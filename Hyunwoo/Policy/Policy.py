@@ -8,8 +8,7 @@ from gymnasium import spaces
 
 import importlib
 
-from DnB import DotsAndBoxes
-from DnB_Env import DnBEnv
+from DotsAndBoxes import DotsAndBoxes, DnBEnv
 
 class Policy():
     def __init__(self):

@@ -6,4 +6,3 @@
 # )
 from .DnB import DotsAndBoxes
 from .DnB_Env import DnBEnv
-from .Policy import Policy
