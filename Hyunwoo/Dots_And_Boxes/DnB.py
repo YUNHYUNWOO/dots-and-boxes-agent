@@ -171,7 +171,6 @@ class DotsAndBoxes:
         return self.is_box_complete
 
 
-
     def winner(self) -> Optional[int]:
         if not self.game_over():
             return None

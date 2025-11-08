@@ -4,5 +4,6 @@
 #     id="gymnasium_env/GridWorld-v0",
 #     entry_point="gymnasium_env.envs:GridWorldEnv",
 # )
-from .DnB import DotsAndBoxes, get_screen_and_clock
-__all__ = ['DotsAndBoxes', 'get_screen_and_clock']
+from .DnB import DotsAndBoxes
+from .DnB_Env import DnBEnv
+from .Policy import Policy
