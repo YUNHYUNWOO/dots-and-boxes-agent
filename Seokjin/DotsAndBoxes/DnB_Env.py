@@ -24,11 +24,7 @@ def interpret_edges(edges) -> list[tuple[int,int]]:
 
     return i_edges
 
-<<<<<<< HEAD
 def interpret_box_owner(box_owner):
-=======
-def interpret_box_owner(box_owner) -> list:
->>>>>>> facbb41579eff354dbe64e54e3eae04cd706ba8a
     def map_func(box):
         if box == 0:
             return -1
@@ -208,11 +204,6 @@ def main():
 
     observation, info = env.reset()
     action_mask = info['action_mask']
-<<<<<<< HEAD
-=======
-
-    print(f"Starting observation: {observation}")
->>>>>>> facbb41579eff354dbe64e54e3eae04cd706ba8a
 
     episode_over = False
     total_reward = 0
