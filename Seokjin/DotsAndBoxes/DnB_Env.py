@@ -2,15 +2,13 @@ from enum import Enum
 
 import numpy as np
 import pygame
-import time
 
 import gymnasium as gym
 from gymnasium import spaces
 
-from DnB import DotsAndBoxes, get_render_desc, draw_board
+from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
-from endgame_policy import EndgamePolicy
-from endgame_policy import list_safe_moves, decompose_components, controlled_value
+
 
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
 def interpret_edges(edges) -> list[tuple[int,int]]:
@@ -24,7 +22,7 @@ def interpret_edges(edges) -> list[tuple[int,int]]:
 
     return i_edges
 
-def interpret_box_owner(box_owner):
+def interpret_box_owner(box_owner) -> list:
     def map_func(box):
         if box == 0:
             return -1
@@ -58,12 +56,14 @@ class DnBEnv(gym.Env):
         # h_edges: 가로 선 6x5  (0: 없음, 1: 있음)
         # v_edges: 세로 선 5x6  (0: 없음, 1: 있음)
         # box_owner: 상자 소유자 5x5 (-1: 유저1, 0: 없음, 1: 유저2)]
+        # cur_player: 현재 플레이어 (0: 유저1, 1: 유저2)
 
         self.observation_space = spaces.Dict(
             {
                 "h_edges": spaces.Box(0, 1, shape=(6,5), dtype=bool),
                 "v_edges": spaces.Box(0, 1, shape=(5,6), dtype=bool),
-                "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int)
+                "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int),
+                "cur_player": spaces.Discrete(2)
             }
         )
 
@@ -97,7 +97,8 @@ class DnBEnv(gym.Env):
         obs = {
             'h_edges': interpret_edges(self.DnB.h_edges),
             'v_edges': interpret_edges(self.DnB.v_edges),
-            'box_owner': interpret_box_owner(self.DnB.box_owner)
+            'box_owner': interpret_box_owner(self.DnB.box_owner),
+            'cur_player': self.DnB.current_player
         }
 
         return obs
@@ -107,7 +108,9 @@ class DnBEnv(gym.Env):
     def _get_info(self) -> dict:
         
         return {
-            'action_mask' : self.action_mask
+            'action_mask' : self.action_mask,
+            'winner': self.DnB.winner(),
+            'score' : self.DnB.score,
         }
     
     def reset(self, seed=None, options=None) -> tuple[dict, dict]:
@@ -156,14 +159,9 @@ class DnBEnv(gym.Env):
 
         if self.render_mode == "human":
             draw_board(self.screen, self.DnB, self.fonts)
-            
-            try:
-                self.DnB.ensure_endgame_console_print()
-            except AttributeError:
-                pass
-
             pygame.event.pump()
             pygame.display.update()
+            
             self.clock.tick(self.metadata['render_fps'])
 
         else:
@@ -181,6 +179,8 @@ class DnBEnv(gym.Env):
         
         terminated = self.DnB.is_game_over
         reward = 1 if terminated else 0
+        if terminated:
+            reward *= -1 if (self.DnB.winner() != self.DnB.current_player) else 1
         observation = self._get_obs()
         info = self._get_info()
 
@@ -194,26 +194,26 @@ class DnBEnv(gym.Env):
             pygame.display.quit()
             pygame.quit()
     
-
 def main():
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
-    # ✅ 정책 생성 (안전수 중 랜덤 + 엔드게임 체인/루프 분해)
-    policy = EndgamePolicy()
-
     observation, info = env.reset()
     action_mask = info['action_mask']
+
+    print(f"Starting observation: {observation}")
 
     episode_over = False
     total_reward = 0
 
     while not episode_over:
-        # ✅ 랜덤샘플 대신 정책 호출
-        action = policy.get_action(observation, info, env)
 
-        # (안전) 마스크 확인
-        assert not action_mask[action[0], action[1], action[2]]
+        action = env.action_space.sample()
+
+        while action_mask[action[0], action[1], action[2]]:
+            action = env.action_space.sample()
+        
+        print('Number of Claimed Edges:', np.sum(action_mask == False))
 
         observation, reward, terminated, truncated, info = env.step(action)
         action_mask = info['action_mask']
@@ -221,9 +221,11 @@ def main():
         total_reward += reward
         episode_over = terminated or truncated
 
-    time.sleep(5)
-    env.close()
+    print(f"Episode finished! Winner: {info['winner']} Total reward: {total_reward}")
+    print(f'observation: {observation}')
+    print(f'info: {info}')
 
+    env.close()
 
 
 if __name__ == '__main__':

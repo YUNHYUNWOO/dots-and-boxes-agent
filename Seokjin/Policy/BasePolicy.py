@@ -9,14 +9,12 @@ from gymnasium import spaces
 import importlib
 import random
 
-from DotsAndBoxes import DotsAndBoxes, DnBEnv
-from endgame_policy import EndgamePolicy
+from DotsAndBoxes import DnBEnv
 
 class Policy():
     def __init__(self):
         ## 필요한거 있으면 추가
         pass
-
 
     def get_action(self, observation, info, env):
         # observation에는 에이전트가 관측하는 상태 정보
@@ -101,5 +99,5 @@ if __name__ == "__main__":
     env = DnBEnv(render_mode='human', n_box=n_box)
     
     # policy = FixedOrderPolicy(n_box=n_box)
-    policy = EndgamePolicy(rng=random.Random(42))  # 필요 시 시드 고정
+    policy = RandomPolicy()
     SimulateEpisode(env, policy, verbose=True)
