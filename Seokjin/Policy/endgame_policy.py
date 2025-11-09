@@ -84,6 +84,40 @@ def list_safe_moves(observation: Dict[str, np.ndarray]) -> List[Tuple[int,int,in
 
     return safe
 
+def list_capture_moves(observation: Dict[str, np.ndarray]) -> List[Tuple[int,int,int]]:
+    """
+    Capture move = 이 수를 두면 인접 박스 중 적어도 하나가 완성됨(count 3 -> 4).
+    즉, 인접 박스의 현재 edge-count가 3인 엣지를 수집.
+    """
+    h_drawn, v_drawn = _edges_drawn_from_obs(observation)
+    n_box = h_drawn.shape[1]
+    counts = _box_edge_counts(h_drawn, v_drawn)
+
+    caps: List[Tuple[int,int,int]] = []
+
+    # Horizontal edges
+    for r in range(n_box + 1):
+        for c in range(n_box):
+            if not h_drawn[r, c]:
+                adj = []
+                if 0 <= r - 1 < n_box: adj.append(counts[r-1, c])
+                if 0 <= r     < n_box: adj.append(counts[r,   c])
+                if any(cnt == 3 for cnt in adj):
+                    caps.append((0, r, c))
+
+    # Vertical edges
+    for r in range(n_box):
+        for c in range(n_box + 1):
+            if not v_drawn[r, c]:
+                adj = []
+                if 0 <= c - 1 < n_box: adj.append(counts[r, c-1])
+                if 0 <= c     < n_box: adj.append(counts[r, c])
+                if any(cnt == 3 for cnt in adj):
+                    caps.append((1, r, c))
+
+    return caps
+
+
 
 
 # ---------- Component (Chain/Loop) decomposition ----------
@@ -295,37 +329,44 @@ class EndgamePolicy:
     def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env) -> Tuple[int,int,int]:
         mask = info["action_mask"]
 
-        # 1) 안전수 중에서 랜덤으로 선택
+        # 0) 상대 실수 응징: 3변 칸이 있으면 먼저 채워서 캡처
+        capture = list_capture_moves(observation)
+        if capture:
+            cap_candidates = [(o,r,c) for (o,r,c) in capture if not mask[o, r, c]]
+            if cap_candidates:
+                return self.rng.choice(cap_candidates)
+
+        # 1) 엔드게임 전: 안전수 중 랜덤
         safe = list_safe_moves(observation)
         if safe:
-            candidates = [(ori, r, c) for (ori, r, c) in safe if not mask[ori, r, c]]
+            candidates = [(o,r,c) for (o,r,c) in safe if not mask[o, r, c]]
             if candidates:
                 return self.rng.choice(candidates)
-            # 안전수는 있는데 전부 마스크되어 있으면 엔드게임 로직으로 폴백
+            # 안전수가 전부 마스크된 희귀상황은 아래로 폴백
 
         # 2) 안전수 0 → 체인/루프 분해 + 최적 오프닝
         components = decompose_components(observation)
         if components:
             idx = choose_endgame_opening(components)
-            # 우선 후보
             move = pick_opening_edge_for_component(observation, components[idx])
             if not mask[move[0], move[1], move[2]]:
                 return move
-            # 같은 컴포넌트 내 다른 엣지들로 폴백
+            # 같은 컴포넌트 내 다른 엣지들 폴백
             for e in (components[idx]["open_edges_to_outside"] + components[idx]["internal_undrawn_edges"]):
                 if not mask[e[0], e[1], e[2]]:
                     return e
 
-        # 3) 최종 폴백: 아무 합법수 랜덤
+        # 3) 최종 폴백: 남은 합법 수 중 랜덤
         n = observation["box_owner"].shape[0]
-        all_moves = []
-        for ori in (0, 1):
-            R = (n + 1) if ori == 0 else n
-            C = n if ori == 0 else (n + 1)
+        pool = []
+        for o in (0,1):
+            R = (n+1) if o==0 else n
+            C = n if o==0 else (n+1)
             for r in range(R):
                 for c in range(C):
-                    if not mask[ori, r, c]:
-                        all_moves.append((ori, r, c))
-        if not all_moves:
+                    if not mask[o, r, c]:
+                        pool.append((o,r,c))
+        if not pool:
             raise RuntimeError("No available moves found (action mask fully blocked).")
-        return self.rng.choice(all_moves)
+        return self.rng.choice(pool)
+
