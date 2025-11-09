@@ -8,13 +8,12 @@ from gymnasium import spaces
 
 import importlib
 
-from DotsAndBoxes import DotsAndBoxes, DnBEnv
+from DotsAndBoxes import DnBEnv
 
-class Policy():
+class BasePolicy():
     def __init__(self):
         ## 필요한거 있으면 추가
         pass
-
 
     def get_action(self, observation, info, env):
         # observation에는 에이전트가 관측하는 상태 정보
@@ -24,7 +23,7 @@ class Policy():
 
 
 ## 예시 정책
-class RandomPolicy(Policy):
+class RandomPolicy(BasePolicy):
     def __init__(self):
         super().__init__()
 
@@ -38,7 +37,7 @@ class RandomPolicy(Policy):
         return action
 
 
-class FixedOrderPolicy(Policy):
+class FixedOrderPolicy(BasePolicy):
     def __init__(self, n_box):
         super().__init__()
         self.n_box = n_box
@@ -61,14 +60,3 @@ class FixedOrderPolicy(Policy):
         self.current_index = (self.current_index + 1) % len(self.action_order)
         
         return action
-
-
-
-if __name__ == "__main__":
-
-    n_box = 5
-    env = DnBEnv(render_mode='human', n_box=n_box)
-    
-    policy = FixedOrderPolicy(n_box=n_box)
-    # policy = RandomPolicy()
-    SimulateEpisode(env, policy, verbose=True)
