@@ -7,8 +7,10 @@ import gymnasium as gym
 from gymnasium import spaces
 
 import importlib
+import random
 
 from DotsAndBoxes import DotsAndBoxes, DnBEnv
+from endgame_policy import EndgamePolicy
 
 class Policy():
     def __init__(self):
@@ -98,6 +100,6 @@ if __name__ == "__main__":
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
     
-    policy = FixedOrderPolicy(n_box=n_box)
-    # policy = RandomPolicy()
+    # policy = FixedOrderPolicy(n_box=n_box)
+    policy = EndgamePolicy(rng=random.Random(42))  # 필요 시 시드 고정
     SimulateEpisode(env, policy, verbose=True)

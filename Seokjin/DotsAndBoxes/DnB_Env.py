@@ -2,13 +2,15 @@ from enum import Enum
 
 import numpy as np
 import pygame
+import time
 
 import gymnasium as gym
 from gymnasium import spaces
 
 from DnB import DotsAndBoxes, get_render_desc, draw_board
 
-
+from endgame_policy import EndgamePolicy
+from endgame_policy import list_safe_moves, decompose_components, controlled_value
 
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
 def interpret_edges(edges):
@@ -23,7 +25,6 @@ def interpret_edges(edges):
     i_edges = [[map_func(e) for e in r] for r in edges]
 
     return i_edges
-
 
 def interpret_box_owner(box_owner):
     def map_func(box):
@@ -165,9 +166,14 @@ class DnBEnv(gym.Env):
 
         if self.render_mode == "human":
             draw_board(self.screen, self.DnB, self.fonts)
+            
+            try:
+                self.DnB.ensure_endgame_console_print()
+            except AttributeError:
+                pass
+
             pygame.event.pump()
             pygame.display.update()
-            
             self.clock.tick(self.metadata['render_fps'])
 
         else:
@@ -203,35 +209,31 @@ def main():
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
+    # ✅ 정책 생성 (안전수 중 랜덤 + 엔드게임 체인/루프 분해)
+    policy = EndgamePolicy()
+
     observation, info = env.reset()
     action_mask = info['action_mask']
-    print("action mask:", action_mask)
-
-    print(f"Starting observation: {observation}")
 
     episode_over = False
     total_reward = 0
 
     while not episode_over:
+        # ✅ 랜덤샘플 대신 정책 호출
+        action = policy.get_action(observation, info, env)
 
-        action = env.action_space.sample()
-
-        while action_mask[action[0], action[1], action[2]]:
-            action = env.action_space.sample()
-        
-        print('Number of Claimed Edges:', np.sum(action_mask == False))
+        # (안전) 마스크 확인
+        assert not action_mask[action[0], action[1], action[2]]
 
         observation, reward, terminated, truncated, info = env.step(action)
         action_mask = info['action_mask']
-                
+
         total_reward += reward
         episode_over = terminated or truncated
 
-    print(f"Episode finished! Total reward: {total_reward}")
-    print(f'Action spasce: {env.action_space}')
-    print(f'Observation spasce: {env.observation_space}')
-
+    time.sleep(5)
     env.close()
+
 
 
 if __name__ == '__main__':

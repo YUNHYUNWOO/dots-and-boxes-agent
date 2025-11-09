@@ -2,6 +2,22 @@ import pygame
 import sys
 from typing import Optional, Tuple
 
+from endgame_policy import (
+    list_safe_moves, decompose_components, controlled_value
+)
+
+# [ADD] 분석 오버레이용 색상 팔레트
+ANALYSIS_COLORS = [
+    (255, 206, 86),   # yellow
+    (75, 192, 192),   # teal
+    (255, 99, 132),   # pink/red
+    (54, 162, 235),   # blue
+    (153, 102, 255),  # purple
+    (201, 203, 207),  # gray
+    (255, 159, 64),   # orange
+    (46, 204, 113),   # green
+]
+
 # ---------------------------
 # Config
 # ---------------------------
@@ -120,6 +136,11 @@ class DotsAndBoxes:
                 self.all_edges.append(e)
                 self.hitboxes.append(edge_rect(e))
 
+        # [ADD] 분석 토글 및 중복출력 방지 플래그
+        self.analysis_enabled = True
+        self._printed_endgame_state = False
+
+
     def edge_claimed(self, e: Edge) -> bool:
         ori, r, c = e
         if ori == 'H':
@@ -156,6 +177,9 @@ class DotsAndBoxes:
         if sum(self.score) == self.total_boxes:
             self.is_game_over = True
 
+        # [ADD] 다음 엔드게임 진입 시 콘솔 출력 허용
+        self._printed_endgame_state = False
+
         return
 
     def is_box_complete(self, r: int, c: int) -> bool:
@@ -168,7 +192,7 @@ class DotsAndBoxes:
         )
 
     def game_over(self) -> bool:
-        return self.is_box_complete
+        return self.is_game_over
 
 
     def winner(self) -> Optional[int]:
@@ -193,6 +217,59 @@ class DotsAndBoxes:
             if rect.collidepoint(x, y) and not self.edge_claimed(e):
                 return e
         return None
+    
+    # [ADD] Env 호환 observation 만들기 (endgame_policy와 인터페이스 맞춤)
+    def to_observation(self):
+        import numpy as np
+        n = self.n
+        h = np.zeros((n+1, n), dtype=int)
+        v = np.zeros((n, n+1), dtype=int)
+        b = np.zeros((n, n), dtype=int)
+        # 0=비어있음, 1=플레이어0, -1=플레이어1 (비0이면 '그어진' 것으로 처리)
+        for r in range(n+1):
+            for c in range(n):
+                owner = self.h_edges[r][c]
+                h[r, c] = 0 if owner is None else (1 if owner == 0 else -1)
+        for r in range(n):
+            for c in range(n+1):
+                owner = self.v_edges[r][c]
+                v[r, c] = 0 if owner is None else (1 if owner == 0 else -1)
+        for r in range(n):
+            for c in range(n):
+                owner = self.box_owner[r][c]
+                b[r, c] = 0 if owner is None else (1 if owner == 0 else -1)
+        return {"h_edges": h, "v_edges": v, "box_owner": b}
+
+    # [ADD] 안전수 리스트 (3변 칸을 만들지 않는 수)
+    def safe_moves(self):
+        obs = self.to_observation()
+        return list_safe_moves(obs)
+
+    # [ADD] 체인/루프 분해
+    def chain_loop_components(self):
+        obs = self.to_observation()
+        return decompose_components(obs)
+
+    # [ADD] 엔드게임 진입 시 콘솔 1회 출력
+    def ensure_endgame_console_print(self):
+        print("===  ===") # 디버그용
+        print(self.safe_moves()) # 디버그용
+        print("===  ===") # 디버그용
+        if not self.analysis_enabled:
+            return
+        if self._printed_endgame_state:
+            return
+        if len(self.safe_moves()) == 0:
+            comps = self.chain_loop_components()
+            cv = controlled_value(comps)
+            print("=== Endgame: Chain/Loop Decomposition ===")
+            for i, comp in enumerate(comps):
+                boxes_sorted = sorted(list(comp["boxes"]))
+                print(f"[{i}] type={comp['type']}, length={comp['length']}, boxes={boxes_sorted}")
+            print("Controlled Value (CV):", cv)
+            print("=========================================")
+            self._printed_endgame_state = True
+
 
 
 
@@ -276,6 +353,44 @@ def draw_board(screen, game: DotsAndBoxes, fonts):
         txt = fonts['xl'].render(msg, True, WIN_MSG_COLOR)
         screen.blit(txt, (MARGIN, 24))
 
+    # [ADD] 분석 오버레이: 안전수 0일 때 체인/루프를 색으로 표시 + CV 패널
+    if game.analysis_enabled and len(game.safe_moves()) == 0:
+        comps = game.chain_loop_components()
+        cv = controlled_value(comps)
+
+        # 각 컴포넌트의 박스를 컬러 테두리로 표시
+        for idx, comp in enumerate(comps):
+            color = ANALYSIS_COLORS[idx % len(ANALYSIS_COLORS)]
+            for (br, bc) in comp["boxes"]:
+                x1, y1 = grid_to_px(br, bc)
+                x2, y2 = grid_to_px(br + 1, bc + 1)
+                rect = pygame.Rect(x1 + 3, y1 + 3, (x2 - x1) - 6, (y2 - y1) - 6)
+                pygame.draw.rect(screen, color, rect, 3)
+
+        # 우측 상단 패널 (CV 및 목록)
+        panel_x = MARGIN + game.n * SPACING - 10
+        panel_y = MARGIN - 60
+        panel_w = 320
+        panel_h = 60 + 22 * max(3, len(comps) + 1)
+        panel = pygame.Surface((panel_w, panel_h), pygame.SRCALPHA)
+        panel.fill((0, 0, 0, 140))
+        screen.blit(panel, (panel_x, panel_y))
+
+        title = fonts["md"].render("Endgame Analysis", True, (240, 240, 255))
+        screen.blit(title, (panel_x + 12, panel_y + 10))
+        cvtxt = fonts["sm"].render(f"CV = {cv}", True, (230, 230, 230))
+        screen.blit(cvtxt, (panel_x + 14, panel_y + 40))
+
+        base_y = panel_y + 66
+        for idx, comp in enumerate(comps):
+            color = ANALYSIS_COLORS[idx % len(ANALYSIS_COLORS)]
+            kind = "chain" if comp["type"] == "chain" else "loop"
+            line = f"[{idx}] {kind}  L={comp['length']}  #boxes={len(comp['boxes'])}"
+            txt = fonts["sm"].render(line, True, color)
+            screen.blit(txt, (panel_x + 14, base_y + idx * 20))
+
+        # 콘솔 출력(엔드게임 진입 시 1회)
+        game.ensure_endgame_console_print()
 
 
 
@@ -321,6 +436,8 @@ def main():
                     n = max(2, n - 1)
                     screen = pygame.display.set_mode(compute_window(n))
                     game = DotsAndBoxes(n)
+                elif event.key == pygame.K_a:
+                    game.analysis_enabled = not game.analysis_enabled
 
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if game.is_game_over:
