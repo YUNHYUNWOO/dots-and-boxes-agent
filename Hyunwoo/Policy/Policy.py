@@ -54,43 +54,14 @@ class FixedOrderPolicy(Policy):
 
     def get_action(self, observation, info, env):
         action = self.action_order[self.current_index]
+        while info['action_mask'][action[0], action[1], action[2]]:
+            self.current_index = (self.current_index + 1) % len(self.action_order)
+            action = self.action_order[self.current_index]
 
         self.current_index = (self.current_index + 1) % len(self.action_order)
+        
         return action
 
-
-# 정책에 의한 전체 에피소드를 시뮬레이션 하는 함수
-# 만약 pygame window가 작동하지 않으면 env 생성시 render_mode를 'human'으로 설정할 것
-def SimulateEpisode(env, policy: Policy, verbose=False):
-    # verbose는 디버깅 출력 여부
-    observation, info = env.reset()
-    action_mask = info['action_mask']
-
-    if verbose:
-        print(f"Starting observation: {observation}")
-
-    episode_over = False
-    total_reward = 0
-
-    while not episode_over:
-        action = policy.get_action(observation, info, env)
-        
-        if verbose:
-            print('action:', action)
-            print(info['action_mask'])
-            print('Number of Claimed Edges:', np.sum(action_mask == False))
-
-        observation, reward, terminated, truncated, info = env.step(action)
-
-        total_reward += reward
-        episode_over = terminated or truncated
-
-    if verbose:
-        print(f"Episode finished! Total reward: {total_reward}")
-        print(f'Action spasce: {env.action_space}')
-        print(f'Observation spasce: {env.observation_space}')
-
-    env.close()
 
 
 if __name__ == "__main__":
