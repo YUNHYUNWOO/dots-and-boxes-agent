@@ -13,20 +13,22 @@ from endgame_policy import EndgamePolicy
 from endgame_policy import list_safe_moves, decompose_components, controlled_value
 
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
-def interpret_edges(edges):
+def interpret_edges(edges) -> list[tuple[int,int]]:
     def map_func(e):
-        if e == 0:
-            return -1
-        elif e == None:
+        if e == None:
             return 0
         else:
-            return e
+            return 1
 
     i_edges = [[map_func(e) for e in r] for r in edges]
 
     return i_edges
 
+<<<<<<< HEAD
 def interpret_box_owner(box_owner):
+=======
+def interpret_box_owner(box_owner) -> list:
+>>>>>>> facbb41579eff354dbe64e54e3eae04cd706ba8a
     def map_func(box):
         if box == 0:
             return -1
@@ -43,7 +45,7 @@ def interpret_box_owner(box_owner):
     return i_box_owner
 
 
-def interpret_action(action):
+def interpret_action(action) -> tuple[str, int, int]:
     ori = 'H' if action[0] == 0 else 'V'
     r, c = map(int, action[1:])
     return (ori, r, c)
@@ -52,8 +54,6 @@ class DnBEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
     def __init__(self, render_mode=None, n_box = 5):
-
-        
         self.n_box = n_box # grid size
         self.DnB = None # Game 인스턴스, 초기화는 reset에서 수행
         self.window_size = 512 #The size of the Pygame window
@@ -65,15 +65,11 @@ class DnBEnv(gym.Env):
 
         self.observation_space = spaces.Dict(
             {
-                "h_edges": spaces.Box(-1, 1, shape=(6,5), dtype=int),
-                "v_edges": spaces.Box(-1, 1, shape=(5,6), dtype=int),
+                "h_edges": spaces.Box(0, 1, shape=(6,5), dtype=bool),
+                "v_edges": spaces.Box(0, 1, shape=(5,6), dtype=bool),
                 "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int)
             }
         )
-        
-        self.h_board = np.zeros(shape=(6,5), dtype=bool)
-        self.v_board = np.zeros(shape=(5,6), dtype=bool)
-
 
         # action space 정의
         # action: (edge_type, row, col)
@@ -82,9 +78,7 @@ class DnBEnv(gym.Env):
         # col: 0~4 (h_edge), 0~5 (v_edge)
         # 불가능한 행동은 action mask로 후에 처리
         self.action_space = spaces.MultiDiscrete(nvec=[2,6,6], dtype=int)
-        
         self.action_mask = None
-
 
         assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
@@ -102,8 +96,8 @@ class DnBEnv(gym.Env):
         self.fonts = None
 
 
-    def _get_obs(self):
-        # potential Copy issue
+    def _get_obs(self) -> dict:
+
         obs = {
             'h_edges': interpret_edges(self.DnB.h_edges),
             'v_edges': interpret_edges(self.DnB.v_edges),
@@ -112,15 +106,15 @@ class DnBEnv(gym.Env):
 
         return obs
 
-    ## auxilary information. manhattan distance
+    # auxilary information.
     # action mask를 항상 포함한다.
-    def _get_info(self):
-        print(self.action_mask)
+    def _get_info(self) -> dict:
+        
         return {
             'action_mask' : self.action_mask
         }
     
-    def reset(self, seed=None, options=None):
+    def reset(self, seed=None, options=None) -> tuple[dict, dict]:
         super().reset(seed=seed)
 
         self.DnB = DotsAndBoxes(self.n_box)
@@ -152,13 +146,13 @@ class DnBEnv(gym.Env):
         return observation, info
     
     # render_mode가 rgb_array인 경우에만 np.ndarray 반환
-    def render(self):
+    def render(self) -> np.ndarray | None:
         if self.render_mode == "rgb_array":
             return self._render_frame()
-        
+
     # frame을 render한다.
     # render_mode가 'human'인 경우에는 pygame 창에 그린다.
-    def _render_frame(self):
+    def _render_frame(self) -> np.ndarray | None:
         if self.screen is None and self.clock is None and self.render_mode == 'human':
             pygame.init()
             pygame.display.init()
@@ -180,10 +174,10 @@ class DnBEnv(gym.Env):
             return np.transpose(
                 np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2)
             )
-        
+    
     # 행동 수행
-    def step(self, action):
-        assert not self.action_mask[action[0], action[1], action[2]], "The action is masked. choose another action."
+    def step(self, action) -> tuple[dict, int, bool, bool, dict]:
+        assert not self.action_mask[action[0], action[1], action[2]], "The action has already been taken. Choose another action."
 
         i_action = interpret_action(action)
         self.action_mask[action[0], action[1], action[2]] = True
@@ -214,6 +208,11 @@ def main():
 
     observation, info = env.reset()
     action_mask = info['action_mask']
+<<<<<<< HEAD
+=======
+
+    print(f"Starting observation: {observation}")
+>>>>>>> facbb41579eff354dbe64e54e3eae04cd706ba8a
 
     episode_over = False
     total_reward = 0

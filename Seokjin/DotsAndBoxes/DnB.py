@@ -159,7 +159,6 @@ class DotsAndBoxes:
         
         if ori == 'H':
             self.h_edges[r][c] = self.current_player
-            print(self.current_player)
         elif ori == 'V':
             self.v_edges[r][c] = self.current_player
 
@@ -426,7 +425,6 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
                 elif event.key == pygame.K_r:
-                    print(n)
                     game = DotsAndBoxes(n)
                 elif event.key in (pygame.K_PLUS, pygame.K_EQUALS):  # '+' on many keyboards
                     n = min(9, n + 1)

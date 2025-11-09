@@ -6,26 +6,23 @@ import pygame
 import gymnasium as gym
 from gymnasium import spaces
 
-from DnB import DotsAndBoxes, get_render_desc, draw_board
+from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
 
 
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
-def interpret_edges(edges):
+def interpret_edges(edges) -> list[tuple[int,int]]:
     def map_func(e):
-        if e == 0:
-            return -1
-        elif e == None:
+        if e == None:
             return 0
         else:
-            return e
+            return 1
 
     i_edges = [[map_func(e) for e in r] for r in edges]
 
     return i_edges
 
-
-def interpret_box_owner(box_owner):
+def interpret_box_owner(box_owner) -> list:
     def map_func(box):
         if box == 0:
             return -1
@@ -42,7 +39,7 @@ def interpret_box_owner(box_owner):
     return i_box_owner
 
 
-def interpret_action(action):
+def interpret_action(action) -> tuple[str, int, int]:
     ori = 'H' if action[0] == 0 else 'V'
     r, c = map(int, action[1:])
     return (ori, r, c)
@@ -51,8 +48,6 @@ class DnBEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
     def __init__(self, render_mode=None, n_box = 5):
-
-        
         self.n_box = n_box # grid size
         self.DnB = None # Game 인스턴스, 초기화는 reset에서 수행
         self.window_size = 512 #The size of the Pygame window
@@ -61,18 +56,16 @@ class DnBEnv(gym.Env):
         # h_edges: 가로 선 6x5  (0: 없음, 1: 있음)
         # v_edges: 세로 선 5x6  (0: 없음, 1: 있음)
         # box_owner: 상자 소유자 5x5 (-1: 유저1, 0: 없음, 1: 유저2)]
+        # cur_player: 현재 플레이어 (0: 유저1, 1: 유저2)
 
         self.observation_space = spaces.Dict(
             {
-                "h_edges": spaces.Box(-1, 1, shape=(6,5), dtype=int),
-                "v_edges": spaces.Box(-1, 1, shape=(5,6), dtype=int),
-                "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int)
+                "h_edges": spaces.Box(0, 1, shape=(6,5), dtype=bool),
+                "v_edges": spaces.Box(0, 1, shape=(5,6), dtype=bool),
+                "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int),
+                "cur_player": spaces.Discrete(2)
             }
         )
-        
-        self.h_board = np.zeros(shape=(6,5), dtype=bool)
-        self.v_board = np.zeros(shape=(5,6), dtype=bool)
-
 
         # action space 정의
         # action: (edge_type, row, col)
@@ -81,9 +74,7 @@ class DnBEnv(gym.Env):
         # col: 0~4 (h_edge), 0~5 (v_edge)
         # 불가능한 행동은 action mask로 후에 처리
         self.action_space = spaces.MultiDiscrete(nvec=[2,6,6], dtype=int)
-        
         self.action_mask = None
-
 
         assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
@@ -101,25 +92,28 @@ class DnBEnv(gym.Env):
         self.fonts = None
 
 
-    def _get_obs(self):
-        # potential Copy issue
+    def _get_obs(self) -> dict:
+
         obs = {
             'h_edges': interpret_edges(self.DnB.h_edges),
             'v_edges': interpret_edges(self.DnB.v_edges),
-            'box_owner': interpret_box_owner(self.DnB.box_owner)
+            'box_owner': interpret_box_owner(self.DnB.box_owner),
+            'cur_player': self.DnB.current_player
         }
 
         return obs
 
-    ## auxilary information. manhattan distance
+    # auxilary information.
     # action mask를 항상 포함한다.
-    def _get_info(self):
-        print(self.action_mask)
+    def _get_info(self) -> dict:
+        
         return {
-            'action_mask' : self.action_mask
+            'action_mask' : self.action_mask,
+            'winner': self.DnB.winner(),
+            'score' : self.DnB.score,
         }
     
-    def reset(self, seed=None, options=None):
+    def reset(self, seed=None, options=None) -> tuple[dict, dict]:
         super().reset(seed=seed)
 
         self.DnB = DotsAndBoxes(self.n_box)
@@ -151,13 +145,13 @@ class DnBEnv(gym.Env):
         return observation, info
     
     # render_mode가 rgb_array인 경우에만 np.ndarray 반환
-    def render(self):
+    def render(self) -> np.ndarray | None:
         if self.render_mode == "rgb_array":
             return self._render_frame()
-        
+
     # frame을 render한다.
     # render_mode가 'human'인 경우에는 pygame 창에 그린다.
-    def _render_frame(self):
+    def _render_frame(self) -> np.ndarray | None:
         if self.screen is None and self.clock is None and self.render_mode == 'human':
             pygame.init()
             pygame.display.init()
@@ -174,10 +168,10 @@ class DnBEnv(gym.Env):
             return np.transpose(
                 np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2)
             )
-        
+    
     # 행동 수행
-    def step(self, action):
-        assert not self.action_mask[action[0], action[1], action[2]], "The action is masked. choose another action."
+    def step(self, action) -> tuple[dict, int, bool, bool, dict]:
+        assert not self.action_mask[action[0], action[1], action[2]], "The action has already been taken. Choose another action."
 
         i_action = interpret_action(action)
         self.action_mask[action[0], action[1], action[2]] = True
@@ -185,6 +179,8 @@ class DnBEnv(gym.Env):
         
         terminated = self.DnB.is_game_over
         reward = 1 if terminated else 0
+        if terminated:
+            reward *= -1 if (self.DnB.winner() != self.DnB.current_player) else 1
         observation = self._get_obs()
         info = self._get_info()
 
@@ -205,7 +201,6 @@ def main():
 
     observation, info = env.reset()
     action_mask = info['action_mask']
-    print("action mask:", action_mask)
 
     print(f"Starting observation: {observation}")
 
@@ -223,13 +218,13 @@ def main():
 
         observation, reward, terminated, truncated, info = env.step(action)
         action_mask = info['action_mask']
-                
+
         total_reward += reward
         episode_over = terminated or truncated
 
-    print(f"Episode finished! Total reward: {total_reward}")
-    print(f'Action spasce: {env.action_space}')
-    print(f'Observation spasce: {env.observation_space}')
+    print(f"Episode finished! Winner: {info['winner']} Total reward: {total_reward}")
+    print(f'observation: {observation}')
+    print(f'info: {info}')
 
     env.close()
 
