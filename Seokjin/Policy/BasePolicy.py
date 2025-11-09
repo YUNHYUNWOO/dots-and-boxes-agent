@@ -53,7 +53,11 @@ class FixedOrderPolicy(Policy):
 
 
     def get_action(self, observation, info, env):
+        action_mask = info['action_mask']
         action = self.action_order[self.current_index]
+        while action_mask[action[0], action[1], action[2]]:
+            self.current_index = (self.current_index + 1) % len(self.action_order)
+            action = self.action_order[self.current_index]
 
         self.current_index = (self.current_index + 1) % len(self.action_order)
         return action

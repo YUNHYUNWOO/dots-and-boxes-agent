@@ -131,12 +131,12 @@ if __name__ == "__main__":
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
-    results = SimulateEpisode(env=env, p0_policy=RandomPolicy(), p1_policy=EndgamePolicy(), verbose=True)
+    results = SimulateEpisode(env=env, p0_policy=FixedOrderPolicy(5), p1_policy=EndgamePolicy(), verbose=True)
 
     env.render_mode = 'rgb_array'
-    p0_policy = RandomPolicy()
-    p1_policy = FixedOrderPolicy(5)
+    p0_policy = FixedOrderPolicy(5)
+    p1_policy = EndgamePolicy()
 
     # policy = RandomPolicy()
-    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=500, verbose=False)
+    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=1000, verbose=False)
     save_simulation_results(results, run_name=run_name)
