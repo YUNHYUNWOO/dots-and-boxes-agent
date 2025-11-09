@@ -8,8 +8,6 @@ from gymnasium import spaces
 
 from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
-
-
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
 def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
     def map_func(e):
@@ -19,15 +17,15 @@ def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
             return 1
 
     n = max(len(h_edges[0]), len(v_edges[0]))
-    i_edges = [[0 for _ in range(n)] for _ in range(n)]
+    i_edges = [[[0 for _ in range(2)] for __ in range(n)] for ___ in range(n)]
 
     for i in range(n):
         for j in range(n):
-            if i != n: 
-                i_edges[i][j] = map_func(h_edges[j][i])
-            if j != n:
-                i_edges[i][j] = map_func(v_edges[j][i])
-                
+            if j != n: 
+                i_edges[j][i][0] = map_func(h_edges[i][j])
+            if i != n:
+                i_edges[j][i][1] = map_func(v_edges[i][j])
+
     return i_edges
 
 
@@ -83,7 +81,7 @@ class DnBEnv(gym.Env):
     def _get_obs(self) -> dict:
 
         obs = {
-            'edges': interpret_edges(self.DnB.h_edges, self.DnB.h_edges),
+            'edges': interpret_edges(self.DnB.h_edges, self.DnB.v_edges),
             'cur_player': self.DnB.current_player
         }
 
