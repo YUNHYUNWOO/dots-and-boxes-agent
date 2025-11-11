@@ -1,17 +1,11 @@
 from DotsAndBoxes import DnBEnv
 from .BasePolicy import BasePolicy
-from DotsAndBoxes import DotsAndBoxesEngine, _h_index, _v_index
+from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
-from Util import encode_Edges, get_legal_actions_encoded
+from Util.DnB_Engine_Util import *
 from Search import BaseSearchEngine, AlphaBetaSearch
 
 Action = List[int]
-N_BOX = 5
-N = N_BOX + 1
-H_COUNT = N * (N - 1)   # 30
-V_COUNT = (N - 1) * N   # 30
-TOTAL_BOXES = N_BOX * N_BOX  # 25
-H, V = 0, 1
 
 def _adjacent_boxes(r: int, c: int, d: int) -> List[Tuple[int, int]]:
     boxes = []
@@ -26,11 +20,11 @@ def _adjacent_boxes(r: int, c: int, d: int) -> List[Tuple[int, int]]:
 def _box_edge_count(hb: int, vb: int, br: int, bc: int) -> int:
     cnt = 0
     # H(br,bc), H(br+1,bc)
-    if (hb >> _h_index(br, bc)) & 1:       cnt += 1
-    if (hb >> _h_index(br + 1, bc)) & 1:   cnt += 1
+    if (hb >> h_index(br, bc)) & 1:       cnt += 1
+    if (hb >> h_index(br + 1, bc)) & 1:   cnt += 1
     # V(br,bc), V(br,bc+1)
-    if (vb >> _v_index(br, bc)) & 1:       cnt += 1
-    if (vb >> _v_index(br, bc + 1)) & 1:   cnt += 1
+    if (vb >> v_index(br, bc)) & 1:       cnt += 1
+    if (vb >> v_index(br, bc + 1)) & 1:   cnt += 1
     return cnt
 
 

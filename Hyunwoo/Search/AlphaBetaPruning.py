@@ -1,7 +1,7 @@
-from DotsAndBoxes import DotsAndBoxesEngine, _h_index, _v_index
+from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from .SearchEngine import BaseSearchEngine
-from Util import get_legal_actions_encoded, decode_Edges
+from Util.DnB_Engine_Util import *
 
 Action = List[int]
 

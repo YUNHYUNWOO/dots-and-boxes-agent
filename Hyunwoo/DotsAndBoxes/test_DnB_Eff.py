@@ -1,10 +1,10 @@
 import copy
 import traceback
 
-from .DnB_Eff import (
-    DotsAndBoxesEngine, N_BOX, N, H, V,
-    _h_index, _v_index,
-)
+from Util import (decode_Edges, N_BOX, N, H, V,
+    h_index, v_index,)
+
+from .DnB_Engine import DotsAndBoxesEngine
 
 # ------------ 유틸 ------------
 def h_edge(c, r):  # 수평 엣지 액션 튜플
@@ -79,7 +79,7 @@ def test_complete_single_box_scores_and_turn_stays():
 
     for a in seq:
         out = eng.apply_action(a)
-
+    
     assert_true(out["is_box_completed"] is True, "박스 하나가 완성되어야 함")
     assert_equal(out["completed_boxes"], [(0, 0)], "완성 박스는 (0,0)")
     assert_equal(eng.score[p1], 1, "완성한 플레이어 점수 +1")
@@ -135,8 +135,8 @@ def test_set_state_roundtrip():
     apply_actions(eng, [
         h_edge(0, 0),
         v_edge(0, 0),
-        h_edge(5, 0),
-        v_edge(0, 5),
+        h_edge(0, 5),
+        v_edge(5, 0),
     ])
     snap = eng.get_state()
 
@@ -180,13 +180,14 @@ def test_game_over_after_claiming_all_edges():
     # 수평 6*5=30
     for r in range(N):
         for c in range(N - 1):
-            if not ((eng.get_state()["edges"][0] >> _h_index(r, c)) & 1):
-                eng.apply_action(h_edge(r, c))
+            if not ((eng.get_state()["edges"][0] >> h_index(c, r)) & 1):
+                eng.apply_action(h_edge(c, r))
+
     # 수직 5*6=30
     for r in range(N - 1):
         for c in range(N):
-            if not ((eng.get_state()["edges"][1] >> _v_index(r, c)) & 1):
-                eng.apply_action(v_edge(r, c))
+            if not ((eng.get_state()["edges"][1] >> v_index(c, r)) & 1):
+                eng.apply_action(v_edge(c, r))
 
     assert_equal(sum(eng.score), N_BOX * N_BOX)  # 25
     assert_true(eng.is_game_over() is True)
@@ -211,7 +212,6 @@ def main():
     for t in TESTS:
         name = t.__name__
         try:
-            t()
             print(f"[PASS] {name}")
             passed += 1
         except Exception as e:
@@ -227,3 +227,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    #test_complete_single_box_scores_and_turn_stays()
