@@ -84,7 +84,8 @@ class DnBEnv(gym.Env):
 
         obs = {
             'edges': interpret_edges(self.DnB.h_edges, self.DnB.v_edges),
-            'cur_player': self.DnB.current_player
+            'cur_player': self.DnB.current_player,
+            'score' : self.DnB.score,
         }
 
         return obs

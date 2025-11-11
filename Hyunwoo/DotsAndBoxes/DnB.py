@@ -131,7 +131,11 @@ class DotsAndBoxes:
         self.current_player = 0 if self.current_player == 1 else 1
         
     def claim_edge(self, e: Edge) -> bool:
-        """Attempt to claim edge for current player. Returns True if any box completed (extra turn), else False."""
+        """ Attempt to claim edge for current player. 
+            Returns False if edge is already claimed
+
+            Else Returns made_box, box_idx
+        """
         if self.edge_claimed(e):
             return False
         ori, r, c = e
@@ -142,20 +146,30 @@ class DotsAndBoxes:
             self.v_edges[r][c] = self.current_player
 
         made_box = False
+        box_idx = []
+        ## Undo를 위해서는 
+        ## 어떤 박스가 생겼는지
+        ## Box index를 기록해야한다.
         for (br, bc) in neighbors_of_edge(e, self.n):
             if self.box_owner[br][bc] is None:
                 if self.is_box_complete(br, bc):
                     self.box_owner[br][bc] = self.current_player
                     self.score[self.current_player] += 1
+
+                    box_idx.append([br, bc])
                     made_box = True
-        
+
+
         if not made_box:
             self.turn_over()
 
         if sum(self.score) == self.total_boxes:
             self.is_game_over = True
 
-        return
+        return  {
+            'made_box': made_box, 
+            'box_idx': box_idx, 
+        }
 
     def is_box_complete(self, r: int, c: int) -> bool:
         # Box at (r,c) has edges: H(r,c), H(r+1,c), V(r,c), V(r,c+1)
@@ -196,6 +210,7 @@ class DotsAndBoxes:
 
 
 def draw_board(screen, game: DotsAndBoxes, fonts):
+
     screen.fill(BG_COLOR)
     # Box fills (semi-transparent)
     box_surface = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
