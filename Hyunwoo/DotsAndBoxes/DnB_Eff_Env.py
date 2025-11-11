@@ -118,7 +118,6 @@ class DnBEnv(gym.Env):
             # Vertical mask: True only when r == n_box
             mask[:,:,1] = (r == n_box)
             # Stack so that mask[0] = H, mask[1] = V
-            print("mask_shape", mask.shape)
             return mask
         self.action_mask = get_init_action_mask(self.n_box)
 

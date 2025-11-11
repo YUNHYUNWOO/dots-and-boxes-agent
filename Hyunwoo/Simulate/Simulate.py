@@ -15,7 +15,7 @@ import tqdm.auto as tqdm
 
 import os
 
-BASE_SAVE_PATH = './SimResult/'
+BASE_SAVE_PATH = './Simulate/SimResult'
 
 def convert_action_to_submit_format(action: tuple[int, int, int]) -> tuple[int, int, int]:
     return (action[1], action[2], action[0])
@@ -162,6 +162,7 @@ def save_simulation_results(results, run_name: str):
     
     이거보단 나은 저장방식이 있을 것 같은데 Todo에 부치겠습니다.
     """
+    
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     os.makedirs(save_path, exist_ok=True)
 
@@ -181,19 +182,19 @@ def save_simulation_results(results, run_name: str):
 
 if __name__ == "__main__":
 
-    run_name = 'AlphaBeta_v1_d3_vs_AlphaBeta_v1_d4'
+    run_name = 'Random_Policy_vs_AlphaBeta_v1_d2'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
     
     alphabeta_search_d3 = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=2)
     p0_policy = Search_Policy(SearchEngine=alphabeta_search_d3)
-    # p0_policy = FixedOrderPolicy(5)
-    alphabeta_search_d4 = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=3)
-    p1_policy = Search_Policy(SearchEngine=alphabeta_search_d4)
+    p0_policy = RandomPolicy()
+    alphabeta_search_d2 = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=2)
+    p1_policy = Search_Policy(SearchEngine=alphabeta_search_d2)
 
     results = SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
     env.render_mode = 'rgb_array'
 
-    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
     save_simulation_results(results, run_name=run_name)

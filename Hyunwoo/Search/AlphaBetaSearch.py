@@ -45,7 +45,7 @@ class AlphaBetaSearch(BaseSearchEngine):
         best_val = -10**9 if maximizing else 10**9
         best_action: Optional[Action] = None
 
-        actions = get_legal_actions_encoded(eng.get_state()['edges'])
+        actions = get_legal_actions(eng.get_state()['edges'])
         
         # print(actions)
         # edges = decode_Edges(eng.get_state()['edges'])

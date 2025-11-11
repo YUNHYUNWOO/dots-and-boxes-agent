@@ -89,7 +89,7 @@ def decode_Edges(encoded_edges):
 
     return edges
 
-def get_legal_actions_encoded(encoded_edges, n_box=5):
+def get_legal_actions(encoded_edges, n_box=5):
     """
     encoded_edges = [h, v]
       - H(r,c): r in [0..n-1], c in [0..n-2], idx = r*(n-1) + c

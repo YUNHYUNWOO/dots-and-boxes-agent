@@ -1,2 +1,2 @@
-from .AlphaBetaPruning import  AlphaBetaSearch
+from .AlphaBetaSearch import  AlphaBetaSearch
 from .SearchEngine import BaseSearchEngine

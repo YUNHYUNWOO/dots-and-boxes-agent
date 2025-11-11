@@ -43,7 +43,7 @@ def evaluate(eng: DotsAndBoxesEngine, root_player: int) -> int:
     me, opp = root_player, 1 - root_player
     score_term = (eng.score[me] - eng.score[opp]) * 100
 
-    moves = get_legal_actions_encoded(eng.get_state()['edges'])
+    moves = get_legal_actions(eng.get_state()['edges'])
     bad_moves = sum(1 for m in moves if _makes_third_edge(eng, m))
     # bad_moves가 적을수록 좋다
     return score_term - bad_moves
