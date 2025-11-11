@@ -19,14 +19,14 @@ def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
             return 1
 
     n = max(len(h_edges[0]), len(v_edges[0]))
-    i_edges = [[0 for _ in range(n)] for _ in range(n)]
+    i_edges = [[[0 for _ in range(2)] for _ in range(n)] for _ in range(n)]
 
     for i in range(n):
         for j in range(n):
-            if i != n: 
-                i_edges[i][j] = map_func(h_edges[j][i])
-            if j != n:
-                i_edges[i][j] = map_func(v_edges[j][i])
+            if j != n - 1: 
+                i_edges[j][i][0] = map_func(h_edges[i][j])
+            if i != n - 1:
+                i_edges[j][i][1] = map_func(v_edges[i][j])
                 
     return i_edges
 
@@ -83,7 +83,7 @@ class DnBEnv(gym.Env):
     def _get_obs(self) -> dict:
 
         obs = {
-            'edges': interpret_edges(self.DnB.h_edges, self.DnB.h_edges),
+            'edges': interpret_edges(self.DnB.h_edges, self.DnB.v_edges),
             'cur_player': self.DnB.current_player
         }
 
@@ -117,10 +117,9 @@ class DnBEnv(gym.Env):
             # Vertical mask: True only when r == n_box
             mask[:,:,1] = (r == n_box)
             # Stack so that mask[0] = H, mask[1] = V
-            
+            print("mask_shape", mask.shape)
             return mask
         self.action_mask = get_init_action_mask(self.n_box)
-
 
         observation = self._get_obs()
         info = self._get_info()
@@ -189,7 +188,7 @@ def main():
     action_mask = info['action_mask']
 
     print(f"Starting observation: {observation}")
-
+    #print(len(observation['edges']), len(observation['edges'][0]), len(observation['edges'][0][0]))
     episode_over = False
     total_reward = 0
 
@@ -199,11 +198,22 @@ def main():
         while action_mask[action[0], action[1], action[2]]:
             action = env.action_space.sample()
         
-        print(action)
+        
         print('Number of Claimed Edges:', np.sum(action_mask == False))
 
         observation, reward, terminated, truncated, info = env.step(action)
+        # print(len(observation['edges']), len(observation['edges'][0]), len(observation['edges'][0][0]))
         action_mask = info['action_mask']
+
+        # print(action_mask[:,:,0].T)
+        # print(action_mask[:,:,1].T)
+
+        # for i in range(2):
+        #     for r in range(len(observation['edges'])):
+        #         for c in range(len(observation['edges'])):
+        #             print(observation['edges'][c][r][i], end = ' ')
+        #         print()
+        #     print('====')
 
         total_reward += reward
         episode_over = terminated or truncated

@@ -1,4 +1,3 @@
-
 import numpy as np
 import pygame
 
@@ -33,7 +32,6 @@ def SimulateEpisode(env, p0_policy: Policy, p1_policy: Policy, verbose=False):
         else:
             policy = p1_policy
             
-
         action = policy.get_action(observation, info, env)
         
         if verbose:
@@ -130,11 +128,11 @@ if __name__ == "__main__":
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
-    results = SimulateEpisode(env=env, p0_policy=EndgamePolicy(), p1_policy=EndgamePolicy(), verbose=True)
+    results = SimulateEpisode(env=env, p0_policy=RandomPolicy(), p1_policy=ChainPolicy(), verbose=True)
 
     env.render_mode = 'rgb_array'
-    p0_policy = EndgamePolicy()
-    p1_policy = EndgamePolicy()
+    p0_policy = RandomPolicy()
+    p1_policy = ChainPolicy()
 
     # policy = RandomPolicy()
     results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=2000, verbose=False)
