@@ -47,7 +47,7 @@ class FixedOrderPolicy(BasePolicy):
                 for c in range(n_box + 1):
                     if (ori == 0 and c == n_box) or (ori == 1 and r == n_box):
                         continue
-                    self.action_order.append((ori, r, c))
+                    self.action_order.append((c, r, ori))
         self.current_index = 0
 
 
