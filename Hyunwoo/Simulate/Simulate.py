@@ -15,6 +15,8 @@ import tqdm.auto as tqdm
 
 import os
 
+import time
+
 BASE_SAVE_PATH = './Simulate/SimResult'
 
 def convert_action_to_submit_format(action: tuple[int, int, int]) -> tuple[int, int, int]:
@@ -45,13 +47,28 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
     episode_over = False
     total_reward = 0
 
+    p0_time, p1_time = 0, 0
+    turn_count = [0, 0]
+
     while not episode_over:
         if observation['cur_player'] == 0:
             policy = p0_policy
         else:
             policy = p1_policy
 
+        start = time.time()
+
         action = policy.get_action(observation, info, env)
+
+        end = time.time()
+
+        if observation['cur_player'] == 0:
+            turn_count[0] += 1
+            p0_time += (end - start)
+        else:
+            turn_count[1] += 1
+            p1_time += (end - start)
+
         record.append(convert_action_to_submit_format(action))
 
         if verbose:
@@ -77,7 +94,8 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         print(f'Observation spasce: {env.observation_space}')
 
     env.close()
-
+    print(f'turn_count: {turn_count}')
+    print(f'p0_time: {p0_time}, p1_time {p1_time}')
     return record, info, total_reward
 
 
@@ -103,6 +121,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
     first_plaer = p0_policy
     second_player = p1_policy
 
+    
     for episode in tqdm.tqdm(range(n_episodes)):
         if verbose:
             print(f"=== Episode {episode + 1} ===")
@@ -121,7 +140,6 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
         first_plaer, second_player = second_player, first_plaer  # 다음 에피소드에서 선후공 교체
         
-
     return results
 
 def calc_basic_stats(results):
@@ -186,15 +204,21 @@ if __name__ == "__main__":
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
     
-    alphabeta_search_d3 = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=2)
-    p0_policy = Search_Policy(SearchEngine=alphabeta_search_d3)
-    p0_policy = RandomPolicy()
-    alphabeta_search_d2 = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=2)
-    p1_policy = Search_Policy(SearchEngine=alphabeta_search_d2)
+
+    alphabeta_search_TT_d4 = AB_TT_Search()
+    alphabeta_search_TT_d4.configure(evaluate=evaluate_rel, move_ordering=None, depth=3)
+    p0_policy = Search_Policy(SearchEngine=alphabeta_search_TT_d4)
+    # p1_policy = RandomPolicy()
+
+    # alphabeta_search_d4 = AlphaBetaSearch()
+    # alphabeta_search_d4.configure(evaluate=evaluate, move_ordering=None, depth=3)
+    # p1_policy = Search_Policy(SearchEngine=alphabeta_search_d4)
+    p1_policy = RandomPolicy()
+
 
     results = SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
     env.render_mode = 'rgb_array'
 
-    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
+    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
     save_simulation_results(results, run_name=run_name)

@@ -3,7 +3,7 @@ from .BasePolicy import BasePolicy
 from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from Util.DnB_Engine_Util import *
-from Search import BaseSearchEngine, AlphaBetaSearch
+from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntry
 
 Action = List[int]
 
@@ -47,6 +47,35 @@ def evaluate(eng: DotsAndBoxesEngine, root_player: int) -> int:
     bad_moves = sum(1 for m in moves if _makes_third_edge(eng, m))
     # bad_moves가 적을수록 좋다
     return score_term - bad_moves
+
+def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
+    moves = get_legal_actions(eng.get_state()['edges'])
+    bad_moves = sum(1 for m in moves if _makes_third_edge(eng, m))
+    # bad_moves가 적을수록 좋다
+    bad_moves /= 100
+    return -bad_moves
+
+def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maximizing, root_player):
+    scored = []
+    for a in actions:
+        out = eng.apply_action(a)
+        
+        player_before = eng.cur_player
+        key = tt.key_from(eng, maximizing) + (tuple(a),)
+        ent = tt._t.get(key)
+        immediate_val = len(out["completed_boxes"])
+        sign = 1 if (root_player == player_before) else -1
+        
+        eng.undo_action(a, out["completed_boxes"], player_before)
+        
+        if ent is not None:
+            scored.append((sign * immediate_val + ent.val, a))
+        else:
+            scored.append((-100, a))  # 기본값
+    # Max node면 높은 값부터, Min node면 낮은 값부터
+    scored.sort(reverse=maximizing)
+    return [a for _, a in scored]
+
 
 
 class Search_Policy(BasePolicy):

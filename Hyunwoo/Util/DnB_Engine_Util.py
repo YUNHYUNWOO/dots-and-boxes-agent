@@ -130,7 +130,7 @@ def _test_get_available_actions_encoded():
         v = random.randint(0, 1 << 30)
 
         encoded_edges = [h, v]
-        actions = get_legal_actions_encoded(encoded_edges=encoded_edges)
+        actions = get_legal_actions(encoded_edges=encoded_edges)
 
         actions_edges = [[[0 for _ in range(2)] for _ in range(6)] for _ in range(6)]
 
@@ -185,7 +185,7 @@ def _test_encode_decode():
 if __name__ == "__main__":
     edges = [[[0 for _ in range(2)] for _ in range(6)] for _ in range(6)]
     edges[3][1][0] = 1
-    print(encode_Edges(edges), _h_index(1, 3))
+    print(encode_Edges(edges), h_index(1, 3))
 
     # test Edge Encode, Decode
     _test_encode_decode()
