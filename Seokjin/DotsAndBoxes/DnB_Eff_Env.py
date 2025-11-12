@@ -8,8 +8,6 @@ from gymnasium import spaces
 
 from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
-
-
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
 def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
     def map_func(e):
@@ -19,7 +17,7 @@ def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
             return 1
 
     n = max(len(h_edges[0]), len(v_edges[0]))
-    i_edges = [[[0 for _ in range(2)] for _ in range(n)] for _ in range(n)]
+    i_edges = [[[0 for _ in range(2)] for __ in range(n)] for ___ in range(n)]
 
     for i in range(n):
         for j in range(n):
@@ -117,7 +115,6 @@ class DnBEnv(gym.Env):
             # Vertical mask: True only when r == n_box
             mask[:,:,1] = (r == n_box)
             # Stack so that mask[0] = H, mask[1] = V
-            print("mask_shape", mask.shape)
             return mask
         self.action_mask = get_init_action_mask(self.n_box)
 
@@ -193,7 +190,6 @@ def main():
     total_reward = 0
 
     while not episode_over:
-
         action = env.action_space.sample()
         while action_mask[action[0], action[1], action[2]]:
             action = env.action_space.sample()

@@ -2,136 +2,158 @@ from typing import List, Tuple, Dict, Optional
 import numpy as np
 import random
 
-# ---------- Helpers to work with the Env observation ----------
+"""
+Board size assumption
+- Boxes: 5x5
+- Points: 6x6
+- Observation:
+    observation["edges"]: shape (6,6,2), dtype=bool
+        edges[r, c, 0] = horizontal edge starting at point (r,c) to (r, c+1)
+            valid indices: r in [0..5], c in [0..4]
+        edges[r, c, 1] = vertical edge starting at point (r,c) to (r+1, c)
+            valid indices: r in [0..4], c in [0..5]
+    observation["cur_player"]: 0 or 1  (not used by policy logic here)
+
+- Action: tuple (edge_type, row, col)
+    edge_type: 0 = horizontal, 1 = vertical
+    row, col follow the same valid ranges as above.
+- info["action_mask"][edge_type, row, col] is assumed:
+    False -> legal (selectable), True -> illegal
+"""
+
+N_BOX = 5       # 5x5 boxes
+N_PT  = N_BOX+1 # 6x6 points
+
+
+# ---------- Helpers to work with the new Env observation ----------
 
 def _edges_drawn_from_obs(observation: Dict[str, np.ndarray]):
     """
-    Convert observation's h_edges/v_edges (values in {-1,0,1}) into boolean arrays:
-    True = edge already drawn by someone, False = empty.
+    Convert observation["edges"] (6,6,2) into:
+        h_drawn: (6,5)  bool  (horizontal edges)
+        v_drawn: (5,6)  bool  (vertical edges)
     """
-    h = np.array(observation["h_edges"])
-    v = np.array(observation["v_edges"])
-    h_drawn = (h != 0)
-    v_drawn = (v != 0)
+    edges = np.asarray(observation["edges"], dtype=bool)
+    assert edges.shape == (N_PT, N_PT, 2), f"edges must be {(N_PT, N_PT, 2)}, got {edges.shape}"
+
+    # Horizontal: r:0..5, c:0..4 from edges[:,:,0]
+    h_drawn = edges[:, :N_BOX, 0]   # (6,5)
+
+    # Vertical: r:0..4, c:0..5 from edges[:,:,1]
+    v_drawn = edges[:N_BOX, :, 1]   # (5,6)
+
     return h_drawn, v_drawn
+
 
 def _box_edge_counts(h_drawn: np.ndarray, v_drawn: np.ndarray) -> np.ndarray:
     """
-    For each box (r,c), count how many of its 4 edges are drawn.
-    h_drawn: shape = (n_box+1, n_box)
-    v_drawn: shape = (n_box, n_box+1)
-    Returns: counts shape (n_box, n_box)
+    For each box (r,c) in 0..4 x 0..4, count how many of its 4 edges are drawn.
+    h_drawn: (6,5) top/bottom edges
+    v_drawn: (5,6) left/right edges
+    Returns: counts shape (5,5)
     """
-    n_box = h_drawn.shape[1]  # since h_drawn is (n_box+1, n_box)
-    counts = np.zeros((n_box, n_box), dtype=int)
-    for r in range(n_box):
-        for c in range(n_box):
+    counts = np.zeros((N_BOX, N_BOX), dtype=int)
+    for r in range(N_BOX):
+        for c in range(N_BOX):
             cnt = 0
-            if h_drawn[r, c]:     cnt += 1  # top
-            if h_drawn[r+1, c]:   cnt += 1  # bottom
-            if v_drawn[r, c]:     cnt += 1  # left
-            if v_drawn[r, c+1]:   cnt += 1  # right
+            if h_drawn[r,   c]: cnt += 1  # top
+            if h_drawn[r+1, c]: cnt += 1  # bottom
+            if v_drawn[r, c]:   cnt += 1  # left
+            if v_drawn[r, c+1]: cnt += 1  # right
             counts[r, c] = cnt
     return counts
 
-def _edge_is_undrawn(h_drawn, v_drawn, edge):
-    ori, r, c = edge  # ori: 0=H, 1=V (Env convention)
-    if ori == 0:
+
+def _edge_is_undrawn(h_drawn, v_drawn, edge: Tuple[int,int,int]) -> bool:
+    et, r, c = edge
+    if et == 0:
+        # horizontal: r in [0..5], c in [0..4]
         return not h_drawn[r, c]
     else:
+        # vertical: r in [0..4], c in [0..5]
         return not v_drawn[r, c]
 
 
-# ---------- Safe-move detection ----------
+# ---------- Safe / Capture moves ----------
 
 def list_safe_moves(observation: Dict[str, np.ndarray]) -> List[Tuple[int,int,int]]:
     """
-    Safe move = 이 수를 두었을 때
-      - 어떤 박스도 3변(=count 2 -> 3)이 되지 않고
-      - 어떤 박스도 완성(=count 3 -> 4)되지 않는 수.
-    즉, 인접 박스의 현재 edge-count가 모두 {0,1}인 엣지만 안전수로 인정.
+    Safe move = placing this edge does NOT create a 3-edge box (i.e., no adjacent box goes from count<=1 to 2 or more?).
+    Classic Dots&Boxes 'safe' commonly means: it doesn't raise any adjacent box to 3 edges and doesn't complete a box.
+    Equivalently: all adjacent boxes currently have counts in {0,1}.
     """
     h_drawn, v_drawn = _edges_drawn_from_obs(observation)
-    n_box = h_drawn.shape[1]
     counts = _box_edge_counts(h_drawn, v_drawn)
 
-    safe = []
+    safe: List[Tuple[int,int,int]] = []
 
-    # Horizontal edges
-    for r in range(n_box + 1):
-        for c in range(n_box):
+    # Horizontal candidates
+    for r in range(N_PT):
+        for c in range(N_BOX):
             if not h_drawn[r, c]:
-                # 인접 박스: (r-1,c) [위], (r,c) [아래]
                 adj = []
-                if 0 <= r - 1 < n_box: adj.append(counts[r-1, c])
-                if 0 <= r     < n_box: adj.append(counts[r,   c])
-
-                # 어떤 인접 박스라도 count >= 2 이면 unsafe
+                if 0 <= r-1 < N_BOX: adj.append(counts[r-1, c])  # box above
+                if 0 <= r   < N_BOX: adj.append(counts[r,   c])  # box below
                 if all(cnt <= 1 for cnt in adj):
                     safe.append((0, r, c))
 
-    # Vertical edges
-    for r in range(n_box):
-        for c in range(n_box + 1):
+    # Vertical candidates
+    for r in range(N_BOX):
+        for c in range(N_PT):
             if not v_drawn[r, c]:
-                # 인접 박스: (r,c-1) [왼], (r,c) [오]
                 adj = []
-                if 0 <= c - 1 < n_box: adj.append(counts[r, c-1])
-                if 0 <= c     < n_box: adj.append(counts[r, c])
-
+                if 0 <= c-1 < N_BOX: adj.append(counts[r, c-1])  # left box
+                if 0 <= c   < N_BOX: adj.append(counts[r, c])    # right box
                 if all(cnt <= 1 for cnt in adj):
                     safe.append((1, r, c))
 
     return safe
 
+
 def list_capture_moves(observation: Dict[str, np.ndarray]) -> List[Tuple[int,int,int]]:
     """
-    Capture move = 이 수를 두면 인접 박스 중 적어도 하나가 완성됨(count 3 -> 4).
-    즉, 인접 박스의 현재 edge-count가 3인 엣지를 수집.
+    Capture move = this edge completes at least one adjacent box (count 3 -> 4).
     """
     h_drawn, v_drawn = _edges_drawn_from_obs(observation)
-    n_box = h_drawn.shape[1]
     counts = _box_edge_counts(h_drawn, v_drawn)
 
     caps: List[Tuple[int,int,int]] = []
 
-    # Horizontal edges
-    for r in range(n_box + 1):
-        for c in range(n_box):
+    # Horizontal
+    for r in range(N_PT):
+        for c in range(N_BOX):
             if not h_drawn[r, c]:
                 adj = []
-                if 0 <= r - 1 < n_box: adj.append(counts[r-1, c])
-                if 0 <= r     < n_box: adj.append(counts[r,   c])
+                if 0 <= r-1 < N_BOX: adj.append(counts[r-1, c])
+                if 0 <= r   < N_BOX: adj.append(counts[r,   c])
                 if any(cnt == 3 for cnt in adj):
                     caps.append((0, r, c))
 
-    # Vertical edges
-    for r in range(n_box):
-        for c in range(n_box + 1):
+    # Vertical
+    for r in range(N_BOX):
+        for c in range(N_PT):
             if not v_drawn[r, c]:
                 adj = []
-                if 0 <= c - 1 < n_box: adj.append(counts[r, c-1])
-                if 0 <= c     < n_box: adj.append(counts[r, c])
+                if 0 <= c-1 < N_BOX: adj.append(counts[r, c-1])
+                if 0 <= c   < N_BOX: adj.append(counts[r, c])
                 if any(cnt == 3 for cnt in adj):
                     caps.append((1, r, c))
 
     return caps
 
 
-
-
 # ---------- Component (Chain/Loop) decomposition ----------
 
-# Represent a box by its (r,c) in [0..n_box-1]x[0..n_box-1].
-# We'll build a graph where nodes are boxes; we connect two adjacent boxes if their shared edge is UNDRAWN.
-# Boundary UNDRAWN edges connect the box to an implicit OUTSIDE node, which we denote by None.
+# Represent a box by (r,c) in [0..4]x[0..4].
+# Build a graph where nodes are boxes; connect two boxes if their shared edge is UNDRAWN.
+# Boundary UNDRAWN edges connect the box to an implicit OUTSIDE node = None.
 
-def _adjacent_boxes_and_edges(n_box: int, h_drawn, v_drawn):
+def _adjacent_boxes_and_edges(h_drawn: np.ndarray, v_drawn: np.ndarray):
     """
-    Build adjacency for UNDRAWN shared edges.
+    Build adjacency for UNDRAWN shared/boundary edges.
     Returns:
         adj: dict[(r,c)] -> set of neighbors (including None for outside)
-        edge_between: dict[((u),(v))] -> list of edge tuples (ori,r,c) that connect them (usually length 1)
+        edge_between: dict[((u),(v))] -> list of (edge_type, r, c) that connect them
     """
     adj: Dict[Tuple[int,int], set] = {}
     edge_between: Dict[Tuple[Optional[Tuple[int,int]], Optional[Tuple[int,int]]], List[Tuple[int,int,int]]] = {}
@@ -145,29 +167,27 @@ def _adjacent_boxes_and_edges(n_box: int, h_drawn, v_drawn):
         edge_between.setdefault(key, []).append(edge)
 
     # init nodes
-    for r in range(n_box):
-        for c in range(n_box):
+    for r in range(N_BOX):
+        for c in range(N_BOX):
             adj[(r,c)] = set()
 
-    # internal shared edges
-    for r in range(n_box):
-        for c in range(n_box):
-            # Right neighbor share vertical edge v_drawn[r, c+1]
-            if c+1 < n_box and not v_drawn[r, c+1]:
-                a = (r, c)
-                b = (r, c+1)
-                edge = (1, r, c+1)  # vertical (r, c+1)
+    # internal UNDRAWN shared edges
+    for r in range(N_BOX):
+        for c in range(N_BOX):
+            # Right neighbor: shared vertical v_drawn[r, c+1]
+            if c+1 < N_BOX and not v_drawn[r, c+1]:
+                a, b = (r, c), (r, c+1)
+                edge = (1, r, c+1)  # vertical
                 add_edge(a, b, edge)
-            # Bottom neighbor share horizontal edge h_drawn[r+1, c]
-            if r+1 < n_box and not h_drawn[r+1, c]:
-                a = (r, c)
-                b = (r+1, c)
-                edge = (0, r+1, c)  # horizontal (r+1, c)
+            # Bottom neighbor: shared horizontal h_drawn[r+1, c]
+            if r+1 < N_BOX and not h_drawn[r+1, c]:
+                a, b = (r, c), (r+1, c)
+                edge = (0, r+1, c)  # horizontal
                 add_edge(a, b, edge)
 
-    # boundary UNDRAWN edges connect to OUTSIDE None
-    for r in range(n_box):
-        for c in range(n_box):
+    # boundary UNDRAWN edges connect to outside None
+    for r in range(N_BOX):
+        for c in range(N_BOX):
             # top boundary
             if not h_drawn[r, c]:
                 add_edge((r, c), None, (0, r, c))
@@ -183,38 +203,30 @@ def _adjacent_boxes_and_edges(n_box: int, h_drawn, v_drawn):
 
     return adj, edge_between
 
+
 def decompose_components(observation: Dict[str, np.ndarray]):
     """
-    Decompose the current UNDRAWN-edge structure into components.
-    Returns a list of components:
-      {
-        "type": "chain" or "loop",
-        "boxes": set of (r,c),
-        "length": int,   # number of boxes in component
-        "open_edges_to_outside": list of (ori,r,c),  # edges that connect to outside (for chains)
-        "internal_undrawn_edges": list of (ori,r,c), # undrawn edges strictly between boxes (for loops and chains)
-      }
+    Decompose UNDRAWN-edge regions into components of boxes.
+    A component is a chain if it touches outside; otherwise a loop (all internal degree 2).
     """
     h_drawn, v_drawn = _edges_drawn_from_obs(observation)
-    n_box = h_drawn.shape[1]
-
-    adj, edge_between = _adjacent_boxes_and_edges(n_box, h_drawn, v_drawn)
+    adj, edge_between = _adjacent_boxes_and_edges(h_drawn, v_drawn)
 
     visited = set()
     components = []
 
-    # gather all boxes that are part of any UNDRAWN-edge adjacency (degree>0)
-    candidates = [b for b, neigh in adj.items() if b is not None and len(neigh) > 0]
+    # boxes that participate (degree>0)
+    candidates = [b for b, nb in adj.items() if b is not None and len(nb) > 0]
 
     for start in candidates:
         if start in visited:
             continue
-        # BFS over boxes only; track outside presence
+
         q = [start]
         visited.add(start)
         comp_boxes = {start}
         touches_outside = False
-        degrees_inside = {}  # degree excluding outside
+        degrees_inside: Dict[Tuple[int,int], int] = {}
         inside_edges = set()
         open_to_outside_edges = set()
 
@@ -228,10 +240,8 @@ def decompose_components(observation: Dict[str, np.ndarray]):
                     for e in edges_uv:
                         open_to_outside_edges.add(e)
                 else:
-                    # internal neighbor
                     for e in edges_uv:
                         inside_edges.add(e)
-                    # accumulate degree (inside only)
                     degrees_inside[u] = degrees_inside.get(u, 0) + 1
                     degrees_inside[v] = degrees_inside.get(v, 0) + 1
                     if v not in visited:
@@ -243,13 +253,11 @@ def decompose_components(observation: Dict[str, np.ndarray]):
             continue
 
         length = len(comp_boxes)
-
         if touches_outside:
             ctype = "chain"
         else:
-            # in a loop, every box has degree 2 internally
             all_deg_two = all(degrees_inside.get(b, 0) == 2 for b in comp_boxes)
-            ctype = "loop" if all_deg_two else "chain"  # fallback just in case
+            ctype = "loop" if all_deg_two else "chain"
 
         components.append({
             "type": ctype,
@@ -259,9 +267,7 @@ def decompose_components(observation: Dict[str, np.ndarray]):
             "internal_undrawn_edges": list(inside_edges),
         })
 
-    # Sort components by a stable rule (e.g., by length asc, loop before chain for same length)
-    components.sort(key=lambda x: (x["length"], 0 if x["type"]=="loop" else 1))
-
+    components.sort(key=lambda x: (x["length"], 0 if x["type"] == "loop" else 1))
     return components
 
 
@@ -271,18 +277,19 @@ def controlled_value(components: List[Dict]) -> int:
     """Compute Controlled Value (CV) for the controller."""
     sum_chains = sum(c["length"] - 2 for c in components if c["type"] == "chain")
     sum_loops  = sum(c["length"] - 4 for c in components if c["type"] == "loop")
-    tb = 4 if any(c["type"]=="chain" for c in components) else (8 if any(c["type"]=="loop" for c in components) else 0)
+    tb = 4 if any(c["type"] == "chain" for c in components) else (8 if any(c["type"] == "loop") else 0)
     return (sum_chains + sum_loops) - tb
+
 
 def choose_endgame_opening(components: List[Dict]) -> int:
     """
-    Decide which component to OPEN (index in components), using standard rules:
+    Standard opening rules:
     - If CV >= 2: open the SHORTEST chain; if none, the shortest loop.
-    - Else (CV <= 1): open a 3-chain if exists; else the shortest loop; else the shortest chain.
+    - Else: open a 3-chain if exists; else shortest loop; else shortest chain.
     """
     cv = controlled_value(components)
-    chains = [i for i,c in enumerate(components) if c["type"]=="chain"]
-    loops  = [i for i,c in enumerate(components) if c["type"]=="loop"]
+    chains = [i for i, c in enumerate(components) if c["type"] == "chain"]
+    loops  = [i for i, c in enumerate(components) if c["type"] == "loop"]
 
     if cv >= 2:
         if chains:
@@ -298,75 +305,74 @@ def choose_endgame_opening(components: List[Dict]) -> int:
         elif chains:
             return min(chains, key=lambda i: components[i]["length"])
         else:
-            raise RuntimeError("No components found to open.")
+            raise RuntimeError("No components to open.")
 
 
-# ---------- Translate a chosen component into a concrete (ori,r,c) move ----------
+# ---------- Opening edge selection ----------
 
-def pick_opening_edge_for_component(observation: Dict[str, np.ndarray], component: Dict) -> Tuple[int,int,int]:
+def pick_opening_edge_for_component(component: Dict) -> Tuple[int,int,int]:
     """
-    For a chain: pick any open edge to OUTSIDE (end-edge). Prefer one that's valid according to action mask externally.
-    For a loop: pick any internal UNDRAWN edge between two boxes.
+    For a chain: pick any edge that touches outside (end-cap).
+    For a loop: pick any undrawn internal edge to 'open' the loop.
     """
     if component["type"] == "chain":
-        # Prefer outside edges (end caps)
-        if not component["open_edges_to_outside"]:
-            # Rare fallback: if graph classified it as chain but no outside edges were recorded,
-            # just use any internal undrawn edge.
-            return component["internal_undrawn_edges"][0]
-        return component["open_edges_to_outside"][0]
+        if component["open_edges_to_outside"]:
+            return component["open_edges_to_outside"][0]
+        # Fallback: if misclassified, pick any internal
+        return component["internal_undrawn_edges"][0]
     else:  # loop
-        # Any internal undrawn edge will open the loop
         return component["internal_undrawn_edges"][0]
 
 
-# ---------- Policy that uses the endgame logic ----------
+# ---------- Policy ----------
 
 class EndgamePolicy:
-    def __init__(self, rng: random.Random | None = None):
+    def __init__(self, rng: Optional[random.Random] = None):
         self.rng = rng or random.Random()
 
     def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env) -> Tuple[int,int,int]:
-        mask = info["action_mask"]
+        mask = info["action_mask"]  # False=legal, True=illegal
 
-        # 0) 상대 실수 응징: 3변 칸이 있으면 먼저 채워서 캡처
+        # 0) Punish mistakes first: if any capture exists, take one.
         capture = list_capture_moves(observation)
         if capture:
-            cap_candidates = [(o,r,c) for (o,r,c) in capture if not mask[o, r, c]]
+            cap_candidates = [(o, r, c) for (o, r, c) in capture if not mask[o, r, c]]
             if cap_candidates:
                 return self.rng.choice(cap_candidates)
 
-        # 1) 엔드게임 전: 안전수 중 랜덤
+        # 1) Pre-endgame: prefer safe moves
         safe = list_safe_moves(observation)
         if safe:
-            candidates = [(o,r,c) for (o,r,c) in safe if not mask[o, r, c]]
+            candidates = [(o, r, c) for (o, r, c) in safe if not mask[o, r, c]]
             if candidates:
                 return self.rng.choice(candidates)
-            # 안전수가 전부 마스크된 희귀상황은 아래로 폴백
+            # Rare case: all safe moves masked -> fallthrough
 
-        # 2) 안전수 0 → 체인/루프 분해 + 최적 오프닝
+        # 2) Endgame: decompose into chains/loops and open optimally
         components = decompose_components(observation)
         if components:
             idx = choose_endgame_opening(components)
-            move = pick_opening_edge_for_component(observation, components[idx])
+            move = pick_opening_edge_for_component(components[idx])
             if not mask[move[0], move[1], move[2]]:
                 return move
-            # 같은 컴포넌트 내 다른 엣지들 폴백
+            # Fallback within the same component
             for e in (components[idx]["open_edges_to_outside"] + components[idx]["internal_undrawn_edges"]):
                 if not mask[e[0], e[1], e[2]]:
                     return e
 
         # 3) 최종 폴백: 남은 합법 수 중 랜덤
-        n = observation["box_owner"].shape[0]
         pool = []
-        for o in (0,1):
-            R = (n+1) if o==0 else n
-            C = n if o==0 else (n+1)
-            for r in range(R):
-                for c in range(C):
-                    if not mask[o, r, c]:
-                        pool.append((o,r,c))
-        if not pool:
-            raise RuntimeError("No available moves found (action mask fully blocked).")
-        return self.rng.choice(pool)
+        # Horizontal edges: (edge_type=0) r in [0..5], c in [0..4]
+        for r in range(N_PT):      # N_PT = 6
+            for c in range(N_BOX): # N_BOX = 5
+                if not mask[0, r, c]:
+                    pool.append((0, r, c))
+        # Vertical edges: (edge_type=1) r in [0..4], c in [0..5]
+        for r in range(N_BOX):
+            for c in range(N_PT):
+                if not mask[1, r, c]:
+                    pool.append((1, r, c))
 
+        if not pool:
+            raise RuntimeError("No available moves (action mask fully blocked).")
+        return self.rng.choice(pool)
