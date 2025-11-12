@@ -2,7 +2,9 @@ from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from .SearchEngine import BaseSearchEngine
 from Util.DnB_Engine_Util import *
-
+import torch
+import torch.nn as nn
+import numpy as np
 
 Action = List[int]
 
@@ -50,25 +52,55 @@ class AB_TT_Search(BaseSearchEngine):
         self.evaluate = None
         self.move_ordering = lambda x: x
         self.depth = None
-
+        self.use_iterative_deepening = False
+        self.deterministic = False
+        self.k = 5
+        self.T = 0.01
 
 
     def search(self, eng, state):
-
+        
         assert self.evaluate != None
         assert self.depth != None
 
         if self.move_ordering == None:
             self.move_ordering = lambda x: x
 
-        return self.alpha_beta(eng=eng, 
-                               depth=self.depth,
+        actions = None
+        if self.use_iterative_deepening:
+            actions, vals = self.iterative_deepening(eng, state)
+        else :
+            actions, vals = self.alpha_beta(eng=eng, 
+                                depth=self.depth,
+                                root_player=state['cur_player'],
+                                alpha= -10**9,
+                                beta= 10**9
+                                )
+        # print('actions: ', actions)
+        # print('vals: ', vals)
+
+        if self.deterministic == True:
+            idx = 0
+        else:
+            v = torch.tensor(vals[:len(actions)], dtype=torch.float32)
+            v = v / self.T
+            probs = torch.softmax(v, dim=0).numpy()
+            idx = np.random.choice(len(actions), p=probs)
+
+        return actions[idx], vals[idx]
+
+    def iterative_deepening(self, eng, state):
+        best_action = None
+        for d in range(self.depth + 1):
+            best_actions, best_vals = self.alpha_beta(eng=eng, 
+                               depth=d,
                                root_player=state['cur_player'],
                                alpha= -10**9,
                                beta= 10**9
                                )
-
-    def alpha_beta(self,
+        return best_actions, best_vals
+    
+    def alpha_beta(self,    
                eng: DotsAndBoxesEngine,
                depth: int,
                root_player: int,
@@ -85,7 +117,7 @@ class AB_TT_Search(BaseSearchEngine):
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
-            return None, sign * self.evaluate(eng)
+            return None, [sign * self.evaluate(eng)]
 
 
         # 현재 노드가 '최대화'인지 여부
@@ -94,10 +126,10 @@ class AB_TT_Search(BaseSearchEngine):
         
         ent = self.tt.probe(eng=eng, maximizing=maximizing, depth=depth)
         if ent != None:
-            return ent.best_action, ent.value
+            return [ent.best_action], [ent.value]
 
-        best_val = -10**9 if maximizing else 10**9
-        best_action: Optional[Action] = None
+        best_vals:List[float] = [-10**9 if maximizing else 10**9 for i in range(self.k)]
+        best_actions: List[Action] = [None for i in range(self.k)]
 
         actions = get_legal_actions(eng.get_state()['edges'])
         
@@ -117,6 +149,9 @@ class AB_TT_Search(BaseSearchEngine):
         #             print("=======")
         #         exit()
 
+        pv_action = self.tt.pv_move(eng, maximizing)
+        if pv_action != None:
+            actions.insert(0, pv_action)
 
         for a in self.move_ordering(actions):
 
@@ -124,7 +159,10 @@ class AB_TT_Search(BaseSearchEngine):
             player_before = eng.cur_player
             out = eng.apply_action(a)
 
-            _, val = self.alpha_beta(eng, depth - 1, root_player, alpha, beta)
+            _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha, beta)
+
+            val = vals[0]
+
             immediate_val = len(out["completed_boxes"])
             sign = 1 if (root_player == player_before) else -1
             val = sign * immediate_val + val
@@ -134,20 +172,18 @@ class AB_TT_Search(BaseSearchEngine):
 
             # 갱신
             if maximizing:
-                if val > best_val:
-                    best_action, best_val = a, val
-                alpha = max(alpha, best_val)
+                self._update_topk(best_actions=best_actions, best_vals=best_vals, a=a, val=val, k=self.k, maximizing=maximizing)
+                alpha = max(alpha, best_vals[0])
             else:
-                if val < best_val:
-                    best_action, best_val = a, val
-                beta = min(beta, best_val)
+                self._update_topk(best_actions=best_actions, best_vals=best_vals, a=a, val=val, k=self.k, maximizing=maximizing)
+                beta = min(beta, best_vals[0])
 
             if beta <= alpha:
                 break  # alpha-beta cut
-            
-        self.tt.store(eng, maximizing=maximizing, depth=depth, value=best_val, best_action=best_action)
         
-        return best_action, best_val
+        self.tt.store(eng, maximizing=maximizing, depth=depth, value=best_vals[0], best_action=best_actions[0])
+        
+        return best_actions, best_vals
      
     def configure(self, **kwargs):
         # print(self._tt_reset_keyss)
@@ -163,3 +199,34 @@ class AB_TT_Search(BaseSearchEngine):
     
     def clear_tt(self):
         self.tt = TranspositionTable()
+
+    def _update_topk(self, best_actions, best_vals, a, val, k, maximizing=True):
+        # 2-1) 이미 존재하면, 더 좋을 때만 갱신(교체)하고 위치 재정렬
+        for idx, (aa, vv) in enumerate(zip(best_actions, best_vals)):
+            if aa == a:
+                # 더 나쁜 결과면 무시
+                if maximizing and val <= vv: 
+                    return
+                if (not maximizing) and val >= vv:
+                    return
+                # 더 좋으면 교체 후 위치 재정렬
+                best_actions.pop(idx); best_vals.pop(idx)
+                break
+
+        # 2-2) 정렬 위치 찾아 삽입 (수동 구현)
+        n = len(best_vals)
+        inserted = False
+        for i in range(n):
+            if (maximizing and val > best_vals[i]) or ((not maximizing) and val < best_vals[i]):
+                best_actions.insert(i, a)
+                best_vals.insert(i, val)
+                inserted = True
+                break
+        if not inserted:
+            best_actions.append(a)
+            best_vals.append(val)
+
+        # 2-3) K 초과 시 꼬리 자르기
+        if len(best_vals) > k:
+            best_actions.pop()
+            best_vals.pop()

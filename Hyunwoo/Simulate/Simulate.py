@@ -47,27 +47,22 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
     episode_over = False
     total_reward = 0
 
-    p0_time, p1_time = 0, 0
     turn_count = [0, 0]
-
+    time_spent = [0, 0]
     while not episode_over:
-        if observation['cur_player'] == 0:
-            policy = p0_policy
-        else:
-            policy = p1_policy
+        cur_player =  observation['cur_player']
+        policy = p0_policy if cur_player == 0 else p1_policy
 
-        start = time.time()
-
+        t0 = time.perf_counter()
         action = policy.get_action(observation, info, env)
+        t1 = time.perf_counter()
 
-        end = time.time()
-
-        if observation['cur_player'] == 0:
+        if cur_player == 0:
             turn_count[0] += 1
-            p0_time += (end - start)
+            time_spent[0] += (t1 - t0)
         else:
             turn_count[1] += 1
-            p1_time += (end - start)
+            time_spent[1] += (t1 - t0)
 
         record.append(convert_action_to_submit_format(action))
 
@@ -95,8 +90,8 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
 
     env.close()
     print(f'turn_count: {turn_count}')
-    print(f'p0_time: {p0_time}, p1_time {p1_time}')
-    return record, info, total_reward
+    print(f'p0_time: {time_spent[0]}, p1_time {time_spent[1]}')
+    return record, info, total_reward, time_spent
 
 
 def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, n_episodes: int, verbose=False):
@@ -115,7 +110,8 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
     results = {
         'record': [],
         'info': [],
-        'total_reward': []
+        'total_reward': [],
+        'time_spent': []
     }
 
     first_plaer = p0_policy
@@ -125,18 +121,20 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
     for episode in tqdm.tqdm(range(n_episodes)):
         if verbose:
             print(f"=== Episode {episode + 1} ===")
-        record, info, total_reward = SimulateEpisode(env, first_plaer, second_player, verbose)
+        record, info, total_reward, time_spent = SimulateEpisode(env, first_plaer, second_player, verbose)
 
         results['record'].append(record)
         results['info'].append(info)
         results['total_reward'].append(total_reward)
         results['info'][-1]['first_player'] = 0
+        results['time_spent'].append(time_spent)
 
         if first_plaer == p1_policy:
             results['total_reward'][-1] *= -1  # 후공 입장에서의 보상으로 변환
             results['info'][-1]['winner'] = 1 - results['info'][-1]['winner']  # 승자 정보도 변환
             results['info'][-1]['first_player'] = 1
             results['info'][-1]['score'] = results['info'][-1]['score'][::-1]
+            results['time_spent'][-1] = results['time_spent'][-1][::-1]
 
         first_plaer, second_player = second_player, first_plaer  # 다음 에피소드에서 선후공 교체
         
@@ -200,25 +198,39 @@ def save_simulation_results(results, run_name: str):
 
 if __name__ == "__main__":
 
-    run_name = 'Random_Policy_vs_AlphaBeta_v1_d2'
+    run_name = 'AB_TT_Depth_2~10_exp_vs_AB_TT_Depth_4'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
     
 
-    alphabeta_search_TT_d4 = AB_TT_Search()
-    alphabeta_search_TT_d4.configure(evaluate=evaluate_rel, move_ordering=None, depth=3)
-    p0_policy = Search_Policy(SearchEngine=alphabeta_search_TT_d4)
-    # p1_policy = RandomPolicy()
 
     # alphabeta_search_d4 = AlphaBetaSearch()
     # alphabeta_search_d4.configure(evaluate=evaluate, move_ordering=None, depth=3)
     # p1_policy = Search_Policy(SearchEngine=alphabeta_search_d4)
-    p1_policy = RandomPolicy()
 
+    config_p0 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':None,
+        'depth': ExponentialSchedulerInt(15, 2, 45, 10),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    }
+    p0_policy = Search_Policy(AB_TT_Search(), config_p0)
+    # p1_policy = RandomPolicy()
+
+    config_p1 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':None,
+        'depth': 4,
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    }
+    
+    p1_policy = Search_Policy(SearchEngine=AB_TT_Search(), config_schedule=config_p1)
 
     results = SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
     env.render_mode = 'rgb_array'
 
-    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=20, verbose=False)
     save_simulation_results(results, run_name=run_name)

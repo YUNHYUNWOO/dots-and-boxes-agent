@@ -4,6 +4,8 @@ from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from Util.DnB_Engine_Util import *
 from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntry
+from .Scheduler import *
+import numpy as np
 
 Action = List[int]
 
@@ -67,7 +69,7 @@ def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maxi
         sign = 1 if (root_player == player_before) else -1
         
         eng.undo_action(a, out["completed_boxes"], player_before)
-        
+
         if ent is not None:
             scored.append((sign * immediate_val + ent.val, a))
         else:
@@ -76,15 +78,25 @@ def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maxi
     scored.sort(reverse=maximizing)
     return [a for _, a in scored]
 
-
-
 class Search_Policy(BasePolicy):
-    def __init__(self, SearchEngine:BaseSearchEngine):
+    def __init__(self, SearchEngine:BaseSearchEngine, config_schedule: Dict):
         ## 필요한거 있으면 추가
         self.eng = DotsAndBoxesEngine()
         self.SearchEngine = SearchEngine
+        self.config_schedule = config_schedule
 
+    def get_config(self, t):
+        config = {}
+        for k, v in self.config_schedule.items():
+            if isinstance(v, BaseScheduler):
+                # BaseScheduler의 하위 클래스면 .value(t)
+                config[k] = v.value(t)
+            else:
+                # 상수면 그대로 사용
+                config[k] = v
 
+        return config
+    
     def get_action(self, observation, info, env):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
@@ -96,8 +108,11 @@ class Search_Policy(BasePolicy):
             'cur_player': observation['cur_player'],
             'score': observation['score']
         }
+        t = 60 - np.sum(info['action_mask'] == False)
+        config = self.get_config(t)
+        self.SearchEngine.configure(**config)
         self.eng.set_state(state)
-        
+
         best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state)
         
         return best_action
