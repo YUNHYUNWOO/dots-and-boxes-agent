@@ -9,7 +9,6 @@ from gymnasium import spaces
 from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
 
-
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
 def interpret_edges(edges) -> list[tuple[int,int]]:
     def map_func(e):

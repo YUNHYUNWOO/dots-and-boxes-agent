@@ -178,7 +178,7 @@ def save_simulation_results(results, run_name: str):
     
     이거보단 나은 저장방식이 있을 것 같은데 Todo에 부치겠습니다.
     """
-    
+
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     os.makedirs(save_path, exist_ok=True)
 
@@ -198,39 +198,72 @@ def save_simulation_results(results, run_name: str):
 
 if __name__ == "__main__":
 
-    run_name = 'AB_TT_Depth_2~10_exp_vs_AB_TT_Depth_4'
+    run_name = 'Mixed_AB_d2~8_t=20_vs_AB_d3'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
-    
 
 
     # alphabeta_search_d4 = AlphaBetaSearch()
     # alphabeta_search_d4.configure(evaluate=evaluate, move_ordering=None, depth=3)
     # p1_policy = Search_Policy(SearchEngine=alphabeta_search_d4)
 
-    config_p0 = {
-        'evaluate':evaluate_rel,
-        'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2, 45, 10),
-        'use_iterative_deepening': True,
-        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
-    }
-    p0_policy = Search_Policy(AB_TT_Search(), config_p0)
-    # p1_policy = RandomPolicy()
 
-    config_p1 = {
-        'evaluate':evaluate_rel,
-        'move_ordering':None,
-        'depth': 4,
-        'use_iterative_deepening': True,
-        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
-    }
+    # p0_policy_part1 = OpeningPolicy()
+    # config_p0_part2 = {
+    #     'evaluate':evaluate_rel,
+    #     'move_ordering':None,
+    #     'depth': ExponentialSchedulerInt(15, 2, 45, 10),
+    #     'use_iterative_deepening': True,
+    #     'deterministic': True
+    # }
+    # p0_policy_part2 = Search_Policy(AB_TT_Search(), config_p0_part2)
     
-    p1_policy = Search_Policy(SearchEngine=AB_TT_Search(), config_schedule=config_p1)
+    # policy_scheduler = PiecewiseConstantScheduler([(0, 20, p0_policy_part1), (20, 60, p0_policy_part2)])
+    # p0_policy = MixedPolicy(policy_scheduler)
 
+
+    # p0_policy = OpeningPolicy()
+
+    # # BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    # config_p1 = {
+    #     'evaluate':evaluate_rel,
+    #     'move_ordering':None,
+    #     'depth': 2,
+    #     'use_iterative_deepening': True,
+    #     'deterministic': True
+    # }
+    # p1_policy = Search_Policy(AB_TT_Search(), config_p1)
+
+    p0_policy_part1 = OpeningPolicy()
+    config_p0_part2 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':None,
+        'depth': ExponentialSchedulerInt(15, 2, 45, 8),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    }
+    # policy_scheduler = PiecewiseConstantScheduler([(0, 35, p0_policy_part1), (35, 60, p0_policy_part2)])
+    # p0_policy = MixedPolicy(policy_scheduler)
+    p0_policy_part2 = Search_Policy(AB_TT_Search(), config_p0_part2)
+    policy_scheduler = PiecewiseConstantScheduler([(0, 20, p0_policy_part1), (20, 60, p0_policy_part2)])
+    p0_policy = MixedPolicy(policy_scheduler)
+
+    # config_p1 = {
+    #     'evaluate':evaluate_rel,
+    #     'move_ordering':None,
+    #     'depth': 3,
+    #     'use_iterative_deepening': True,
+    #     'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    # }
+    # p1_policy = Search_Policy(AB_TT_Search(), config_p1)
+
+    
+    # p1_policy = Search_Policy(SearchEngine=AB_TT_Search(), config_schedule=config_p1)
+
+    p1_policy = PlayablePolicy()
+    
     results = SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
-    env.render_mode = 'rgb_array'
-
-    results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=20, verbose=False)
-    save_simulation_results(results, run_name=run_name)
+    # env.render_mode = 'rgb_array'
+    # results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
+    # save_simulation_results(results, run_name=run_name)

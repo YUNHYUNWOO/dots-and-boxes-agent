@@ -1,5 +1,5 @@
 import math
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Any
 
 class BaseScheduler:
     """모든 스케줄러의 베이스. __call__(t) == value(t)."""
@@ -199,6 +199,50 @@ class PiecewiseScheduler(BaseScheduler):
             ],
         }
 
+class PiecewiseConstantScheduler(BaseScheduler):
+    """
+    시간 구간을 지정해서, 구간마다 미리 정해둔 value(객체)를 반환하는 스케줄러.
+
+    segments: List[(t_start, t_end, value)]
+        - t_start <= t < t_end 인 구간에 대해 value 를 리턴
+    default_value:
+        - 어느 구간에도 속하지 않을 때 사용할 값 (없으면 에러)
+    """
+    def __init__(
+        self,
+        segments: List[Tuple[float, float, Any]],
+        default_value: Optional[Any] = None,
+    ):
+        # 구간 정렬 및 검증
+        self.segments = sorted(segments, key=lambda x: x[0])
+        self.default_value = default_value
+
+        for (s, e, _) in self.segments:
+            if s >= e:
+                raise ValueError(f"잘못된 구간: start={s}, end={e}")
+
+    def value(self, t: float) -> Any:
+        # t가 속한 구간을 찾아서 해당 value를 리턴
+        for (start, end, v) in self.segments:
+            if start <= t < end:
+                return v
+
+        # 아무 구간에도 안 걸리면 default 사용 (없으면 에러)
+        if self.default_value is not None:
+            return self.default_value
+
+        raise ValueError(f"t={t} 에 해당하는 구간이 없고, default_value도 없음.")
+
+    def get_config(self) -> Dict:
+        return {
+            "type": "PiecewiseConstantScheduler",
+            "segments": [
+                {"start": s, "end": e, "value": v}
+                for (s, e, v) in self.segments
+            ],
+            "default_value": self.default_value,
+        }
+    
 
 class WarmupHoldDecayScheduler(BaseScheduler):
     """

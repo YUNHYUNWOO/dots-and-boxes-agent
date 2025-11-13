@@ -48,6 +48,7 @@ def evaluate(eng: DotsAndBoxesEngine, root_player: int) -> int:
     moves = get_legal_actions(eng.get_state()['edges'])
     bad_moves = sum(1 for m in moves if _makes_third_edge(eng, m))
     # bad_moves가 적을수록 좋다
+
     return score_term - bad_moves
 
 def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
@@ -56,6 +57,29 @@ def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
     # bad_moves가 적을수록 좋다
     bad_moves /= 100
     return -bad_moves
+
+# Todo Chain analysis
+# eng.get_state()
+    # {
+    #     "edges": [self.h_bits, self.v_bits],
+    #     "cur_player": self.cur_player,
+    #     "score": self.score[:],
+    # }
+
+# 체인을 나눠
+# 체인에는 열린 체인, 닫힌 체인
+# 루프
+# 이것들의 개수를 가지고, 보드가 얼마나 좋은지 벨류에 대한 판단을 만들면 되는거잖아.
+# 한번에 
+
+def evaluate_chain(eng: DotsAndBoxesEngine) -> int:
+
+    moves = get_legal_actions(eng.get_state()['edges'])
+    bad_moves = sum(1 for m in moves if _makes_third_edge(eng, m))
+    # bad_moves가 적을수록 좋다
+    bad_moves /= 100
+    return -bad_moves
+
 
 def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maximizing, root_player):
     scored = []
@@ -74,9 +98,11 @@ def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maxi
             scored.append((sign * immediate_val + ent.val, a))
         else:
             scored.append((-100, a))  # 기본값
+
     # Max node면 높은 값부터, Min node면 낮은 값부터
     scored.sort(reverse=maximizing)
     return [a for _, a in scored]
+
 
 class Search_Policy(BasePolicy):
     def __init__(self, SearchEngine:BaseSearchEngine, config_schedule: Dict):
@@ -110,13 +136,13 @@ class Search_Policy(BasePolicy):
         }
         t = 60 - np.sum(info['action_mask'] == False)
         config = self.get_config(t)
+
         self.SearchEngine.configure(**config)
         self.eng.set_state(state)
 
         best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state)
         
         return best_action
-    
 
 def main():
     AlphaBetaSearch = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=3)

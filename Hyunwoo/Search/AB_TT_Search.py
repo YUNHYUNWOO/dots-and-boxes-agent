@@ -5,6 +5,7 @@ from Util.DnB_Engine_Util import *
 import torch
 import torch.nn as nn
 import numpy as np
+from collections import OrderedDict
 
 Action = List[int]
 
@@ -15,14 +16,17 @@ class TTEntry:
         self.depth = depth          # 이 값이 유효한 최소 보장 깊이
         self.best_action = best_action
 
+
 class TranspositionTable:
     def __init__(self):
-        self._t = {}
+        self._t = OrderedDict()
+        self.capacity = 150000
+
 
     @staticmethod
     def key_from(eng: DotsAndBoxesEngine, maximizing: int):
         h, v = eng.h_bits, eng.v_bits
-        return (h, v, maximizing)
+        return (h << 33) | (v << 1) | (1 if maximizing else 0)
 
     def probe(self, eng, maximizing, depth) -> Optional[TTEntry]:
         k = self.key_from(eng, maximizing)
@@ -38,10 +42,16 @@ class TranspositionTable:
         if (prev is None) or (depth >= prev.depth):
             self._t[k] = TTEntry(value, depth, best_action)
 
+        self._t[k] = TTEntry(value, depth, best_action)
+        # 최근 사용으로 이동
+        self._t.move_to_end(k, last=True)
+        # 용량 초과 시 LRU부터 제거
+        if len(self._t) > self.capacity:
+            self._t.popitem(last=False)
+
     def pv_move(self, eng, maximizing) -> Optional[Tuple[int,int,int]]:
         ent = self._t.get(self.key_from(eng, maximizing))
         return None if ent is None else ent.best_action
-    
 
 
 class AB_TT_Search(BaseSearchEngine):
@@ -96,8 +106,8 @@ class AB_TT_Search(BaseSearchEngine):
                                depth=d,
                                root_player=state['cur_player'],
                                alpha= -10**9,
-                               beta= 10**9
-                               )
+                               beta= 10**9)
+            
         return best_actions, best_vals
     
     def alpha_beta(self,    
@@ -114,15 +124,14 @@ class AB_TT_Search(BaseSearchEngine):
         - root_player: 최상위 호출 시점의 플레이어(평가 기준)
         - 턴 결정은 eng.cur_player를 기준으로 자동 변환
         """
+
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
             return None, [sign * self.evaluate(eng)]
 
-
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)
-
         
         ent = self.tt.probe(eng=eng, maximizing=maximizing, depth=depth)
         if ent != None:

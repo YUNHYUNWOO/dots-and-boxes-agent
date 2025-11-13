@@ -117,7 +117,7 @@ class DotsAndBoxesEngine:
 
         self._set_edge(c, r, d)
 
-        completed = []
+        completed = [] 
 
         h1 = (self.h_bits >> h_index(0, 0)) & 1
         h2 = (self.h_bits >> h_index(0, 0 + 1)) & 1
