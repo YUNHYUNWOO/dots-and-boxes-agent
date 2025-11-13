@@ -147,4 +147,4 @@ class OpeningPolicy(BasePolicy):
 
     def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env) -> Tuple[int,int,int]:
         
-        return list(dots_and_boxes_policy(observation['edges']))
+        return list(dots_and_boxes_policy(observation['edges'])), None

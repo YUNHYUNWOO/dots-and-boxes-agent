@@ -22,7 +22,6 @@ class TranspositionTable:
         self._t = OrderedDict()
         self.capacity = 150000
 
-
     @staticmethod
     def key_from(eng: DotsAndBoxesEngine, maximizing: int):
         h, v = eng.h_bits, eng.v_bits
@@ -54,6 +53,9 @@ class TranspositionTable:
         return None if ent is None else ent.best_action
 
 
+def default_move_ordering(actions, eng, tt, depth, root_player):
+    return actions
+    
 class AB_TT_Search(BaseSearchEngine):
 
     def __init__(self):
@@ -67,14 +69,13 @@ class AB_TT_Search(BaseSearchEngine):
         self.k = 5
         self.T = 0.01
 
-
     def search(self, eng, state):
         
         assert self.evaluate != None
         assert self.depth != None
 
         if self.move_ordering == None:
-            self.move_ordering = lambda x: x
+            self.move_ordering = default_move_ordering
 
         actions = None
         if self.use_iterative_deepening:
@@ -162,7 +163,7 @@ class AB_TT_Search(BaseSearchEngine):
         if pv_action != None:
             actions.insert(0, pv_action)
 
-        for a in self.move_ordering(actions):
+        for a in self.move_ordering(actions, eng, self.tt, depth, root_player):
 
             # 적용
             player_before = eng.cur_player

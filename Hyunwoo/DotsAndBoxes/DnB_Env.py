@@ -9,38 +9,31 @@ from gymnasium import spaces
 from .DnB import DotsAndBoxes, get_render_desc, draw_board
 
 
+
 # DnB 환경의 상태, 행동을 DnB Env의 형태로 변환
-def interpret_edges(edges) -> list[tuple[int,int]]:
+def interpret_edges(h_edges, v_edges) -> list[tuple[int,int]]:
     def map_func(e):
         if e == None:
             return 0
         else:
             return 1
 
-    i_edges = [[map_func(e) for e in r] for r in edges]
+    n = max(len(h_edges[0]), len(v_edges[0]))
+    i_edges = [[[0 for _ in range(2)] for _ in range(n)] for _ in range(n)]
 
+    for i in range(n):
+        for j in range(n):
+            if j != n - 1: 
+                i_edges[j][i][0] = map_func(h_edges[i][j])
+            if i != n - 1:
+                i_edges[j][i][1] = map_func(v_edges[i][j])
+                
     return i_edges
-
-def interpret_box_owner(box_owner) -> list:
-    def map_func(box):
-        if box == 0:
-            return -1
-        elif box == None:
-            return 0
-        else :
-            return box 
-        
-    for r in range(len(box_owner)):
-        for c, e in enumerate(box_owner[r]):
-            if e == 0:
-                box_owner[r][c] = -1
-    i_box_owner = [[map_func(box) for box in r] for r in box_owner]
-    return i_box_owner
 
 
 def interpret_action(action) -> tuple[str, int, int]:
-    ori = 'H' if action[0] == 0 else 'V'
-    r, c = map(int, action[1:])
+    ori = 'H' if action[2] == 0 else 'V'
+    c, r = map(int, action[:2])
     return (ori, r, c)
 
 class DnBEnv(gym.Env):
@@ -52,16 +45,12 @@ class DnBEnv(gym.Env):
         self.window_size = 512 #The size of the Pygame window
 
         # Observation space 정의
-        # h_edges: 가로 선 6x5  (0: 없음, 1: 있음)
-        # v_edges: 세로 선 5x6  (0: 없음, 1: 있음)
-        # box_owner: 상자 소유자 5x5 (-1: 유저1, 0: 없음, 1: 유저2)]
+        # edges: [r, c, z(방향)] boolean 배열
         # cur_player: 현재 플레이어 (0: 유저1, 1: 유저2)
 
         self.observation_space = spaces.Dict(
             {
-                "h_edges": spaces.Box(0, 1, shape=(6,5), dtype=bool),
-                "v_edges": spaces.Box(0, 1, shape=(5,6), dtype=bool),
-                "box_owner": spaces.Box(-1, 1, shape=(5,5), dtype=int),
+                "edges": spaces.Box(0, 1, shape=(6,6,2), dtype=bool),
                 "cur_player": spaces.Discrete(2)
             }
         )
@@ -71,8 +60,8 @@ class DnBEnv(gym.Env):
         # edge_type: 0 (h_edge), 1 (v_edge)
         # row: 0~5 (h_edge), 0~4 (v_edge) 
         # col: 0~4 (h_edge), 0~5 (v_edge)
-        # 불가능한 행동은 action mask로 후에 처리
-        self.action_space = spaces.MultiDiscrete(nvec=[2,6,6], dtype=int)
+        # 불가능한 행동은 action mask로 후에 처리z
+        self.action_space = spaces.MultiDiscrete(nvec=[6,6,2], dtype=int)
         self.action_mask = None
 
         assert render_mode is None or render_mode in self.metadata["render_modes"]
@@ -94,10 +83,9 @@ class DnBEnv(gym.Env):
     def _get_obs(self) -> dict:
 
         obs = {
-            'h_edges': interpret_edges(self.DnB.h_edges),
-            'v_edges': interpret_edges(self.DnB.v_edges),
-            'box_owner': interpret_box_owner(self.DnB.box_owner),
-            'cur_player': self.DnB.current_player
+            'edges': interpret_edges(self.DnB.h_edges, self.DnB.v_edges),
+            'cur_player': self.DnB.current_player,
+            'score' : self.DnB.score,
         }
 
         return obs
@@ -107,8 +95,8 @@ class DnBEnv(gym.Env):
     def _get_info(self) -> dict:
         
         return {
-            'action_mask' : self.action_mask,
             'winner': self.DnB.winner(),
+            'action_mask' : self.action_mask,
             'score' : self.DnB.score,
         }
     
@@ -120,20 +108,18 @@ class DnBEnv(gym.Env):
         # 불가능한 테두리의 행동들을 마스킹한다.
         def get_init_action_mask(n_box) -> np.ndarray:
             # shape: (n_box+1, n_box+1)
-            r = np.arange(n_box + 1)[:, None]        # (R,1)
-            c = np.arange(n_box + 1)[None, :]        # (1,C)
+            r = np.arange(n_box + 1)[None, :]        # (R,1)
+            c = np.arange(n_box + 1)[:, None]        # (1,C)
 
-            mask = np.zeros((2, n_box + 1, n_box + 1), dtype=bool)
+            mask = np.zeros((n_box + 1, n_box + 1, 2), dtype=bool)
             # Horizontal mask: True only when c == n_box
             
-            mask[0] = (c == n_box)
+            mask[:,:,0] = (c == n_box)
             # Vertical mask: True only when r == n_box
-            mask[1] = (r == n_box)
+            mask[:,:,1] = (r == n_box)
             # Stack so that mask[0] = H, mask[1] = V
-            
             return mask
         self.action_mask = get_init_action_mask(self.n_box)
-
 
         observation = self._get_obs()
         info = self._get_info()
@@ -202,21 +188,32 @@ def main():
     action_mask = info['action_mask']
 
     print(f"Starting observation: {observation}")
-
+    #print(len(observation['edges']), len(observation['edges'][0]), len(observation['edges'][0][0]))
     episode_over = False
     total_reward = 0
 
     while not episode_over:
 
         action = env.action_space.sample()
-
         while action_mask[action[0], action[1], action[2]]:
             action = env.action_space.sample()
+        
         
         print('Number of Claimed Edges:', np.sum(action_mask == False))
 
         observation, reward, terminated, truncated, info = env.step(action)
+        # print(len(observation['edges']), len(observation['edges'][0]), len(observation['edges'][0][0]))
         action_mask = info['action_mask']
+
+        # print(action_mask[:,:,0].T)
+        # print(action_mask[:,:,1].T)
+
+        # for i in range(2):
+        #     for r in range(len(observation['edges'])):
+        #         for c in range(len(observation['edges'])):
+        #             print(observation['edges'][c][r][i], end = ' ')
+        #         print()
+        #     print('====')
 
         total_reward += reward
         episode_over = terminated or truncated

@@ -1,4 +1,4 @@
-from DotsAndBoxes import DotsAndBoxes, DnB_Env
+from DotsAndBoxes import DotsAndBoxes, DnBEnv
 from .BasePolicy import BasePolicy
 import pygame
 
@@ -9,7 +9,7 @@ class PlayablePolicy(BasePolicy):
         # print(self.policy_scheduler.get_config())
         return self.policy_scheduler.value(t)
     
-    def get_action(self, observation, info, env: DnB_Env):
+    def get_action(self, observation, info, env: DnBEnv):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
@@ -25,6 +25,6 @@ class PlayablePolicy(BasePolicy):
                         break
         d, r, c = e
         action = [c, r, 0 if d == 'H' else 1]
-        return action
+        return action, None
 
         

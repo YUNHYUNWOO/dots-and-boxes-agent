@@ -34,7 +34,7 @@ class RandomPolicy(BasePolicy):
         while action_mask[action[0], action[1], action[2]]:
             action = env.action_space.sample()
 
-        return action
+        return action, None
 
 
 class FixedOrderPolicy(BasePolicy):
@@ -59,4 +59,4 @@ class FixedOrderPolicy(BasePolicy):
 
         self.current_index = (self.current_index + 1) % len(self.action_order)
         
-        return action
+        return action, None

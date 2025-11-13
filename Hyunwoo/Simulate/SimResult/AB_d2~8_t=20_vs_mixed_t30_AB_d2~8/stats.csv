@@ -1,0 +1,2 @@
+n_episodes,n_p0_wins,n_p1_wins,p0_win_rate,p0_score_count,p0_score_mean,p0_score_std,p0_score_min,p0_score_25%,p0_score_50%,p0_score_75%,p0_score_max,p1_score_count,p1_score_mean,p1_score_std,p1_score_min,p1_score_25%,p1_score_50%,p1_score_75%,p1_score_max
+50,21,29,0.42,50.0,12.18,5.847343719282165,4.0,7.25,11.0,18.0,22.0,50.0,12.82,5.847343719282165,3.0,7.0,14.0,17.75,21.0

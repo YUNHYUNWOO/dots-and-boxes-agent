@@ -58,6 +58,7 @@ def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
     bad_moves /= 100
     return -bad_moves
 
+# ===============================================
 # Todo Chain analysis
 # eng.get_state()
     # {
@@ -65,12 +66,6 @@ def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
     #     "cur_player": self.cur_player,
     #     "score": self.score[:],
     # }
-
-# 체인을 나눠
-# 체인에는 열린 체인, 닫힌 체인
-# 루프
-# 이것들의 개수를 가지고, 보드가 얼마나 좋은지 벨류에 대한 판단을 만들면 되는거잖아.
-# 한번에 
 
 def evaluate_chain(eng: DotsAndBoxesEngine) -> int:
 
@@ -81,13 +76,15 @@ def evaluate_chain(eng: DotsAndBoxesEngine) -> int:
     return -bad_moves
 
 
-def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maximizing, root_player):
+## Move_Ordering
+def move_ordering(actions, eng: DotsAndBoxesEngine, tt: TranspositionTable, depth:int, root_player:int):
     scored = []
     for a in actions:
         out = eng.apply_action(a)
-        
+        maximizing = (eng.get_state()['cur_player'] == root_player)
+
         player_before = eng.cur_player
-        key = tt.key_from(eng, maximizing) + (tuple(a),)
+        key = tt.key_from(eng, maximizing)
         ent = tt._t.get(key)
         immediate_val = len(out["completed_boxes"])
         sign = 1 if (root_player == player_before) else -1
@@ -95,7 +92,7 @@ def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maxi
         eng.undo_action(a, out["completed_boxes"], player_before)
 
         if ent is not None:
-            scored.append((sign * immediate_val + ent.val, a))
+            scored.append((sign * immediate_val + ent.value, a))
         else:
             scored.append((-100, a))  # 기본값
 
@@ -103,8 +100,9 @@ def move_ordering(actions, tt: TranspositionTable, eng: DotsAndBoxesEngine, maxi
     scored.sort(reverse=maximizing)
     return [a for _, a in scored]
 
+# =======================================
 
-class Search_Policy(BasePolicy):
+class SearchPolicy(BasePolicy):
     def __init__(self, SearchEngine:BaseSearchEngine, config_schedule: Dict):
         ## 필요한거 있으면 추가
         self.eng = DotsAndBoxesEngine()
@@ -142,8 +140,8 @@ class Search_Policy(BasePolicy):
 
         best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state)
         
-        return best_action
+        return best_action, best_val
 
 def main():
     AlphaBetaSearch = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=3)
-    Search_Policy(SearchEngine=AlphaBetaSearch)
+    SearchPolicy(SearchEngine=AlphaBetaSearch)

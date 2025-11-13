@@ -16,11 +16,10 @@ import tqdm.auto as tqdm
 import os
 
 import time
+import json
 
 BASE_SAVE_PATH = './Simulate/SimResult'
 
-def convert_action_to_submit_format(action: tuple[int, int, int]) -> tuple[int, int, int]:
-    return (action[1], action[2], action[0])
 
 # 정책에 의한 전체 에피소드를 시뮬레이션 하는 함수
 # 만약 pygame window가 작동하지 않으면 env 생성시 render_mode를 'human'으로 설정할 것
@@ -38,33 +37,24 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         
     # verbose는 디버깅 출력 여부
     observation, info = env.reset()
-    action_mask = info['action_mask']
-    record = []
 
     if verbose:
         print(f"Starting observation: {observation}")
 
-    episode_over = False
-    total_reward = 0
-
     turn_count = [0, 0]
-    time_spent = [0, 0]
+    time_spent = []
+    Action_log = []
+    vals = []
+    scores = []
+    player = []
+    episode_over = False
     while not episode_over:
         cur_player =  observation['cur_player']
         policy = p0_policy if cur_player == 0 else p1_policy
 
         t0 = time.perf_counter()
-        action = policy.get_action(observation, info, env)
+        action, val = policy.get_action(observation, info, env)
         t1 = time.perf_counter()
-
-        if cur_player == 0:
-            turn_count[0] += 1
-            time_spent[0] += (t1 - t0)
-        else:
-            turn_count[1] += 1
-            time_spent[1] += (t1 - t0)
-
-        record.append(convert_action_to_submit_format(action))
 
         if verbose:
             print('action:', action)
@@ -75,23 +65,35 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
                 for r in range(info['action_mask'].shape[0]):
                     print(info['action_mask'][:,r,i])
                 print('-----')
+            print('Number of Claimed Edges:', np.sum(info['action_mask'] == False))
 
-            print('Number of Claimed Edges:', np.sum(action_mask == False))
-
-        observation, reward, terminated, truncated, info = env.step(action)
-
-        total_reward += reward
+        observation, _, terminated, truncated, info = env.step(action)
         episode_over = terminated or truncated
+        
+        player.append(cur_player)
+        time_spent.append(t1 - t0)
+        vals.append(val)
+        scores.append(info['score'])
+
+        Action_log.append(action)
 
     if verbose:
-        print(f"Episode finished! Winner: {info['winner']} Total reward: {total_reward}")
+        print(f"Episode finished! Winner: {info['winner']}")
         print(f'Action spasce: {env.action_space}')
         print(f'Observation spasce: {env.observation_space}')
 
     env.close()
-    print(f'turn_count: {turn_count}')
-    print(f'p0_time: {time_spent[0]}, p1_time {time_spent[1]}')
-    return record, info, total_reward, time_spent
+   
+    Evaluation_log = {
+        'player': player,
+        'time_spent': time_spent,
+        'vals': vals,
+        'scores': scores,
+        'winner': info['winner'],
+    }
+    Action_log = {'Action_log': ", ".join(str(x) for a in Action_log for x in a)}
+
+    return Evaluation_log, Action_log
 
 
 def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, n_episodes: int, verbose=False):
@@ -114,65 +116,139 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
         'time_spent': []
     }
 
-    first_plaer = p0_policy
+    first_player = p0_policy
     second_player = p1_policy
 
-    
+    Evaluation_logs = []
+    Action_logs = []
+
     for episode in tqdm.tqdm(range(n_episodes)):
         if verbose:
             print(f"=== Episode {episode + 1} ===")
-        record, info, total_reward, time_spent = SimulateEpisode(env, first_plaer, second_player, verbose)
+        Evaluation_log, Action_log  = SimulateEpisode(env, first_player, second_player, verbose)
 
-        results['record'].append(record)
-        results['info'].append(info)
-        results['total_reward'].append(total_reward)
-        results['info'][-1]['first_player'] = 0
-        results['time_spent'].append(time_spent)
+        Evaluation_log['first_player'] = 0 if first_player == p0_policy else 1
+        if first_player == p1_policy:
+            Evaluation_log['player'] = [1 - p for p in Evaluation_log['player']]
+            Evaluation_log['winner'] = 1 - Evaluation_log['winner']
+            Evaluation_log['scores'] = [score[::-1] for score in Evaluation_log['scores']]
+        Action_log['first_player'] = 0 if first_player == p0_policy else 1
 
-        if first_plaer == p1_policy:
-            results['total_reward'][-1] *= -1  # 후공 입장에서의 보상으로 변환
-            results['info'][-1]['winner'] = 1 - results['info'][-1]['winner']  # 승자 정보도 변환
-            results['info'][-1]['first_player'] = 1
-            results['info'][-1]['score'] = results['info'][-1]['score'][::-1]
-            results['time_spent'][-1] = results['time_spent'][-1][::-1]
+        Evaluation_logs.append({
+            'episode_id': episode,
+            'Evaluation_log': Evaluation_log
+        })
 
-        first_plaer, second_player = second_player, first_plaer  # 다음 에피소드에서 선후공 교체
+        Action_logs.append({
+            'episode_id': episode,
+            'Action_log': Action_log
+        })
+
+        first_player, second_player = second_player, first_player  # 다음 에피소드에서 선후공 교체
         
-    return results
+    return Evaluation_logs, Action_logs
 
-def calc_basic_stats(results):
+def calc_basic_stats_from_eval_logs(Evaluation_logs):
     """
-    SimulateMultipleEpisodes의 결과로부터 기본 통계치를 계산합니다.
-    Returns:
-        stats: pandas DataFrame 형태로 반환됩니다.
-            n_episodes: 총 에피소드 수
-            n_p0_wins: 첫 번째 정책이 이긴 에피소드 수
-            n_p1_wins: 두 번째 정책이 이긴 에피소드 수
-            p0_win_rate: 첫 번째 정책의 승률
-            p0_score_*: 첫 번째 정책의 점수에 대한 기본 통계량(mean, std, 25%, 50%, 75% 등)
-            p1_score_*: 두 번째 정책의 점수에 대한 기본 통계량(mean, std, 25%, 50%, 75% 등)
-    """
-    infos_df = pd.DataFrame(results['info'])
-
-    n_episodes = len(infos_df)
-    n_p0_wins = (infos_df['winner'] == 0).sum()
-    n_p1_wins = (infos_df['winner'] == 1).sum()
-
-    stats = pd.DataFrame({
-        'n_episodes': [n_episodes,],
-        'n_p0_wins': [n_p0_wins,],
-        'n_p1_wins': [n_p1_wins,],
-        'p0_win_rate': [n_p0_wins / n_episodes]
-    })
+    Evaluation_logs: SimulateMultipleEpisodes에서 생성된 로그 리스트.
     
-    p0_basic_stats = infos_df['score'].apply(lambda x: x[0]).describe().add_prefix('p0_score_').to_frame().T.reset_index(drop=True)
-    p1_basic_stats = infos_df['score'].apply(lambda x: x[1]).describe().add_prefix('p1_score_').to_frame().T.reset_index(drop=True)
+    반환: 한 줄짜리 pandas.DataFrame
+      - n_episodes: 총 판수
+      - n_p0_wins, n_p1_wins
+      - p0_win_rate, p1_win_rate
+      - p0_score_*: describe() 결과(prefix 붙임)
+      - p1_score_*: describe() 결과(prefix 붙임)
+      - p0_time_per_game, p1_time_per_game: 플레이어별 '판당' 평균 시간
+      - p0_time_per_turn, p1_time_per_turn: 플레이어별 '턴당' 평균 시간
+    """
 
-    stats = pd.concat([stats, p0_basic_stats, p1_basic_stats], axis=1)
+    episode_rows = []
 
-    return stats
+    for ep in Evaluation_logs:
+        ep_id = ep.get("episode_id", None)
+        log = ep.get("Evaluation_log")
 
-def save_simulation_results(results, run_name: str):
+        winner = log["winner"]
+        scores_list = log["scores"]
+        # 각 에피소드의 최종 점수
+        final_p0, final_p1 = scores_list[-1]
+
+        players = log["player"]
+        times = log["time_spent"]
+
+        # 플레이어별 총 시간 / 턴 수
+        p0_total_time = sum(t for t, p in zip(times, players) if p == 0)
+        p1_total_time = sum(t for t, p in zip(times, players) if p == 1)
+
+        p0_n_turns = sum(1 for p in players if p == 0)
+        p1_n_turns = sum(1 for p in players if p == 1)
+
+        episode_rows.append({
+            "episode_id": ep_id,
+            "winner": winner,
+            "p0_score": final_p0,
+            "p1_score": final_p1,
+            "p0_total_time": p0_total_time,
+            "p1_total_time": p1_total_time,
+            "p0_n_turns": p0_n_turns,
+            "p1_n_turns": p1_n_turns,
+        })
+
+    df = pd.DataFrame(episode_rows)
+
+    if len(df) == 0:
+        raise ValueError("Evaluation_logs가 비어 있습니다.")
+
+    # --- 기본 승수/승률 ---
+    n_episodes = len(df)
+    n_p0_wins = (df["winner"] == 0).sum()
+    n_p1_wins = (df["winner"] == 1).sum()
+
+    p0_win_rate = n_p0_wins / n_episodes
+    p1_win_rate = n_p1_wins / n_episodes
+
+    # --- 점수 describe ---
+    p0_score_stats = df["p0_score"].describe().add_prefix("p0_score_")
+    p1_score_stats = df["p1_score"].describe().add_prefix("p1_score_")
+
+    # --- 시간 통계 ---
+    # 판당 평균 시간: 각 에피소드의 total_time을 episode 축으로 평균
+    p0_time_per_game = df["p0_total_time"].mean()
+    p1_time_per_game = df["p1_total_time"].mean()
+
+    # 턴당 평균 시간: 전체 에피소드의 total_time 합 / 전체 턴 수 합
+    p0_total_time_all = df["p0_total_time"].sum()
+    p1_total_time_all = df["p1_total_time"].sum()
+
+    p0_total_turns_all = df["p0_n_turns"].sum()
+    p1_total_turns_all = df["p1_n_turns"].sum()
+
+    p0_time_per_turn = p0_total_time_all / p0_total_turns_all if p0_total_turns_all > 0 else np.nan
+    p1_time_per_turn = p1_total_time_all / p1_total_turns_all if p1_total_turns_all > 0 else np.nan
+
+    summary = {
+        "n_episodes": n_episodes,
+        "n_p0_wins": n_p0_wins,
+        "n_p1_wins": n_p1_wins,
+        "p0_win_rate": p0_win_rate,
+        "p1_win_rate": p1_win_rate,
+        "p0_time_per_game": p0_time_per_game,
+        "p1_time_per_game": p1_time_per_game,
+        "p0_time_per_turn": p0_time_per_turn,
+        "p1_time_per_turn": p1_time_per_turn,
+    }
+
+    summary_df = pd.DataFrame([summary])
+
+    # describe 결과 붙이기
+    p0_score_df = p0_score_stats.to_frame().T.reset_index(drop=True)
+    p1_score_df = p1_score_stats.to_frame().T.reset_index(drop=True)
+
+    stats_df = pd.concat([summary_df, p0_score_df, p1_score_df], axis=1)
+
+    return stats_df
+
+def save_sim_logs(Evaluation_logs, Actions_logs, run_name: str):
     """
     SimulateMultipleEpisodes의 결과를 지정된 경로에 저장합니다.
     
@@ -182,88 +258,49 @@ def save_simulation_results(results, run_name: str):
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     os.makedirs(save_path, exist_ok=True)
 
-    infos_df = pd.DataFrame(results['info'])
-    infos_df.to_csv(os.path.join(save_path, 'infos.csv'), index=False)
+    with open(os.path.join(save_path, 'Action_logs.csv'), 'w') as f:
+        json.dump(Actions_logs, f)
 
-    observations_df = pd.DataFrame(results['record'])
-    observations_df.to_csv(os.path.join(save_path, 'record.csv'), index=False)
+    with open(os.path.join(save_path, 'Evaluation_logs.csv'), 'w') as f:
+        json.dump(Actions_logs, f)
 
-    rewards_df = pd.DataFrame({'total_reward': results['total_reward']})
-    rewards_df.to_csv(os.path.join(save_path, 'rewards.csv'), index=False)
-
-    stats_df = calc_basic_stats(results)
-    stats_df.to_csv(os.path.join(save_path, 'stats.csv'), index=False)
+    
+    basic_stat_df = calc_basic_stats_from_eval_logs(Evaluation_logs=Evaluation_logs)
+    basic_stat_df.to_csv(os.path.join(save_path, 'stats.csv'))
 
     print(f"Simulation results saved to {save_path}")
 
 if __name__ == "__main__":
 
-    run_name = 'Mixed_AB_d2~8_t=20_vs_AB_d3'
+    run_name = 'AB_d2~10_vs_AB_d2~13'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
 
-    # alphabeta_search_d4 = AlphaBetaSearch()
-    # alphabeta_search_d4.configure(evaluate=evaluate, move_ordering=None, depth=3)
-    # p1_policy = Search_Policy(SearchEngine=alphabeta_search_d4)
-
-
-    # p0_policy_part1 = OpeningPolicy()
-    # config_p0_part2 = {
-    #     'evaluate':evaluate_rel,
-    #     'move_ordering':None,
-    #     'depth': ExponentialSchedulerInt(15, 2, 45, 10),
-    #     'use_iterative_deepening': True,
-    #     'deterministic': True
-    # }
-    # p0_policy_part2 = Search_Policy(AB_TT_Search(), config_p0_part2)
-    
-    # policy_scheduler = PiecewiseConstantScheduler([(0, 20, p0_policy_part1), (20, 60, p0_policy_part2)])
-    # p0_policy = MixedPolicy(policy_scheduler)
-
-
-    # p0_policy = OpeningPolicy()
-
-    # # BooleanScheduler(true_intervals=[[10, 60]], default=False)
-    # config_p1 = {
-    #     'evaluate':evaluate_rel,
-    #     'move_ordering':None,
-    #     'depth': 2,
-    #     'use_iterative_deepening': True,
-    #     'deterministic': True
-    # }
-    # p1_policy = Search_Policy(AB_TT_Search(), config_p1)
-
-    p0_policy_part1 = OpeningPolicy()
-    config_p0_part2 = {
+    config_p0 = {
         'evaluate':evaluate_rel,
         'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2, 45, 8),
+        'depth': ExponentialSchedulerInt(15, 2.0, 45, 10),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
     }
-    # policy_scheduler = PiecewiseConstantScheduler([(0, 35, p0_policy_part1), (35, 60, p0_policy_part2)])
-    # p0_policy = MixedPolicy(policy_scheduler)
-    p0_policy_part2 = Search_Policy(AB_TT_Search(), config_p0_part2)
-    policy_scheduler = PiecewiseConstantScheduler([(0, 20, p0_policy_part1), (20, 60, p0_policy_part2)])
-    p0_policy = MixedPolicy(policy_scheduler)
+    p0_policy = SearchPolicy(AB_TT_Search(), config_p0)
 
-    # config_p1 = {
-    #     'evaluate':evaluate_rel,
-    #     'move_ordering':None,
-    #     'depth': 3,
-    #     'use_iterative_deepening': True,
-    #     'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
-    # }
-    # p1_policy = Search_Policy(AB_TT_Search(), config_p1)
+    p1_policy_part1 = OpeningPolicy()
+    config_p1_part2 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':None,
+        'depth': ExponentialSchedulerInt(15, 2.0, 45, 13),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+    }
+    p1_policy_part2 = SearchPolicy(AB_TT_Search(), config_p1_part2)
+    scheduler = PiecewiseConstantScheduler([[0, 30, p1_policy_part1]], default_value=p1_policy_part2)
+    p1_policy = MixedPolicy(scheduler)
 
-    
-    # p1_policy = Search_Policy(SearchEngine=AB_TT_Search(), config_schedule=config_p1)
+    SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
-    p1_policy = PlayablePolicy()
-    
-    results = SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
+    env.render_mode = 'rgb_array'
+    Evaluation_logs, Actions_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy_part2, n_episodes=30, verbose=False)
+    save_sim_logs(Evaluation_logs, Actions_logs, run_name=run_name)
 
-    # env.render_mode = 'rgb_array'
-    # results = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
-    # save_simulation_results(results, run_name=run_name)
