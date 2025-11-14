@@ -272,35 +272,36 @@ def save_sim_logs(Evaluation_logs, Actions_logs, run_name: str):
 
 if __name__ == "__main__":
 
-    run_name = 'AB_d2~10_vs_AB_d2~13'
+    run_name = 'AB_d2~10_t15_vs_AB_d2~10_t25'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
 
-    config_p0 = {
+    p0_policy_part1 = OpeningPolicy()
+    p0_config = {
         'evaluate':evaluate_rel,
         'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2.0, 45, 10),
+        'depth': ExponentialSchedulerInt(15, 2, 40, 5),
         'use_iterative_deepening': True,
-        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
+        'deterministic': True
     }
-    p0_policy = SearchPolicy(AB_TT_Search(), config_p0)
+    p0_policy_part2 = SearchPolicy(AB_TT_Search(), p0_config)
+    policy_scheduler = PiecewiseConstantScheduler([[30, 60, p0_policy_part2]], default_value=p0_policy_part1)
+    p0_policy = MixedPolicy(policy_scheduler)
 
-    p1_policy_part1 = OpeningPolicy()
-    config_p1_part2 = {
+    
+    config_p1 = {
         'evaluate':evaluate_rel,
         'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2.0, 45, 13),
+        'depth': 3,
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
     }
-    p1_policy_part2 = SearchPolicy(AB_TT_Search(), config_p1_part2)
-    scheduler = PiecewiseConstantScheduler([[0, 30, p1_policy_part1]], default_value=p1_policy_part2)
-    p1_policy = MixedPolicy(scheduler)
+    p1_policy = SearchPolicy(AB_TT_Search(), config_p1)
 
     SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
 
     env.render_mode = 'rgb_array'
-    Evaluation_logs, Actions_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy_part2, n_episodes=30, verbose=False)
+    Evaluation_logs, Actions_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=100, verbose=False)
     save_sim_logs(Evaluation_logs, Actions_logs, run_name=run_name)
 
