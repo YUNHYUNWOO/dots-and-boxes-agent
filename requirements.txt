@@ -5,3 +5,5 @@ scipy==1.11.3
 pandas==2.1.1
 matplotlib==3.8.0
 onnxruntime==1.18.1
+gymnasium
+pygame
