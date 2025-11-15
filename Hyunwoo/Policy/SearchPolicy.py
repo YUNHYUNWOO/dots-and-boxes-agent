@@ -142,6 +142,10 @@ class SearchPolicy(BasePolicy):
         
         return best_action, best_val
 
+    def get_log(self):
+        log = self.SearchEngine.get_log()
+        self.SearchEngine.reset_log()
+        return log
 def main():
     AlphaBetaSearch = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=3)
     SearchPolicy(SearchEngine=AlphaBetaSearch)

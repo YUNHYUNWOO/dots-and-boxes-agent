@@ -21,6 +21,8 @@ class BasePolicy():
             # 필수적으로 action mask가 포함되어있음
         raise NotImplementedError
 
+    def get_log(self):
+        return None
 
 ## 예시 정책
 class RandomPolicy(BasePolicy):
