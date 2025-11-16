@@ -1,0 +1,2936 @@
+[
+    {
+        "episode_id": 0,
+        "Policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 587,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 642,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 584,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 37,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1030,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 544,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 499,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 426,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 400,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 374,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 330,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 383,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 366,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 346,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 324,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 314,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 309,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 269,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 257,
+                    "cutoffs": 38,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3477,
+                    "cutoffs": 344,
+                    "tt_hits": 111,
+                    "tt_cutoffs": 28,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2886,
+                    "cutoffs": 248,
+                    "tt_hits": 60,
+                    "tt_cutoffs": 12,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9882,
+                    "cutoffs": 1719,
+                    "tt_hits": 484,
+                    "tt_cutoffs": 216,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7844,
+                    "cutoffs": 1485,
+                    "tt_hits": 398,
+                    "tt_cutoffs": 164,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8024,
+                    "cutoffs": 1394,
+                    "tt_hits": 427,
+                    "tt_cutoffs": 180,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 13878,
+                    "cutoffs": 3466,
+                    "tt_hits": 957,
+                    "tt_cutoffs": 495,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18720,
+                    "cutoffs": 6617,
+                    "tt_hits": 1325,
+                    "tt_cutoffs": 773,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10894,
+                    "cutoffs": 4393,
+                    "tt_hits": 792,
+                    "tt_cutoffs": 468,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 15831,
+                    "cutoffs": 4339,
+                    "tt_hits": 1062,
+                    "tt_cutoffs": 695,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14090,
+                    "cutoffs": 4689,
+                    "tt_hits": 974,
+                    "tt_cutoffs": 611,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21227,
+                    "cutoffs": 7583,
+                    "tt_hits": 2058,
+                    "tt_cutoffs": 1343,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 33016,
+                    "cutoffs": 12643,
+                    "tt_hits": 3674,
+                    "tt_cutoffs": 2560,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 34816,
+                    "cutoffs": 14338,
+                    "tt_hits": 4836,
+                    "tt_cutoffs": 3393,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17734,
+                    "cutoffs": 9585,
+                    "tt_hits": 2711,
+                    "tt_cutoffs": 2088,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18957,
+                    "cutoffs": 9757,
+                    "tt_hits": 2821,
+                    "tt_cutoffs": 2058,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 39684,
+                    "cutoffs": 20291,
+                    "tt_hits": 6533,
+                    "tt_cutoffs": 4327,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 47682,
+                    "cutoffs": 24378,
+                    "tt_hits": 8487,
+                    "tt_cutoffs": 5471,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 53472,
+                    "cutoffs": 27688,
+                    "tt_hits": 9815,
+                    "tt_cutoffs": 6261,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 57875,
+                    "cutoffs": 30256,
+                    "tt_hits": 10863,
+                    "tt_cutoffs": 6894,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 25919,
+                    "cutoffs": 11130,
+                    "tt_hits": 10766,
+                    "tt_cutoffs": 7911,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14008,
+                    "cutoffs": 6263,
+                    "tt_hits": 5368,
+                    "tt_cutoffs": 4258,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 12282,
+                    "cutoffs": 5479,
+                    "tt_hits": 4663,
+                    "tt_cutoffs": 3610,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10786,
+                    "cutoffs": 4755,
+                    "tt_hits": 4061,
+                    "tt_cutoffs": 3027,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10038,
+                    "cutoffs": 4390,
+                    "tt_hits": 3772,
+                    "tt_cutoffs": 2627,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9528,
+                    "cutoffs": 4112,
+                    "tt_hits": 3642,
+                    "tt_cutoffs": 2305,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9358,
+                    "cutoffs": 4048,
+                    "tt_hits": 3579,
+                    "tt_cutoffs": 2041,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9287,
+                    "cutoffs": 3998,
+                    "tt_hits": 3573,
+                    "tt_cutoffs": 1861,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6372,
+                    "cutoffs": 2576,
+                    "tt_hits": 2478,
+                    "tt_cutoffs": 1172,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6464,
+                    "cutoffs": 2588,
+                    "tt_hits": 2518,
+                    "tt_cutoffs": 1096,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6853,
+                    "cutoffs": 2731,
+                    "tt_hits": 2688,
+                    "tt_cutoffs": 1133,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2343,
+                    "cutoffs": 814,
+                    "tt_hits": 1008,
+                    "tt_cutoffs": 560,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1658,
+                    "cutoffs": 547,
+                    "tt_hits": 696,
+                    "tt_cutoffs": 350,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1063,
+                    "cutoffs": 329,
+                    "tt_hits": 428,
+                    "tt_cutoffs": 196,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 789,
+                    "cutoffs": 213,
+                    "tt_hits": 301,
+                    "tt_cutoffs": 107,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 551,
+                    "cutoffs": 116,
+                    "tt_hits": 189,
+                    "tt_cutoffs": 37,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 353,
+                    "cutoffs": 40,
+                    "tt_hits": 106,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 212,
+                    "cutoffs": 0,
+                    "tt_hits": 56,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 1,
+        "Policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 613,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1851,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1249,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1184,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 554,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 501,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 513,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 459,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 418,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 397,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 348,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 343,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 326,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 313,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 300,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 294,
+                    "cutoffs": 38,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 287,
+                    "cutoffs": 37,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4673,
+                    "cutoffs": 311,
+                    "tt_hits": 131,
+                    "tt_cutoffs": 22,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2897,
+                    "cutoffs": 222,
+                    "tt_hits": 68,
+                    "tt_cutoffs": 7,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8910,
+                    "cutoffs": 1601,
+                    "tt_hits": 539,
+                    "tt_cutoffs": 246,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9214,
+                    "cutoffs": 1539,
+                    "tt_hits": 570,
+                    "tt_cutoffs": 214,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7085,
+                    "cutoffs": 1300,
+                    "tt_hits": 372,
+                    "tt_cutoffs": 141,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 16849,
+                    "cutoffs": 3887,
+                    "tt_hits": 1172,
+                    "tt_cutoffs": 685,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20181,
+                    "cutoffs": 6980,
+                    "tt_hits": 1328,
+                    "tt_cutoffs": 805,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 11343,
+                    "cutoffs": 4469,
+                    "tt_hits": 826,
+                    "tt_cutoffs": 501,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20941,
+                    "cutoffs": 7007,
+                    "tt_hits": 1539,
+                    "tt_cutoffs": 952,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21071,
+                    "cutoffs": 5626,
+                    "tt_hits": 1372,
+                    "tt_cutoffs": 814,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 25304,
+                    "cutoffs": 8051,
+                    "tt_hits": 2238,
+                    "tt_cutoffs": 1346,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17116,
+                    "cutoffs": 6899,
+                    "tt_hits": 2037,
+                    "tt_cutoffs": 1403,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 30720,
+                    "cutoffs": 13636,
+                    "tt_hits": 5006,
+                    "tt_cutoffs": 3743,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14242,
+                    "cutoffs": 6800,
+                    "tt_hits": 4589,
+                    "tt_cutoffs": 4002,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 15393,
+                    "cutoffs": 7276,
+                    "tt_hits": 5003,
+                    "tt_cutoffs": 4290,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20115,
+                    "cutoffs": 9531,
+                    "tt_hits": 6254,
+                    "tt_cutoffs": 5194,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21502,
+                    "cutoffs": 9984,
+                    "tt_hits": 6352,
+                    "tt_cutoffs": 4969,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 24449,
+                    "cutoffs": 11368,
+                    "tt_hits": 7195,
+                    "tt_cutoffs": 5332,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 29711,
+                    "cutoffs": 14235,
+                    "tt_hits": 8833,
+                    "tt_cutoffs": 6260,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 33270,
+                    "cutoffs": 16168,
+                    "tt_hits": 10093,
+                    "tt_cutoffs": 6975,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 25728,
+                    "cutoffs": 11641,
+                    "tt_hits": 10564,
+                    "tt_cutoffs": 7106,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14669,
+                    "cutoffs": 7379,
+                    "tt_hits": 5131,
+                    "tt_cutoffs": 3657,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9809,
+                    "cutoffs": 5500,
+                    "tt_hits": 2680,
+                    "tt_cutoffs": 1937,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8532,
+                    "cutoffs": 4525,
+                    "tt_hits": 2515,
+                    "tt_cutoffs": 1564,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8815,
+                    "cutoffs": 4405,
+                    "tt_hits": 2906,
+                    "tt_cutoffs": 1593,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9082,
+                    "cutoffs": 4262,
+                    "tt_hits": 3291,
+                    "tt_cutoffs": 1622,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9786,
+                    "cutoffs": 4557,
+                    "tt_hits": 3634,
+                    "tt_cutoffs": 1620,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9660,
+                    "cutoffs": 4195,
+                    "tt_hits": 3825,
+                    "tt_cutoffs": 1608,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3250,
+                    "cutoffs": 1542,
+                    "tt_hits": 1057,
+                    "tt_cutoffs": 403,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2544,
+                    "cutoffs": 1067,
+                    "tt_hits": 882,
+                    "tt_cutoffs": 290,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2274,
+                    "cutoffs": 844,
+                    "tt_hits": 842,
+                    "tt_cutoffs": 253,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1063,
+                    "cutoffs": 329,
+                    "tt_hits": 428,
+                    "tt_cutoffs": 196,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 789,
+                    "cutoffs": 213,
+                    "tt_hits": 301,
+                    "tt_cutoffs": 107,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 551,
+                    "cutoffs": 116,
+                    "tt_hits": 189,
+                    "tt_cutoffs": 37,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 353,
+                    "cutoffs": 40,
+                    "tt_hits": 106,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 212,
+                    "cutoffs": 0,
+                    "tt_hits": 56,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 2,
+        "Policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 613,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 30,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1545,
+                    "cutoffs": 55,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 46,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1232,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1107,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 870,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 719,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 549,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 416,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 529,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 458,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 426,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 411,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 423,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 355,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 367,
+                    "cutoffs": 38,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 344,
+                    "cutoffs": 37,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4741,
+                    "cutoffs": 320,
+                    "tt_hits": 126,
+                    "tt_cutoffs": 18,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4034,
+                    "cutoffs": 268,
+                    "tt_hits": 97,
+                    "tt_cutoffs": 10,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10076,
+                    "cutoffs": 1659,
+                    "tt_hits": 512,
+                    "tt_cutoffs": 282,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6976,
+                    "cutoffs": 1299,
+                    "tt_hits": 362,
+                    "tt_cutoffs": 161,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6458,
+                    "cutoffs": 1273,
+                    "tt_hits": 294,
+                    "tt_cutoffs": 127,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14841,
+                    "cutoffs": 3389,
+                    "tt_hits": 948,
+                    "tt_cutoffs": 545,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 24182,
+                    "cutoffs": 8040,
+                    "tt_hits": 1750,
+                    "tt_cutoffs": 981,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 12899,
+                    "cutoffs": 4733,
+                    "tt_hits": 961,
+                    "tt_cutoffs": 480,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 11269,
+                    "cutoffs": 5157,
+                    "tt_hits": 1038,
+                    "tt_cutoffs": 709,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18404,
+                    "cutoffs": 6989,
+                    "tt_hits": 1405,
+                    "tt_cutoffs": 964,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 27475,
+                    "cutoffs": 9466,
+                    "tt_hits": 2422,
+                    "tt_cutoffs": 1560,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 33016,
+                    "cutoffs": 12643,
+                    "tt_hits": 3674,
+                    "tt_cutoffs": 2560,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 26624,
+                    "cutoffs": 10692,
+                    "tt_hits": 3478,
+                    "tt_cutoffs": 2457,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 23910,
+                    "cutoffs": 10670,
+                    "tt_hits": 8589,
+                    "tt_cutoffs": 7158,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 25909,
+                    "cutoffs": 11490,
+                    "tt_hits": 9485,
+                    "tt_cutoffs": 7786,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 30756,
+                    "cutoffs": 13753,
+                    "tt_hits": 11284,
+                    "tt_cutoffs": 9086,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 27299,
+                    "cutoffs": 12150,
+                    "tt_hits": 9504,
+                    "tt_cutoffs": 7489,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 26361,
+                    "cutoffs": 11660,
+                    "tt_hits": 8761,
+                    "tt_cutoffs": 6648,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 28495,
+                    "cutoffs": 12973,
+                    "tt_hits": 8969,
+                    "tt_cutoffs": 6416,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 32315,
+                    "cutoffs": 15025,
+                    "tt_hits": 10117,
+                    "tt_cutoffs": 6822,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 32768,
+                    "cutoffs": 15734,
+                    "tt_hits": 9774,
+                    "tt_cutoffs": 6411,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 26021,
+                    "cutoffs": 12227,
+                    "tt_hits": 7532,
+                    "tt_cutoffs": 4778,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 29894,
+                    "cutoffs": 14446,
+                    "tt_hits": 8810,
+                    "tt_cutoffs": 5464,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 35889,
+                    "cutoffs": 17761,
+                    "tt_hits": 11029,
+                    "tt_cutoffs": 6786,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17167,
+                    "cutoffs": 7102,
+                    "tt_hits": 7440,
+                    "tt_cutoffs": 5081,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 11766,
+                    "cutoffs": 4817,
+                    "tt_hits": 5157,
+                    "tt_cutoffs": 3404,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9509,
+                    "cutoffs": 3836,
+                    "tt_hits": 4207,
+                    "tt_cutoffs": 2651,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7276,
+                    "cutoffs": 2875,
+                    "tt_hits": 3249,
+                    "tt_cutoffs": 1926,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 5079,
+                    "cutoffs": 1946,
+                    "tt_hits": 2283,
+                    "tt_cutoffs": 1242,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4299,
+                    "cutoffs": 1583,
+                    "tt_hits": 1952,
+                    "tt_cutoffs": 959,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3547,
+                    "cutoffs": 1236,
+                    "tt_hits": 1629,
+                    "tt_cutoffs": 696,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2831,
+                    "cutoffs": 909,
+                    "tt_hits": 1318,
+                    "tt_cutoffs": 472,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1775,
+                    "cutoffs": 541,
+                    "tt_hits": 745,
+                    "tt_cutoffs": 227,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1285,
+                    "cutoffs": 352,
+                    "tt_hits": 488,
+                    "tt_cutoffs": 115,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 553,
+                    "cutoffs": 91,
+                    "tt_hits": 229,
+                    "tt_cutoffs": 50,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 220,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 128,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 3,
+        "Policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 518,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 602,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 637,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 557,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 514,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 424,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 381,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 832,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 726,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 447,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 403,
+                    "cutoffs": 46,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 367,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 336,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 310,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 289,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 295,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 245,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 226,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 248,
+                    "cutoffs": 38,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3799,
+                    "cutoffs": 312,
+                    "tt_hits": 108,
+                    "tt_cutoffs": 9,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2620,
+                    "cutoffs": 209,
+                    "tt_hits": 61,
+                    "tt_cutoffs": 4,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10912,
+                    "cutoffs": 1726,
+                    "tt_hits": 592,
+                    "tt_cutoffs": 264,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7111,
+                    "cutoffs": 1478,
+                    "tt_hits": 378,
+                    "tt_cutoffs": 142,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6049,
+                    "cutoffs": 1219,
+                    "tt_hits": 330,
+                    "tt_cutoffs": 142,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10549,
+                    "cutoffs": 2986,
+                    "tt_hits": 688,
+                    "tt_cutoffs": 381,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9720,
+                    "cutoffs": 3779,
+                    "tt_hits": 688,
+                    "tt_cutoffs": 406,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 5589,
+                    "cutoffs": 2077,
+                    "tt_hits": 408,
+                    "tt_cutoffs": 283,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6823,
+                    "cutoffs": 2671,
+                    "tt_hits": 576,
+                    "tt_cutoffs": 424,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 14635,
+                    "cutoffs": 5572,
+                    "tt_hits": 1805,
+                    "tt_cutoffs": 1324,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18416,
+                    "cutoffs": 7749,
+                    "tt_hits": 2600,
+                    "tt_cutoffs": 1905,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 30161,
+                    "cutoffs": 12967,
+                    "tt_hits": 4346,
+                    "tt_cutoffs": 3172,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 43008,
+                    "cutoffs": 18827,
+                    "tt_hits": 6713,
+                    "tt_cutoffs": 4955,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 13019,
+                    "cutoffs": 6931,
+                    "tt_hits": 3737,
+                    "tt_cutoffs": 3308,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 15075,
+                    "cutoffs": 7728,
+                    "tt_hits": 4099,
+                    "tt_cutoffs": 3538,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21938,
+                    "cutoffs": 11284,
+                    "tt_hits": 6027,
+                    "tt_cutoffs": 4886,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20830,
+                    "cutoffs": 10566,
+                    "tt_hits": 5566,
+                    "tt_cutoffs": 4354,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21946,
+                    "cutoffs": 10872,
+                    "tt_hits": 5802,
+                    "tt_cutoffs": 4280,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 26717,
+                    "cutoffs": 13122,
+                    "tt_hits": 7258,
+                    "tt_cutoffs": 5100,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 32150,
+                    "cutoffs": 15794,
+                    "tt_hits": 9120,
+                    "tt_cutoffs": 6130,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 37872,
+                    "cutoffs": 18755,
+                    "tt_hits": 11270,
+                    "tt_cutoffs": 7355,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 42456,
+                    "cutoffs": 21324,
+                    "tt_hits": 12975,
+                    "tt_cutoffs": 8377,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17174,
+                    "cutoffs": 8999,
+                    "tt_hits": 4958,
+                    "tt_cutoffs": 2982,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17270,
+                    "cutoffs": 8983,
+                    "tt_hits": 5106,
+                    "tt_cutoffs": 2892,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18995,
+                    "cutoffs": 9747,
+                    "tt_hits": 5969,
+                    "tt_cutoffs": 3259,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20725,
+                    "cutoffs": 10505,
+                    "tt_hits": 6828,
+                    "tt_cutoffs": 3625,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4224,
+                    "cutoffs": 1617,
+                    "tt_hits": 1805,
+                    "tt_cutoffs": 1036,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2917,
+                    "cutoffs": 1046,
+                    "tt_hits": 1216,
+                    "tt_cutoffs": 641,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2899,
+                    "cutoffs": 1001,
+                    "tt_hits": 1221,
+                    "tt_cutoffs": 576,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2889,
+                    "cutoffs": 960,
+                    "tt_hits": 1229,
+                    "tt_cutoffs": 515,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2889,
+                    "cutoffs": 924,
+                    "tt_hits": 1241,
+                    "tt_cutoffs": 480,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 468,
+                    "cutoffs": 166,
+                    "tt_hits": 147,
+                    "tt_cutoffs": 97,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 334,
+                    "cutoffs": 105,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 50,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 220,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 128,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 4,
+        "Policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 587,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 550,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 533,
+                    "cutoffs": 55,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 496,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 437,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 424,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 457,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 440,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 471,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 408,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 401,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 376,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 324,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 315,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 300,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 317,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 295,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 261,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 260,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2018,
+                    "cutoffs": 153,
+                    "tt_hits": 34,
+                    "tt_cutoffs": 3,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 1797,
+                    "cutoffs": 188,
+                    "tt_hits": 38,
+                    "tt_cutoffs": 5,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 9921,
+                    "cutoffs": 1905,
+                    "tt_hits": 561,
+                    "tt_cutoffs": 261,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7668,
+                    "cutoffs": 1599,
+                    "tt_hits": 409,
+                    "tt_cutoffs": 198,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 5454,
+                    "cutoffs": 1233,
+                    "tt_hits": 314,
+                    "tt_cutoffs": 118,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 10833,
+                    "cutoffs": 3060,
+                    "tt_hits": 804,
+                    "tt_cutoffs": 471,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 16039,
+                    "cutoffs": 6173,
+                    "tt_hits": 1249,
+                    "tt_cutoffs": 774,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7195,
+                    "cutoffs": 2515,
+                    "tt_hits": 579,
+                    "tt_cutoffs": 423,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17861,
+                    "cutoffs": 4790,
+                    "tt_hits": 1185,
+                    "tt_cutoffs": 722,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 22471,
+                    "cutoffs": 7235,
+                    "tt_hits": 1839,
+                    "tt_cutoffs": 1121,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 19187,
+                    "cutoffs": 6400,
+                    "tt_hits": 1794,
+                    "tt_cutoffs": 1162,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 15280,
+                    "cutoffs": 5798,
+                    "tt_hits": 2025,
+                    "tt_cutoffs": 1429,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 38715,
+                    "cutoffs": 16396,
+                    "tt_hits": 6239,
+                    "tt_cutoffs": 4474,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 65501,
+                    "cutoffs": 30685,
+                    "tt_hits": 13180,
+                    "tt_cutoffs": 9842,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 15338,
+                    "cutoffs": 6375,
+                    "tt_hits": 2858,
+                    "tt_cutoffs": 2146,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18432,
+                    "cutoffs": 7624,
+                    "tt_hits": 3223,
+                    "tt_cutoffs": 2292,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 23088,
+                    "cutoffs": 11024,
+                    "tt_hits": 6762,
+                    "tt_cutoffs": 5396,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 22913,
+                    "cutoffs": 11060,
+                    "tt_hits": 6361,
+                    "tt_cutoffs": 4930,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 23027,
+                    "cutoffs": 11247,
+                    "tt_hits": 5997,
+                    "tt_cutoffs": 4475,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 25404,
+                    "cutoffs": 12696,
+                    "tt_hits": 6415,
+                    "tt_cutoffs": 4654,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 28347,
+                    "cutoffs": 14460,
+                    "tt_hits": 7131,
+                    "tt_cutoffs": 5049,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 31295,
+                    "cutoffs": 16127,
+                    "tt_hits": 8181,
+                    "tt_cutoffs": 5712,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 16738,
+                    "cutoffs": 6732,
+                    "tt_hits": 7534,
+                    "tt_cutoffs": 5293,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8951,
+                    "cutoffs": 4000,
+                    "tt_hits": 3557,
+                    "tt_cutoffs": 2775,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7556,
+                    "cutoffs": 3201,
+                    "tt_hits": 3146,
+                    "tt_cutoffs": 2352,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6318,
+                    "cutoffs": 2560,
+                    "tt_hits": 2704,
+                    "tt_cutoffs": 1912,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 5204,
+                    "cutoffs": 2044,
+                    "tt_hits": 2243,
+                    "tt_cutoffs": 1467,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4110,
+                    "cutoffs": 1548,
+                    "tt_hits": 1775,
+                    "tt_cutoffs": 1036,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3807,
+                    "cutoffs": 1356,
+                    "tt_hits": 1679,
+                    "tt_cutoffs": 897,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3548,
+                    "cutoffs": 1203,
+                    "tt_hits": 1583,
+                    "tt_cutoffs": 764,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 3329,
+                    "cutoffs": 1083,
+                    "tt_hits": 1490,
+                    "tt_cutoffs": 640,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2889,
+                    "cutoffs": 924,
+                    "tt_hits": 1241,
+                    "tt_cutoffs": 480,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 468,
+                    "cutoffs": 166,
+                    "tt_hits": 147,
+                    "tt_cutoffs": 97,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 334,
+                    "cutoffs": 105,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 50,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 220,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 128,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 5,
+        "Policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 613,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 502,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 442,
+                    "cutoffs": 55,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 467,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 600,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 584,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 613,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 545,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 539,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 503,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 449,
+                    "cutoffs": 46,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 396,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 359,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 331,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 303,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 275,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 297,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 281,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 257,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2159,
+                    "cutoffs": 235,
+                    "tt_hits": 46,
+                    "tt_cutoffs": 6,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2730,
+                    "cutoffs": 209,
+                    "tt_hits": 55,
+                    "tt_cutoffs": 8,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 8258,
+                    "cutoffs": 1391,
+                    "tt_hits": 382,
+                    "tt_cutoffs": 175,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6222,
+                    "cutoffs": 1382,
+                    "tt_hits": 395,
+                    "tt_cutoffs": 192,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4493,
+                    "cutoffs": 1026,
+                    "tt_hits": 215,
+                    "tt_cutoffs": 86,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6536,
+                    "cutoffs": 1863,
+                    "tt_hits": 371,
+                    "tt_cutoffs": 227,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 11836,
+                    "cutoffs": 4432,
+                    "tt_hits": 840,
+                    "tt_cutoffs": 459,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 7064,
+                    "cutoffs": 2983,
+                    "tt_hits": 552,
+                    "tt_cutoffs": 308,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 6179,
+                    "cutoffs": 2148,
+                    "tt_hits": 478,
+                    "tt_cutoffs": 296,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18361,
+                    "cutoffs": 6405,
+                    "tt_hits": 1801,
+                    "tt_cutoffs": 1261,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 24833,
+                    "cutoffs": 8818,
+                    "tt_hits": 2369,
+                    "tt_cutoffs": 1569,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 21808,
+                    "cutoffs": 8601,
+                    "tt_hits": 2990,
+                    "tt_cutoffs": 2133,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 35790,
+                    "cutoffs": 14558,
+                    "tt_hits": 4566,
+                    "tt_cutoffs": 3144,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 28905,
+                    "cutoffs": 11654,
+                    "tt_hits": 3709,
+                    "tt_cutoffs": 2496,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 35840,
+                    "cutoffs": 14614,
+                    "tt_hits": 5378,
+                    "tt_cutoffs": 3685,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20079,
+                    "cutoffs": 10301,
+                    "tt_hits": 5735,
+                    "tt_cutoffs": 4809,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18008,
+                    "cutoffs": 9025,
+                    "tt_hits": 5002,
+                    "tt_cutoffs": 4105,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 16983,
+                    "cutoffs": 8219,
+                    "tt_hits": 4558,
+                    "tt_cutoffs": 3558,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 17974,
+                    "cutoffs": 8375,
+                    "tt_hits": 4875,
+                    "tt_cutoffs": 3532,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 22242,
+                    "cutoffs": 10492,
+                    "tt_hits": 6236,
+                    "tt_cutoffs": 4254,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 27072,
+                    "cutoffs": 12972,
+                    "tt_hits": 7965,
+                    "tt_cutoffs": 5189,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 31449,
+                    "cutoffs": 15424,
+                    "tt_hits": 9521,
+                    "tt_cutoffs": 6093,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 35250,
+                    "cutoffs": 17808,
+                    "tt_hits": 10617,
+                    "tt_cutoffs": 6642,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18624,
+                    "cutoffs": 9636,
+                    "tt_hits": 5658,
+                    "tt_cutoffs": 3250,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 18995,
+                    "cutoffs": 9747,
+                    "tt_hits": 5969,
+                    "tt_cutoffs": 3259,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 20725,
+                    "cutoffs": 10505,
+                    "tt_hits": 6828,
+                    "tt_cutoffs": 3625,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 4224,
+                    "cutoffs": 1617,
+                    "tt_hits": 1805,
+                    "tt_cutoffs": 1036,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2917,
+                    "cutoffs": 1046,
+                    "tt_hits": 1216,
+                    "tt_cutoffs": 641,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2899,
+                    "cutoffs": 1001,
+                    "tt_hits": 1221,
+                    "tt_cutoffs": 576,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2889,
+                    "cutoffs": 960,
+                    "tt_hits": 1229,
+                    "tt_cutoffs": 515,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 2889,
+                    "cutoffs": 924,
+                    "tt_hits": 1241,
+                    "tt_cutoffs": 480,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 0,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 468,
+                    "cutoffs": 166,
+                    "tt_hits": 147,
+                    "tt_cutoffs": 97,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 334,
+                    "cutoffs": 105,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 50,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 220,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 128,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skip_move": false
+                }
+            ]
+        }
+    }
+]

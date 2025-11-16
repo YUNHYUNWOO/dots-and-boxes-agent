@@ -50,6 +50,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         time_manager = p0_time_manager if cur_player == 0 else p1_time_manager
         policy = p0_policy if cur_player == 0 else p1_policy
 
+        print(cur_player)
         t0 = time.perf_counter()
         time_manager.start_move()
         action, val = policy.get_action(observation, info, env, time_manager)
@@ -165,7 +166,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'no_tc_vs_tc'
+    run_name = 'no_tc_d2_18_vs_tc_d30'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -184,7 +185,7 @@ if __name__ == "__main__":
     config_p0 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'depth': ExponentialSchedulerInt(15, 2, 35, 18),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
@@ -197,7 +198,7 @@ if __name__ == "__main__":
     config_p1 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'depth': 30,
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
@@ -208,7 +209,7 @@ if __name__ == "__main__":
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=15, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=4, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

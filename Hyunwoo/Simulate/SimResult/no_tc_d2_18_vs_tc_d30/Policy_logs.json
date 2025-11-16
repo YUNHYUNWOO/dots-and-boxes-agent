@@ -1,0 +1,2438 @@
+[
+    {
+        "episode_id": 0,
+        "Policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11951090900038253
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 113,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 1,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.1383270940023067
+                },
+                {
+                    "nodes": 1622,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.20981814900005702
+                },
+                {
+                    "nodes": 618,
+                    "cutoffs": 55,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08280670299791382
+                },
+                {
+                    "nodes": 1690,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.20335783599875867
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 37,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.1228566169993428
+                },
+                {
+                    "nodes": 521,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0671848330021021
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 99,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12887729899739497
+                },
+                {
+                    "nodes": 1272,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.14739416500015068
+                },
+                {
+                    "nodes": 846,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11689061699871672
+                },
+                {
+                    "nodes": 670,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.07589514700157451
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 142,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.1253524980020302
+                },
+                {
+                    "nodes": 354,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.04382309900029213
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 169,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12247786999796517
+                },
+                {
+                    "nodes": 320,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.03692268500162754
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 171,
+                    "tt_hits": 10,
+                    "tt_cutoffs": 1,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11722985099913785
+                },
+                {
+                    "nodes": 290,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.032551291998970555
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 163,
+                    "tt_hits": 13,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11213936500280397
+                },
+                {
+                    "nodes": 240,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.02834545899895602
+                },
+                {
+                    "nodes": 2048,
+                    "cutoffs": 217,
+                    "tt_hits": 57,
+                    "tt_cutoffs": 12,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.2019253300022683
+                },
+                {
+                    "nodes": 4559,
+                    "cutoffs": 284,
+                    "tt_hits": 119,
+                    "tt_cutoffs": 28,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.43504958799894666
+                },
+                {
+                    "nodes": 3920,
+                    "cutoffs": 242,
+                    "tt_hits": 92,
+                    "tt_cutoffs": 15,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.35037013799956185
+                },
+                {
+                    "nodes": 13103,
+                    "cutoffs": 1948,
+                    "tt_hits": 728,
+                    "tt_cutoffs": 337,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 1.1895100030014873
+                },
+                {
+                    "nodes": 6144,
+                    "cutoffs": 872,
+                    "tt_hits": 249,
+                    "tt_cutoffs": 86,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.548208116000751
+                },
+                {
+                    "nodes": 12995,
+                    "cutoffs": 3459,
+                    "tt_hits": 877,
+                    "tt_cutoffs": 500,
+                    "skipped_move": 0,
+                    "depth": 5,
+                    "time_spent": 1.1941981780000788
+                },
+                {
+                    "nodes": 8192,
+                    "cutoffs": 2292,
+                    "tt_hits": 490,
+                    "tt_cutoffs": 260,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.7541680889989948
+                },
+                {
+                    "nodes": 9953,
+                    "cutoffs": 3623,
+                    "tt_hits": 741,
+                    "tt_cutoffs": 429,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 0.8783130330011772
+                },
+                {
+                    "nodes": 13312,
+                    "cutoffs": 5057,
+                    "tt_hits": 1325,
+                    "tt_cutoffs": 858,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 1.1204154450024362
+                },
+                {
+                    "nodes": 25238,
+                    "cutoffs": 10081,
+                    "tt_hits": 3469,
+                    "tt_cutoffs": 2731,
+                    "skipped_move": 0,
+                    "depth": 8,
+                    "time_spent": 2.0607922359995428
+                },
+                {
+                    "nodes": 18432,
+                    "cutoffs": 7227,
+                    "tt_hits": 2662,
+                    "tt_cutoffs": 2089,
+                    "skipped_move": 0,
+                    "depth": 7,
+                    "time_spent": 1.4517080590012483
+                },
+                {
+                    "nodes": 31805,
+                    "cutoffs": 15802,
+                    "tt_hits": 5698,
+                    "tt_cutoffs": 4728,
+                    "skipped_move": 0,
+                    "depth": 10,
+                    "time_spent": 2.4913609079994785
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 10893,
+                    "tt_hits": 4011,
+                    "tt_cutoffs": 3323,
+                    "skipped_move": 0,
+                    "depth": 8,
+                    "time_spent": 1.7815129069967952
+                },
+                {
+                    "nodes": 27122,
+                    "cutoffs": 13029,
+                    "tt_hits": 5329,
+                    "tt_cutoffs": 4051,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 1.9269496689994412
+                },
+                {
+                    "nodes": 46548,
+                    "cutoffs": 24324,
+                    "tt_hits": 9025,
+                    "tt_cutoffs": 6744,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 3.212780075999035
+                },
+                {
+                    "nodes": 92504,
+                    "cutoffs": 49795,
+                    "tt_hits": 21603,
+                    "tt_cutoffs": 15904,
+                    "skipped_move": 0,
+                    "depth": 16,
+                    "time_spent": 5.870598508001422
+                },
+                {
+                    "nodes": 144295,
+                    "cutoffs": 80741,
+                    "tt_hits": 37106,
+                    "tt_cutoffs": 27061,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 8.99998083799801
+                },
+                {
+                    "nodes": 35840,
+                    "cutoffs": 17818,
+                    "tt_hits": 7027,
+                    "tt_cutoffs": 5171,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 2.261331440000504
+                },
+                {
+                    "nodes": 29696,
+                    "cutoffs": 14585,
+                    "tt_hits": 5591,
+                    "tt_cutoffs": 4157,
+                    "skipped_move": 0,
+                    "depth": 11,
+                    "time_spent": 1.956739438999648
+                },
+                {
+                    "nodes": 48753,
+                    "cutoffs": 26952,
+                    "tt_hits": 12774,
+                    "tt_cutoffs": 8814,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.697698670999671
+                },
+                {
+                    "nodes": 55087,
+                    "cutoffs": 30222,
+                    "tt_hits": 15382,
+                    "tt_cutoffs": 10529,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.91419266199955
+                },
+                {
+                    "nodes": 61576,
+                    "cutoffs": 33544,
+                    "tt_hits": 18188,
+                    "tt_cutoffs": 12344,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 3.2302667500007374
+                },
+                {
+                    "nodes": 68144,
+                    "cutoffs": 36864,
+                    "tt_hits": 21170,
+                    "tt_cutoffs": 14256,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 3.493045761002577
+                },
+                {
+                    "nodes": 30720,
+                    "cutoffs": 15906,
+                    "tt_hits": 9389,
+                    "tt_cutoffs": 6373,
+                    "skipped_move": 0,
+                    "depth": 16,
+                    "time_spent": 1.502443797999149
+                },
+                {
+                    "nodes": 25600,
+                    "cutoffs": 13034,
+                    "tt_hits": 7705,
+                    "tt_cutoffs": 5409,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 1.2453235690009024
+                },
+                {
+                    "nodes": 22536,
+                    "cutoffs": 12388,
+                    "tt_hits": 6891,
+                    "tt_cutoffs": 3981,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 1.0365938670001924
+                },
+                {
+                    "nodes": 21187,
+                    "cutoffs": 11069,
+                    "tt_hits": 7034,
+                    "tt_cutoffs": 3848,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.9256219620001502
+                },
+                {
+                    "nodes": 19747,
+                    "cutoffs": 9662,
+                    "tt_hits": 7168,
+                    "tt_cutoffs": 3716,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.8089183240008424
+                },
+                {
+                    "nodes": 19607,
+                    "cutoffs": 9126,
+                    "tt_hits": 7596,
+                    "tt_cutoffs": 3840,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.7469355150024057
+                },
+                {
+                    "nodes": 18685,
+                    "cutoffs": 8102,
+                    "tt_hits": 7790,
+                    "tt_cutoffs": 3883,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.7085687270009657
+                },
+                {
+                    "nodes": 15627,
+                    "cutoffs": 7243,
+                    "tt_hits": 6387,
+                    "tt_cutoffs": 3974,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.5777991899994959
+                },
+                {
+                    "nodes": 14746,
+                    "cutoffs": 6490,
+                    "tt_hits": 6305,
+                    "tt_cutoffs": 4006,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.5184629840005073
+                },
+                {
+                    "nodes": 1838,
+                    "cutoffs": 993,
+                    "tt_hits": 548,
+                    "tt_cutoffs": 440,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.07597507600075915
+                },
+                {
+                    "nodes": 1441,
+                    "cutoffs": 729,
+                    "tt_hits": 448,
+                    "tt_cutoffs": 350,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.05488155900093261
+                },
+                {
+                    "nodes": 1112,
+                    "cutoffs": 524,
+                    "tt_hits": 352,
+                    "tt_cutoffs": 265,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.04002225200019893
+                },
+                {
+                    "nodes": 843,
+                    "cutoffs": 369,
+                    "tt_hits": 262,
+                    "tt_cutoffs": 187,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.02806816100201104
+                },
+                {
+                    "nodes": 591,
+                    "cutoffs": 220,
+                    "tt_hits": 182,
+                    "tt_cutoffs": 120,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.01917702900027507
+                },
+                {
+                    "nodes": 425,
+                    "cutoffs": 145,
+                    "tt_hits": 109,
+                    "tt_cutoffs": 61,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.012714861997665139
+                },
+                {
+                    "nodes": 268,
+                    "cutoffs": 66,
+                    "tt_hits": 49,
+                    "tt_cutoffs": 16,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.007764548998238752
+                },
+                {
+                    "nodes": 155,
+                    "cutoffs": 17,
+                    "tt_hits": 17,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.00394029800008866
+                },
+                {
+                    "nodes": 89,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.002100000998325413
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 1,
+        "Policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12248199799796566
+                },
+                {
+                    "nodes": 587,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.07854746999873896
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 32,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.1263538069979404
+                },
+                {
+                    "nodes": 612,
+                    "cutoffs": 55,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.082356892999087
+                },
+                {
+                    "nodes": 551,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.09672404099910636
+                },
+                {
+                    "nodes": 1553,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.18666950300030294
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 37,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.12809986699721776
+                },
+                {
+                    "nodes": 1202,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.14396596400183626
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 89,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12351960500018322
+                },
+                {
+                    "nodes": 529,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.06515585399756674
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 97,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12179918199763051
+                },
+                {
+                    "nodes": 514,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.060385946999304
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 92,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11739985800159047
+                },
+                {
+                    "nodes": 440,
+                    "cutoffs": 45,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.049245624999457505
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 86,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11239504300101544
+                },
+                {
+                    "nodes": 492,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0602989949984476
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 127,
+                    "tt_hits": 9,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11371821299690055
+                },
+                {
+                    "nodes": 244,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.03038249200108112
+                },
+                {
+                    "nodes": 2048,
+                    "cutoffs": 136,
+                    "tt_hits": 37,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.21058525100306724
+                },
+                {
+                    "nodes": 3179,
+                    "cutoffs": 183,
+                    "tt_hits": 65,
+                    "tt_cutoffs": 7,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.2974412849980581
+                },
+                {
+                    "nodes": 2943,
+                    "cutoffs": 245,
+                    "tt_hits": 61,
+                    "tt_cutoffs": 9,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.280012089999218
+                },
+                {
+                    "nodes": 2224,
+                    "cutoffs": 195,
+                    "tt_hits": 42,
+                    "tt_cutoffs": 10,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.1949713449976116
+                },
+                {
+                    "nodes": 4096,
+                    "cutoffs": 673,
+                    "tt_hits": 185,
+                    "tt_cutoffs": 77,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.3652052450015617
+                },
+                {
+                    "nodes": 3269,
+                    "cutoffs": 914,
+                    "tt_hits": 159,
+                    "tt_cutoffs": 68,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.3116068870003801
+                },
+                {
+                    "nodes": 7168,
+                    "cutoffs": 2268,
+                    "tt_hits": 493,
+                    "tt_cutoffs": 291,
+                    "skipped_move": 0,
+                    "depth": 5,
+                    "time_spent": 0.6625657529984892
+                },
+                {
+                    "nodes": 12992,
+                    "cutoffs": 4373,
+                    "tt_hits": 930,
+                    "tt_cutoffs": 487,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 1.1681893719978689
+                },
+                {
+                    "nodes": 10240,
+                    "cutoffs": 2998,
+                    "tt_hits": 743,
+                    "tt_cutoffs": 484,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 0.9259359179995954
+                },
+                {
+                    "nodes": 18531,
+                    "cutoffs": 5158,
+                    "tt_hits": 1435,
+                    "tt_cutoffs": 917,
+                    "skipped_move": 0,
+                    "depth": 7,
+                    "time_spent": 1.4561908499999845
+                },
+                {
+                    "nodes": 16384,
+                    "cutoffs": 5194,
+                    "tt_hits": 1541,
+                    "tt_cutoffs": 1052,
+                    "skipped_move": 0,
+                    "depth": 8,
+                    "time_spent": 1.2829948450016673
+                },
+                {
+                    "nodes": 28969,
+                    "cutoffs": 9170,
+                    "tt_hits": 3139,
+                    "tt_cutoffs": 2108,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 2.1571261399985815
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 7056,
+                    "tt_hits": 2152,
+                    "tt_cutoffs": 1329,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 1.6086779600009322
+                },
+                {
+                    "nodes": 23552,
+                    "cutoffs": 7334,
+                    "tt_hits": 2302,
+                    "tt_cutoffs": 1437,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 1.6501479110011132
+                },
+                {
+                    "nodes": 37642,
+                    "cutoffs": 14521,
+                    "tt_hits": 5708,
+                    "tt_cutoffs": 3842,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 2.552984107998782
+                },
+                {
+                    "nodes": 59843,
+                    "cutoffs": 24874,
+                    "tt_hits": 10800,
+                    "tt_cutoffs": 7453,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 3.903324253999017
+                },
+                {
+                    "nodes": 30720,
+                    "cutoffs": 12901,
+                    "tt_hits": 5928,
+                    "tt_cutoffs": 4064,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 1.9637969310024346
+                },
+                {
+                    "nodes": 29321,
+                    "cutoffs": 11945,
+                    "tt_hits": 5647,
+                    "tt_cutoffs": 3834,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 1.7987019030006195
+                },
+                {
+                    "nodes": 27648,
+                    "cutoffs": 10951,
+                    "tt_hits": 5297,
+                    "tt_cutoffs": 3568,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 1.6424020759986888
+                },
+                {
+                    "nodes": 45577,
+                    "cutoffs": 21137,
+                    "tt_hits": 12696,
+                    "tt_cutoffs": 8778,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.45798956499857
+                },
+                {
+                    "nodes": 52415,
+                    "cutoffs": 24723,
+                    "tt_hits": 15299,
+                    "tt_cutoffs": 10384,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.803911466999125
+                },
+                {
+                    "nodes": 60426,
+                    "cutoffs": 29030,
+                    "tt_hits": 18414,
+                    "tt_cutoffs": 12367,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 3.1396317090002412
+                },
+                {
+                    "nodes": 26624,
+                    "cutoffs": 12474,
+                    "tt_hits": 7288,
+                    "tt_cutoffs": 4903,
+                    "skipped_move": 0,
+                    "depth": 15,
+                    "time_spent": 1.3696170629991684
+                },
+                {
+                    "nodes": 33074,
+                    "cutoffs": 15943,
+                    "tt_hits": 11076,
+                    "tt_cutoffs": 7252,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 1.5141610770006082
+                },
+                {
+                    "nodes": 36560,
+                    "cutoffs": 17681,
+                    "tt_hits": 12679,
+                    "tt_cutoffs": 8272,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 1.658797718999267
+                },
+                {
+                    "nodes": 40779,
+                    "cutoffs": 19774,
+                    "tt_hits": 14589,
+                    "tt_cutoffs": 9542,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 1.919729355002346
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 10687,
+                    "tt_hits": 7916,
+                    "tt_cutoffs": 4809,
+                    "skipped_move": 0,
+                    "depth": 15,
+                    "time_spent": 0.9581819500017446
+                },
+                {
+                    "nodes": 20480,
+                    "cutoffs": 9466,
+                    "tt_hits": 7280,
+                    "tt_cutoffs": 4315,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 0.8334239830001025
+                },
+                {
+                    "nodes": 17408,
+                    "cutoffs": 7867,
+                    "tt_hits": 6068,
+                    "tt_cutoffs": 3634,
+                    "skipped_move": 0,
+                    "depth": 13,
+                    "time_spent": 0.7073089910009003
+                },
+                {
+                    "nodes": 13750,
+                    "cutoffs": 6765,
+                    "tt_hits": 5030,
+                    "tt_cutoffs": 3449,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.5594838809993234
+                },
+                {
+                    "nodes": 14070,
+                    "cutoffs": 6843,
+                    "tt_hits": 5255,
+                    "tt_cutoffs": 3641,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.5504945859975123
+                },
+                {
+                    "nodes": 4218,
+                    "cutoffs": 2124,
+                    "tt_hits": 1554,
+                    "tt_cutoffs": 1309,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.17498618800163968
+                },
+                {
+                    "nodes": 3652,
+                    "cutoffs": 1850,
+                    "tt_hits": 1299,
+                    "tt_cutoffs": 1074,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.14328853899860405
+                },
+                {
+                    "nodes": 2981,
+                    "cutoffs": 1452,
+                    "tt_hits": 1067,
+                    "tt_cutoffs": 863,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.11273578899999848
+                },
+                {
+                    "nodes": 2316,
+                    "cutoffs": 1040,
+                    "tt_hits": 855,
+                    "tt_cutoffs": 673,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.07907616699958453
+                },
+                {
+                    "nodes": 1884,
+                    "cutoffs": 840,
+                    "tt_hits": 656,
+                    "tt_cutoffs": 497,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.07265228200049023
+                },
+                {
+                    "nodes": 1382,
+                    "cutoffs": 548,
+                    "tt_hits": 482,
+                    "tt_cutoffs": 347,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.043342392000340624
+                },
+                {
+                    "nodes": 1036,
+                    "cutoffs": 389,
+                    "tt_hits": 326,
+                    "tt_cutoffs": 216,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.031953165998857
+                },
+                {
+                    "nodes": 709,
+                    "cutoffs": 225,
+                    "tt_hits": 194,
+                    "tt_cutoffs": 110,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.0212038030003896
+                },
+                {
+                    "nodes": 460,
+                    "cutoffs": 114,
+                    "tt_hits": 85,
+                    "tt_cutoffs": 28,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.012937768002302619
+                },
+                {
+                    "nodes": 263,
+                    "cutoffs": 29,
+                    "tt_hits": 29,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.007267409997439245
+                },
+                {
+                    "nodes": 149,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.003208861999155488
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 2,
+        "Policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12882876799994847
+                },
+                {
+                    "nodes": 587,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.07767744499869877
+                },
+                {
+                    "nodes": 550,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.072747389000142
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 37,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.12476033200073289
+                },
+                {
+                    "nodes": 514,
+                    "cutoffs": 53,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.06692115999976522
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 35,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.14136983700154815
+                },
+                {
+                    "nodes": 510,
+                    "cutoffs": 51,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.06346493700038991
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 100,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.1301040300022578
+                },
+                {
+                    "nodes": 1118,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.13461096600076417
+                },
+                {
+                    "nodes": 826,
+                    "cutoffs": 49,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.09715394299928448
+                },
+                {
+                    "nodes": 641,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.07363441600318765
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 79,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11735113699978683
+                },
+                {
+                    "nodes": 515,
+                    "cutoffs": 44,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.05912297900067642
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 112,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11871846999929403
+                },
+                {
+                    "nodes": 364,
+                    "cutoffs": 42,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.04264174399941112
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 129,
+                    "tt_hits": 8,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11648837599932449
+                },
+                {
+                    "nodes": 324,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0372493549984938
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 154,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11499434600045788
+                },
+                {
+                    "nodes": 277,
+                    "cutoffs": 39,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.030894778999936534
+                },
+                {
+                    "nodes": 2048,
+                    "cutoffs": 218,
+                    "tt_hits": 64,
+                    "tt_cutoffs": 14,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.21242955399793573
+                },
+                {
+                    "nodes": 2500,
+                    "cutoffs": 188,
+                    "tt_hits": 52,
+                    "tt_cutoffs": 3,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.2551017959995079
+                },
+                {
+                    "nodes": 3072,
+                    "cutoffs": 258,
+                    "tt_hits": 64,
+                    "tt_cutoffs": 5,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.2930648729998211
+                },
+                {
+                    "nodes": 10131,
+                    "cutoffs": 1748,
+                    "tt_hits": 584,
+                    "tt_cutoffs": 292,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.962011291001545
+                },
+                {
+                    "nodes": 5120,
+                    "cutoffs": 749,
+                    "tt_hits": 199,
+                    "tt_cutoffs": 73,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.4812100810013362
+                },
+                {
+                    "nodes": 17237,
+                    "cutoffs": 3751,
+                    "tt_hits": 1232,
+                    "tt_cutoffs": 602,
+                    "skipped_move": 0,
+                    "depth": 5,
+                    "time_spent": 1.5780783480004175
+                },
+                {
+                    "nodes": 8192,
+                    "cutoffs": 2079,
+                    "tt_hits": 522,
+                    "tt_cutoffs": 219,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.7678303909997339
+                },
+                {
+                    "nodes": 13204,
+                    "cutoffs": 4322,
+                    "tt_hits": 905,
+                    "tt_cutoffs": 515,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 1.1822177469985036
+                },
+                {
+                    "nodes": 13312,
+                    "cutoffs": 4202,
+                    "tt_hits": 1121,
+                    "tt_cutoffs": 722,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 1.1043401079987234
+                },
+                {
+                    "nodes": 14021,
+                    "cutoffs": 4422,
+                    "tt_hits": 1469,
+                    "tt_cutoffs": 979,
+                    "skipped_move": 0,
+                    "depth": 8,
+                    "time_spent": 1.0949763329990674
+                },
+                {
+                    "nodes": 38154,
+                    "cutoffs": 13960,
+                    "tt_hits": 5621,
+                    "tt_cutoffs": 4053,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 2.939150598998822
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 8424,
+                    "tt_hits": 3029,
+                    "tt_cutoffs": 2288,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 1.6873610090005968
+                },
+                {
+                    "nodes": 40076,
+                    "cutoffs": 16068,
+                    "tt_hits": 6027,
+                    "tt_cutoffs": 4421,
+                    "skipped_move": 0,
+                    "depth": 11,
+                    "time_spent": 2.9195818419975694
+                },
+                {
+                    "nodes": 26624,
+                    "cutoffs": 10509,
+                    "tt_hits": 3463,
+                    "tt_cutoffs": 2369,
+                    "skipped_move": 0,
+                    "depth": 11,
+                    "time_spent": 1.9195567019996815
+                },
+                {
+                    "nodes": 27648,
+                    "cutoffs": 10801,
+                    "tt_hits": 3596,
+                    "tt_cutoffs": 2469,
+                    "skipped_move": 0,
+                    "depth": 10,
+                    "time_spent": 1.8844586279992654
+                },
+                {
+                    "nodes": 77629,
+                    "cutoffs": 40177,
+                    "tt_hits": 16620,
+                    "tt_cutoffs": 12148,
+                    "skipped_move": 0,
+                    "depth": 16,
+                    "time_spent": 5.189503401001275
+                },
+                {
+                    "nodes": 129366,
+                    "cutoffs": 70013,
+                    "tt_hits": 33179,
+                    "tt_cutoffs": 24351,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 8.180769024002075
+                },
+                {
+                    "nodes": 31744,
+                    "cutoffs": 15957,
+                    "tt_hits": 7134,
+                    "tt_cutoffs": 5002,
+                    "skipped_move": 0,
+                    "depth": 16,
+                    "time_spent": 1.9597108220004884
+                },
+                {
+                    "nodes": 29696,
+                    "cutoffs": 14690,
+                    "tt_hits": 6649,
+                    "tt_cutoffs": 4597,
+                    "skipped_move": 0,
+                    "depth": 15,
+                    "time_spent": 1.7394742089963984
+                },
+                {
+                    "nodes": 25527,
+                    "cutoffs": 12374,
+                    "tt_hits": 5361,
+                    "tt_cutoffs": 3620,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 1.4896981980018609
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 10498,
+                    "tt_hits": 4529,
+                    "tt_cutoffs": 3011,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 1.2848062079974625
+                },
+                {
+                    "nodes": 50326,
+                    "cutoffs": 26624,
+                    "tt_hits": 15520,
+                    "tt_cutoffs": 10968,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.668461593999382
+                },
+                {
+                    "nodes": 55298,
+                    "cutoffs": 29364,
+                    "tt_hits": 17511,
+                    "tt_cutoffs": 12307,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.8376865239988547
+                },
+                {
+                    "nodes": 18432,
+                    "cutoffs": 9025,
+                    "tt_hits": 5161,
+                    "tt_cutoffs": 3611,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 0.9560351420004736
+                },
+                {
+                    "nodes": 16354,
+                    "cutoffs": 7795,
+                    "tt_hits": 4527,
+                    "tt_cutoffs": 3099,
+                    "skipped_move": 0,
+                    "depth": 11,
+                    "time_spent": 0.8267380580000463
+                },
+                {
+                    "nodes": 19312,
+                    "cutoffs": 10168,
+                    "tt_hits": 6281,
+                    "tt_cutoffs": 4423,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.9536360120000609
+                },
+                {
+                    "nodes": 19550,
+                    "cutoffs": 10129,
+                    "tt_hits": 6519,
+                    "tt_cutoffs": 4570,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.9246713159991486
+                },
+                {
+                    "nodes": 14336,
+                    "cutoffs": 6841,
+                    "tt_hits": 5177,
+                    "tt_cutoffs": 2920,
+                    "skipped_move": 0,
+                    "depth": 22,
+                    "time_spent": 0.6093403470003977
+                },
+                {
+                    "nodes": 13312,
+                    "cutoffs": 5929,
+                    "tt_hits": 4894,
+                    "tt_cutoffs": 2257,
+                    "skipped_move": 0,
+                    "depth": 25,
+                    "time_spent": 0.5316330050009128
+                },
+                {
+                    "nodes": 12269,
+                    "cutoffs": 5171,
+                    "tt_hits": 4609,
+                    "tt_cutoffs": 1902,
+                    "skipped_move": 0,
+                    "depth": 26,
+                    "time_spent": 0.47232187500048894
+                },
+                {
+                    "nodes": 12024,
+                    "cutoffs": 4879,
+                    "tt_hits": 4518,
+                    "tt_cutoffs": 1615,
+                    "skipped_move": 0,
+                    "depth": 27,
+                    "time_spent": 0.43995040799927665
+                },
+                {
+                    "nodes": 12288,
+                    "cutoffs": 4511,
+                    "tt_hits": 4789,
+                    "tt_cutoffs": 1427,
+                    "skipped_move": 0,
+                    "depth": 29,
+                    "time_spent": 0.4206333280017134
+                },
+                {
+                    "nodes": 11204,
+                    "cutoffs": 3711,
+                    "tt_hits": 4502,
+                    "tt_cutoffs": 1109,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.36066737600049237
+                },
+                {
+                    "nodes": 9520,
+                    "cutoffs": 2729,
+                    "tt_hits": 3840,
+                    "tt_cutoffs": 766,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.29298092600220116
+                },
+                {
+                    "nodes": 2282,
+                    "cutoffs": 696,
+                    "tt_hits": 749,
+                    "tt_cutoffs": 226,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.07131023599868058
+                },
+                {
+                    "nodes": 1892,
+                    "cutoffs": 431,
+                    "tt_hits": 675,
+                    "tt_cutoffs": 180,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.06151697499808506
+                },
+                {
+                    "nodes": 2156,
+                    "cutoffs": 495,
+                    "tt_hits": 617,
+                    "tt_cutoffs": 187,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.06444033799925819
+                },
+                {
+                    "nodes": 1307,
+                    "cutoffs": 224,
+                    "tt_hits": 302,
+                    "tt_cutoffs": 54,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.039923278000060236
+                },
+                {
+                    "nodes": 709,
+                    "cutoffs": 57,
+                    "tt_hits": 113,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.017288683000515448
+                },
+                {
+                    "nodes": 348,
+                    "cutoffs": 0,
+                    "tt_hits": 29,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.008194832000299357
+                },
+                {
+                    "nodes": 149,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.004094023999641649
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 3,
+        "Policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "logs": [
+                {
+                    "nodes": 918,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11728638599743135
+                },
+                {
+                    "nodes": 613,
+                    "cutoffs": 57,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08656287700068788
+                },
+                {
+                    "nodes": 602,
+                    "cutoffs": 56,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0769469709994155
+                },
+                {
+                    "nodes": 608,
+                    "cutoffs": 54,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08261903200036613
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 40,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 1,
+                    "time_spent": 0.12233575500067673
+                },
+                {
+                    "nodes": 563,
+                    "cutoffs": 52,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08637365300091915
+                },
+                {
+                    "nodes": 772,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0960146249999525
+                },
+                {
+                    "nodes": 752,
+                    "cutoffs": 50,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.0893888539976615
+                },
+                {
+                    "nodes": 765,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08938062800007174
+                },
+                {
+                    "nodes": 470,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.056284177997440565
+                },
+                {
+                    "nodes": 712,
+                    "cutoffs": 48,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.08278629500273382
+                },
+                {
+                    "nodes": 331,
+                    "cutoffs": 47,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.04025535799883073
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 138,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12278999299815041
+                },
+                {
+                    "nodes": 358,
+                    "cutoffs": 43,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.04358666800180799
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 137,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.12065261200041277
+                },
+                {
+                    "nodes": 324,
+                    "cutoffs": 41,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.03729768500124919
+                },
+                {
+                    "nodes": 1024,
+                    "cutoffs": 129,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.11632162500245613
+                },
+                {
+                    "nodes": 342,
+                    "cutoffs": 38,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.03806377600267297
+                },
+                {
+                    "nodes": 2048,
+                    "cutoffs": 229,
+                    "tt_hits": 46,
+                    "tt_cutoffs": 9,
+                    "skipped_move": 0,
+                    "depth": 2,
+                    "time_spent": 0.21788230599850067
+                },
+                {
+                    "nodes": 4471,
+                    "cutoffs": 391,
+                    "tt_hits": 118,
+                    "tt_cutoffs": 22,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.4537355490028858
+                },
+                {
+                    "nodes": 2148,
+                    "cutoffs": 224,
+                    "tt_hits": 43,
+                    "tt_cutoffs": 5,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.21780483199836453
+                },
+                {
+                    "nodes": 1900,
+                    "cutoffs": 220,
+                    "tt_hits": 41,
+                    "tt_cutoffs": 8,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.18849747700005537
+                },
+                {
+                    "nodes": 4096,
+                    "cutoffs": 470,
+                    "tt_hits": 105,
+                    "tt_cutoffs": 33,
+                    "skipped_move": 0,
+                    "depth": 3,
+                    "time_spent": 0.38683738300096593
+                },
+                {
+                    "nodes": 6064,
+                    "cutoffs": 1206,
+                    "tt_hits": 261,
+                    "tt_cutoffs": 105,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.5753801730024861
+                },
+                {
+                    "nodes": 7168,
+                    "cutoffs": 1427,
+                    "tt_hits": 362,
+                    "tt_cutoffs": 146,
+                    "skipped_move": 0,
+                    "depth": 4,
+                    "time_spent": 0.6603435429969977
+                },
+                {
+                    "nodes": 25955,
+                    "cutoffs": 8043,
+                    "tt_hits": 1741,
+                    "tt_cutoffs": 958,
+                    "skipped_move": 0,
+                    "depth": 6,
+                    "time_spent": 2.379347999998572
+                },
+                {
+                    "nodes": 10240,
+                    "cutoffs": 3635,
+                    "tt_hits": 685,
+                    "tt_cutoffs": 432,
+                    "skipped_move": 0,
+                    "depth": 5,
+                    "time_spent": 0.9991218450013548
+                },
+                {
+                    "nodes": 14604,
+                    "cutoffs": 5525,
+                    "tt_hits": 1252,
+                    "tt_cutoffs": 867,
+                    "skipped_move": 0,
+                    "depth": 7,
+                    "time_spent": 1.300176497999928
+                },
+                {
+                    "nodes": 16384,
+                    "cutoffs": 4251,
+                    "tt_hits": 1295,
+                    "tt_cutoffs": 808,
+                    "skipped_move": 0,
+                    "depth": 7,
+                    "time_spent": 1.2624099280001246
+                },
+                {
+                    "nodes": 40484,
+                    "cutoffs": 11345,
+                    "tt_hits": 4874,
+                    "tt_cutoffs": 3289,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 2.985739340001601
+                },
+                {
+                    "nodes": 22528,
+                    "cutoffs": 8115,
+                    "tt_hits": 3438,
+                    "tt_cutoffs": 2397,
+                    "skipped_move": 0,
+                    "depth": 10,
+                    "time_spent": 1.6143847919993277
+                },
+                {
+                    "nodes": 23552,
+                    "cutoffs": 8113,
+                    "tt_hits": 3268,
+                    "tt_cutoffs": 2229,
+                    "skipped_move": 0,
+                    "depth": 9,
+                    "time_spent": 1.6639660239998193
+                },
+                {
+                    "nodes": 24576,
+                    "cutoffs": 8142,
+                    "tt_hits": 3246,
+                    "tt_cutoffs": 2203,
+                    "skipped_move": 0,
+                    "depth": 8,
+                    "time_spent": 1.7285820100005367
+                },
+                {
+                    "nodes": 54325,
+                    "cutoffs": 25560,
+                    "tt_hits": 12795,
+                    "tt_cutoffs": 9836,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 3.480775503998302
+                },
+                {
+                    "nodes": 91566,
+                    "cutoffs": 44904,
+                    "tt_hits": 23464,
+                    "tt_cutoffs": 17974,
+                    "skipped_move": 0,
+                    "depth": 16,
+                    "time_spent": 5.92438607800068
+                },
+                {
+                    "nodes": 29696,
+                    "cutoffs": 13655,
+                    "tt_hits": 7391,
+                    "tt_cutoffs": 5640,
+                    "skipped_move": 0,
+                    "depth": 13,
+                    "time_spent": 1.8693181829985406
+                },
+                {
+                    "nodes": 26624,
+                    "cutoffs": 12244,
+                    "tt_hits": 6362,
+                    "tt_cutoffs": 4853,
+                    "skipped_move": 0,
+                    "depth": 12,
+                    "time_spent": 1.6806092709994118
+                },
+                {
+                    "nodes": 23552,
+                    "cutoffs": 10791,
+                    "tt_hits": 5423,
+                    "tt_cutoffs": 4197,
+                    "skipped_move": 0,
+                    "depth": 11,
+                    "time_spent": 1.4516635059990222
+                },
+                {
+                    "nodes": 45562,
+                    "cutoffs": 23558,
+                    "tt_hits": 14684,
+                    "tt_cutoffs": 10778,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.442051353998977
+                },
+                {
+                    "nodes": 48831,
+                    "cutoffs": 25436,
+                    "tt_hits": 15825,
+                    "tt_cutoffs": 11310,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.5089110690023517
+                },
+                {
+                    "nodes": 53940,
+                    "cutoffs": 28387,
+                    "tt_hits": 17647,
+                    "tt_cutoffs": 12371,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.7642690149987175
+                },
+                {
+                    "nodes": 57984,
+                    "cutoffs": 30673,
+                    "tt_hits": 19247,
+                    "tt_cutoffs": 13338,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 2.920907891999377
+                },
+                {
+                    "nodes": 20480,
+                    "cutoffs": 10363,
+                    "tt_hits": 6106,
+                    "tt_cutoffs": 4424,
+                    "skipped_move": 0,
+                    "depth": 14,
+                    "time_spent": 1.092665002001013
+                },
+                {
+                    "nodes": 19456,
+                    "cutoffs": 9822,
+                    "tt_hits": 5758,
+                    "tt_cutoffs": 4206,
+                    "skipped_move": 0,
+                    "depth": 13,
+                    "time_spent": 0.9420174560000305
+                },
+                {
+                    "nodes": 13298,
+                    "cutoffs": 5914,
+                    "tt_hits": 5398,
+                    "tt_cutoffs": 3651,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.5426830920005159
+                },
+                {
+                    "nodes": 12120,
+                    "cutoffs": 5299,
+                    "tt_hits": 4962,
+                    "tt_cutoffs": 3147,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.47033210000154213
+                },
+                {
+                    "nodes": 10957,
+                    "cutoffs": 4699,
+                    "tt_hits": 4520,
+                    "tt_cutoffs": 2649,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.3959093519988528
+                },
+                {
+                    "nodes": 10887,
+                    "cutoffs": 4598,
+                    "tt_hits": 4553,
+                    "tt_cutoffs": 2551,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.39370460500140325
+                },
+                {
+                    "nodes": 10828,
+                    "cutoffs": 4501,
+                    "tt_hits": 4591,
+                    "tt_cutoffs": 2477,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.36989235100190854
+                },
+                {
+                    "nodes": 10437,
+                    "cutoffs": 4347,
+                    "tt_hits": 4386,
+                    "tt_cutoffs": 2325,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.35386848999769427
+                },
+                {
+                    "nodes": 10614,
+                    "cutoffs": 4562,
+                    "tt_hits": 4449,
+                    "tt_cutoffs": 2602,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.34525747099905857
+                },
+                {
+                    "nodes": 10364,
+                    "cutoffs": 4477,
+                    "tt_hits": 4283,
+                    "tt_cutoffs": 2480,
+                    "skipped_move": 0,
+                    "depth": 30,
+                    "time_spent": 0.35340880199873936
+                },
+                {
+                    "nodes": 1335,
+                    "cutoffs": 623,
+                    "tt_hits": 435,
+                    "tt_cutoffs": 337,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.050672509998548776
+                },
+                {
+                    "nodes": 1061,
+                    "cutoffs": 473,
+                    "tt_hits": 333,
+                    "tt_cutoffs": 246,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.03506362400003127
+                },
+                {
+                    "nodes": 837,
+                    "cutoffs": 363,
+                    "tt_hits": 238,
+                    "tt_cutoffs": 163,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.027653476998239057
+                },
+                {
+                    "nodes": 634,
+                    "cutoffs": 263,
+                    "tt_hits": 153,
+                    "tt_cutoffs": 91,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.0202482089989644
+                },
+                {
+                    "nodes": 440,
+                    "cutoffs": 160,
+                    "tt_hits": 94,
+                    "tt_cutoffs": 46,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.012701556999672903
+                },
+                {
+                    "nodes": 268,
+                    "cutoffs": 66,
+                    "tt_hits": 49,
+                    "tt_cutoffs": 16,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.007332622000831179
+                },
+                {
+                    "nodes": 155,
+                    "cutoffs": 17,
+                    "tt_hits": 17,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.003791449998971075
+                },
+                {
+                    "nodes": 89,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 18,
+                    "time_spent": 0.001921938997838879
+                }
+            ]
+        }
+    }
+]

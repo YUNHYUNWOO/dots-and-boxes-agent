@@ -210,7 +210,8 @@ class DotsAndBoxesEngine:
         else:      self.v_bits &= ~(1 << v_index(c, r))
 
     def is_game_over(self) -> bool:
-        return sum(self.score) == TOTAL_BOXES
+        return (self.h_bits == self.h_mask) and \
+           (self.v_bits == self.v_mask)
 
     # ---- API ----
     def apply_action(self, action: Tuple[int, int, int]) -> Dict:
@@ -873,12 +874,12 @@ def init():
     config = {
         'evaluate':evaluate_rel,
         'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2, 40, 5),
+        'depth': ExponentialSchedulerInt(15, 2, 45, 10),
         'use_iterative_deepening': True,
         'deterministic': True
     }
     policy_part2 = SearchPolicy(AB_TT_Search(), config)
-    policy_scheduler = PiecewiseConstantScheduler([[30, 60, policy_part2]], default_value=policy_part1)
+    policy_scheduler = PiecewiseConstantScheduler([[20, 60, policy_part2]], default_value=policy_part1)
     model = MixedPolicy(policy_scheduler)
 
     # model = OpeningPolicy()

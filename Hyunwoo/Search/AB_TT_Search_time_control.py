@@ -7,41 +7,12 @@ import torch.nn as nn
 import numpy as np
 from collections import OrderedDict
 from Util.DnB_Engine_Util import N_BOX
+from Policy.Scheduler import Budget_Scheduler
 
 Action = List[int]
 EXACT = 0
 LOWERBOUND = 1
 UPPERBOUND = 2
-        
-
-def default_budget_for_this_move(t, time_manager):
-    """
-        budget_for_this_move(t):
-        -> returns budget for turn t
-    """
-
-    rem = time_manager.remaining()
-    base = rem / ((2 * N_BOX * (N_BOX + 1) - t) / 2)
-
-    progress = t / (2 * N_BOX * (N_BOX + 1))
-
-    if progress < 0.3:
-        weight = 0.1
-    elif progress < 0.6:
-        weight = 4.0
-    else:
-        weight = 3.0
-
-    budget = base * weight
-    MIN_BUDGET = 0.02   # 최소 20ms
-    MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
-    budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
-
-    SAFETY = 0.05
-    budget = max(0.0, budget - SAFETY)
-
-    return budget
-
         
 
 class TTEntry:
@@ -108,7 +79,7 @@ class AB_TT_Search_TC(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-        self.budget_for_this_move = default_budget_for_this_move
+        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=28, scale=7, alpha=1, p=0.3)
         self.use_time_control = True
 
         ## Loging
@@ -134,12 +105,12 @@ class AB_TT_Search_TC(BaseSearchEngine):
             return h_bits.bit_count() + v_bits.bit_count() 
         t = count_moves(eng.get_state()['edges'])
         
-        budget = self.budget_for_this_move(t, time_manager)
+        budget = self.get_budget_for_this_move(t, time_manager)
         # print('t', t, 'budget', budget)
         
         self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
 
-        #print(f't: {t}, remaining: {time_manager.remaining()}')
+        print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
         try:
             if self.use_iterative_deepening:
                 actions, vals = None, None
@@ -296,6 +267,24 @@ class AB_TT_Search_TC(BaseSearchEngine):
     def _check_time(self):
         if time.perf_counter() >= self.deadline:
             raise TimeoutError()
+
+    def get_budget_for_this_move(self, t, time_manager):
+        """
+            budget_for_this_move(t):
+            -> returns budget for turn t
+        """
+        rem = time_manager.remaining()
+        w = self.budget_scheduler.value(t)
+
+        print(rem, w, rem * w)
+
+        budget = rem * w
+        MIN_BUDGET = 0.02   # 최소 20ms
+        MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
+        budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
+        SAFETY = 0.05
+        budget = max(0.0, budget - SAFETY)
+        return budget
 
     def get_log(self):
         return {

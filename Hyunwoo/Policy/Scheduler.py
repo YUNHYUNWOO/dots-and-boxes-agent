@@ -1,5 +1,7 @@
 import math
 from typing import List, Tuple, Dict, Optional, Any
+import numpy as np
+from scipy.stats import skewnorm
 
 class BaseScheduler:
     """모든 스케줄러의 베이스. __call__(t) == value(t)."""
@@ -152,6 +154,38 @@ class InverseSqrtScheduler(BaseScheduler):
 # ---------------------------
 # 복합/구간/주기형 스케줄러들
 # ---------------------------
+
+class Budget_Scheduler(BaseScheduler):
+    def __init__(self,
+                 num_turns: int,
+                 center: float = None,
+                 scale: float = None,
+                 alpha: float = 3.0,
+                 p: float = 0.3):
+        self.num_turns = num_turns
+
+        t = np.arange(num_turns)
+        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
+        
+        w = g / g.sum()
+        u = np.ones((num_turns,)) / num_turns
+        self.w = p * u + w * (1 - p)
+
+    def value(self, t:int)->float:
+        idx = int(t)
+        if idx < 0:
+            idx = 0
+        if idx >= self.num_turns:
+            idx = self.num_turns - 1
+
+        tail_sum = float(self.w[idx:].sum())
+        if tail_sum <= 0:
+            return 1.0  # 남은 weight가 없다면 남은 시간 전부 다 써도 된다고 가정
+
+        return float(self.w[idx] / tail_sum)
+    
+    def get_config(self):
+        return None
 
 class StepScheduler(BaseScheduler):
     """계단형: [(t1, v1), (t2, v2), ...], t < t1 -> v1, t1<=t<t2 -> v2 ... 마지막 이상은 마지막 값."""
