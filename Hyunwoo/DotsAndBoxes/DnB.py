@@ -181,7 +181,7 @@ class DotsAndBoxes:
         )
 
     def game_over(self) -> bool:
-        return self.is_box_complete
+        return self.is_game_over
 
 
     def winner(self) -> Optional[int]:

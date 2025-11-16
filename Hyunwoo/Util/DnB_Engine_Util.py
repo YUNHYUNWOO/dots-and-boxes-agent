@@ -51,7 +51,17 @@ def count_completed_boxes(h_bits: int, v_bits: int) -> int:
                 cnt += 1
     return cnt
 
+def edge_is_claimed(edges, c: int, r: int, d: int) -> bool:
+    if d == H: return ((edges[0] >> h_index(c, r)) & 1) == 1
+    else:      return ((edges[1] >> v_index(c, r)) & 1) == 1
 
+def edges_adjacent_to_box(c, r):
+    return [
+        [c, r, 0],
+        [c + 1, r, 1],
+        [c, r + 1, 0],
+        [c, r, 1]
+    ]
 def encode_Edges(edges):
     """
         edges를 받아 int 2개로 압축한다.

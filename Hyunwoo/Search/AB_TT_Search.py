@@ -73,12 +73,14 @@ class AB_TT_Search(BaseSearchEngine):
         self.k = 5
         self.T = 0.01
         self.skip_move = True
+        self.w_eval = 1
 
         ## Loging
         self.nodes = 0
         self.cutoffs = 0
         self.tt_hits = 0
         self.tt_cutoffs = 0
+        self.skipped_move = 0
 
     def search(self, eng, state):
         
@@ -140,7 +142,7 @@ class AB_TT_Search(BaseSearchEngine):
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
-            return None, [sign * self.evaluate(eng)]
+            return None, [sign * self.evaluate(eng) * self.w_eval]
 
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)
@@ -180,15 +182,17 @@ class AB_TT_Search(BaseSearchEngine):
             player_before = eng.cur_player
             out = eng.apply_action(a)
 
-            # ## Skipping Suspicious Move
-            # n_maximizing = (root_player == eng.cur_player)
-            # n_depth = depth - 1
-            # ent = self.tt.probe(eng=eng, maximizing=n_maximizing, depth=n_depth)
-            # if ent != None and ent.depth >= n_depth:
-            #     if not skipped and ((not maximizing and ent.flag == LOWERBOUND) or (maximizing and ent.flag == UPPERBOUND)):
-            #         move_order.append((True, a))
-            #         eng.undo_action(a, out["completed_boxes"], player_before)
-            #         continue 
+            ## Skipping Suspicious Move
+            if self.skip_move:
+                n_maximizing = (root_player == eng.cur_player)
+                n_depth = depth - 1
+                ent = self.tt.probe(eng=eng, maximizing=n_maximizing, depth=n_depth)
+                if ent != None and ent.depth >= n_depth:
+                    if not skipped and ((not maximizing and ent.flag == LOWERBOUND) or (maximizing and ent.flag == UPPERBOUND)):
+                        self.skip_move += 1
+                        move_order.append((True, a))
+                        eng.undo_action(a, out["completed_boxes"], player_before)
+                        continue 
 
             _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha, beta)
 
@@ -234,7 +238,8 @@ class AB_TT_Search(BaseSearchEngine):
             'nodes': self.nodes,
             'cutoffs': self.cutoffs,
             'tt_hits': self.tt_hits,
-            'tt_cutoffs': self.tt_cutoffs
+            'tt_cutoffs': self.tt_cutoffs,
+            'skip_move': self.skip_move
         }
     
     def reset_log(self):
@@ -242,6 +247,7 @@ class AB_TT_Search(BaseSearchEngine):
         self.cutoffs = 0
         self.tt_hits = 0
         self.tt_cutoffs = 0
+        self.skip_move = 0
 
     def clear_tt(self):
         self.tt = TranspositionTable()

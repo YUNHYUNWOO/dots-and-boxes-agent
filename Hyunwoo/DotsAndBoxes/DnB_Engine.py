@@ -11,13 +11,16 @@ from Util import (
     check_bounds,
     boxes_adjacent_to_edge,
     is_box_complete,
-    count_completed_boxes
+    count_completed_boxes,
+    edge_is_claimed
 )
 
 class DotsAndBoxesEngine:
     def __init__(self, state: Optional[Dict] = None):
         self.h_bits: int = 0
         self.v_bits: int = 0
+        self.h_mask = (1 << H_COUNT) - 1  # 30 bits
+        self.v_mask = (1 << V_COUNT) - 1  # 30 bits
         self.cur_player: int = 0
         self.score: List[int] = [0, 0]
         if state is not None:
@@ -93,9 +96,6 @@ class DotsAndBoxesEngine:
         return eng
 
     # ---- Internals ----
-    def _edge_is_claimed(self, c: int, r: int, d: int) -> bool:
-        if d == H: return ((self.h_bits >> h_index(c, r)) & 1) == 1
-        else:      return ((self.v_bits >> v_index(c, r)) & 1) == 1
 
     def _set_edge(self, c: int, r: int, d: int) -> None:
         if d == H: self.h_bits |= (1 << h_index(c, r))
@@ -106,13 +106,14 @@ class DotsAndBoxesEngine:
         else:      self.v_bits &= ~(1 << v_index(c, r))
 
     def is_game_over(self) -> bool:
-        return sum(self.score) == TOTAL_BOXES
+        return (self.h_bits == self.h_mask) and \
+           (self.v_bits == self.v_mask)
 
     # ---- API ----
     def apply_action(self, action: Tuple[int, int, int]) -> Dict:
         c, r, d = action
         check_bounds(c, r, d)
-        if self._edge_is_claimed(c, r, d):
+        if edge_is_claimed([self.h_bits, self.v_bits], c, r, d):
             raise ValueError("Edge already claimed")
 
         self._set_edge(c, r, d)
@@ -156,7 +157,7 @@ class DotsAndBoxesEngine:
         c, r, d = action
         check_bounds(c, r, d)
 
-        if not self._edge_is_claimed(c, r, d):
+        if not edge_is_claimed([self.h_bits, self.v_bits], c, r, d):
             raise ValueError("Cannot undo: Edge is not set")
 
         self._clear_edge(c, r, d)
