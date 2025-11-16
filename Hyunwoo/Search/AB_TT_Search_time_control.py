@@ -6,14 +6,50 @@ import torch
 import torch.nn as nn
 import numpy as np
 from collections import OrderedDict
+from Util.DnB_Engine_Util import N_BOX
 
 Action = List[int]
+EXACT = 0
+LOWERBOUND = 1
+UPPERBOUND = 2
+        
+
+def default_budget_for_this_move(t, time_manager):
+    """
+        budget_for_this_move(t):
+        -> returns budget for turn t
+    """
+
+    rem = time_manager.remaining()
+    base = rem / ((2 * N_BOX * (N_BOX + 1) - t) / 2)
+
+    progress = t / (2 * N_BOX * (N_BOX + 1))
+
+    if progress < 0.3:
+        weight = 0.1
+    elif progress < 0.6:
+        weight = 4.0
+    else:
+        weight = 3.0
+
+    budget = base * weight
+    MIN_BUDGET = 0.02   # 최소 20ms
+    MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
+    budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
+
+    SAFETY = 0.05
+    budget = max(0.0, budget - SAFETY)
+
+    return budget
+
+        
 
 class TTEntry:
-    __slots__ = ("value", "depth", "best_action")
-    def __init__(self, value: int, depth: int, best_action: Optional[Tuple[int,int,int]]):
+    __slots__ = ("value", "depth", "flag", "best_action")
+    def __init__(self, value: int, depth: int, flag, best_action: Optional[Tuple[int,int,int]]):
         self.value = value          # root 기준의 미래마진 값
         self.depth = depth          # 이 값이 유효한 최소 보장 깊이
+        self.flag = flag            # EXACT / LOWERBOUND / UPPERBOUND
         self.best_action = best_action
 
 
@@ -34,14 +70,14 @@ class TranspositionTable:
             return ent
         return None
 
-    def store(self, eng, maximizing, depth, value, best_action):
+    def store(self, eng, maximizing, depth, flag, value, best_action):
         k = self.key_from(eng, maximizing)
         prev = self._t.get(k)
         # 더 깊은(depth 큰) 결과만 덮어씌우자
         if (prev is None) or (depth >= prev.depth):
-            self._t[k] = TTEntry(value, depth, best_action)
+            self._t[k] = TTEntry(value, depth, flag, best_action)
 
-        self._t[k] = TTEntry(value, depth, best_action)
+        self._t[k] = TTEntry(value, depth, flag, best_action)
         # 최근 사용으로 이동
         self._t.move_to_end(k, last=True)
         # 용량 초과 시 LRU부터 제거
@@ -55,21 +91,35 @@ class TranspositionTable:
 
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
-    
-class AB_TT_Search(BaseSearchEngine):
+
+
+
+class AB_TT_Search_TC(BaseSearchEngine):
 
     def __init__(self):
         self.tt = TranspositionTable()
         self._tt_reset_keys = ['evaluate']
         self.evaluate = None
-        self.move_ordering = lambda x: x
+        self.move_ordering = None
         self.depth = None
         self.use_iterative_deepening = False
         self.deterministic = False
         self.k = 5
         self.T = 0.01
+        self.skip_move = True
+        self.w_eval = 1
+        self.budget_for_this_move = default_budget_for_this_move
+        self.use_time_control = True
 
-    def search(self, eng, state):
+        ## Loging
+        self.nodes = 0
+        self.cutoffs = 0
+        self.tt_hits = 0
+        self.tt_cutoffs = 0
+        self.skipped_move = 0
+        self.searched_d = 0
+
+    def search(self, eng, state, time_manager):
         
         assert self.evaluate != None
         assert self.depth != None
@@ -78,17 +128,47 @@ class AB_TT_Search(BaseSearchEngine):
             self.move_ordering = default_move_ordering
 
         actions = None
-        if self.use_iterative_deepening:
-            actions, vals = self.iterative_deepening(eng, state)
-        else :
-            actions, vals = self.alpha_beta(eng=eng, 
-                                depth=self.depth,
-                                root_player=state['cur_player'],
-                                alpha= -10**9,
-                                beta= 10**9
-                                )
-        # print('actions: ', actions)
-        # print('vals: ', vals)
+
+        def count_moves(edges) -> int:
+            h_bits, v_bits = edges
+            return h_bits.bit_count() + v_bits.bit_count() 
+        t = count_moves(eng.get_state()['edges'])
+        
+        budget = self.budget_for_this_move(t, time_manager)
+        # print('t', t, 'budget', budget)
+        
+        self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
+
+        #print(f't: {t}, remaining: {time_manager.remaining()}')
+        try:
+            if self.use_iterative_deepening:
+                actions, vals = None, None
+                for d in range(self.depth + 1):
+                    self._check_time()
+                    
+                    actions, vals = self.alpha_beta(eng=eng, 
+                                    depth=d,
+                                    root_player=state['cur_player'],
+                                    alpha= -10**9,
+                                    beta= 10**9)
+                    self.searched_d = d
+            else :
+                actions, vals = self.alpha_beta(eng=eng, 
+                                    depth=self.depth,
+                                    root_player=state['cur_player'],
+                                    alpha= -10**9,
+                                    beta= 10**9
+                                    )
+            # print('actions: ', actions)
+            # print('vals: ', vals)
+
+        except TimeoutError:
+            pass
+
+        if actions == None:
+            # 어떤 깊이도 끝까지 못 돌린 극단 상황
+            actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+            vals = [0]
 
         if self.deterministic == True:
             idx = 0
@@ -99,17 +179,6 @@ class AB_TT_Search(BaseSearchEngine):
             idx = np.random.choice(len(actions), p=probs)
 
         return actions[idx], vals[idx]
-
-    def iterative_deepening(self, eng, state):
-        best_action = None
-        for d in range(self.depth + 1):
-            best_actions, best_vals = self.alpha_beta(eng=eng, 
-                               depth=d,
-                               root_player=state['cur_player'],
-                               alpha= -10**9,
-                               beta= 10**9)
-            
-        return best_actions, best_vals
     
     def alpha_beta(self,    
                eng: DotsAndBoxesEngine,
@@ -118,7 +187,11 @@ class AB_TT_Search(BaseSearchEngine):
                alpha: int = -10**9,
                beta: int = 10**9
                ) -> Tuple[Optional[Action], int]:
-        
+        self.nodes += 1
+        if (self.nodes & 1023) == 0:  # 1024의 배수일 때
+            self._check_time()
+
+
         """
         반환: (가치, 최선의 액션)
         - depth: 남은 탐색 깊이
@@ -129,45 +202,57 @@ class AB_TT_Search(BaseSearchEngine):
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
-            return None, [sign * self.evaluate(eng)]
+            return None, [sign * self.evaluate(eng) * self.w_eval]
 
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)
         
         ent = self.tt.probe(eng=eng, maximizing=maximizing, depth=depth)
-        if ent != None:
-            return [ent.best_action], [ent.value]
+        if ent != None and ent.depth >= depth:
+            self.tt_hits += 1
+            if ent.flag == EXACT:
+                return [ent.best_action], [ent.value]
+            elif ent.flag == LOWERBOUND:
+                if ent.value >= beta:
+                    self.tt_cutoffs += 1
+                    return [ent.best_action], [ent.value]  # 이 노드에서 바로 cutoff
+                alpha = max(alpha, ent.value)
+            elif ent.flag == UPPERBOUND:
+                if ent.value <= alpha:
+                    self.tt_cutoffs += 1
+                    return [ent.best_action], [ent.value]
+                beta = min(beta, ent.value)
 
         best_vals:List[float] = [-10**9 if maximizing else 10**9 for i in range(self.k)]
         best_actions: List[Action] = [None for i in range(self.k)]
 
         actions = get_legal_actions(eng.get_state()['edges'])
-        
-        # print(actions)
-        # edges = decode_Edges(eng.get_state()['edges'])
-
-        # for a in actions:
-        #     if edges[a[0]][a[1]][a[2]]:
-        #         print('Same_Edges_Detected')
-        #         print(a)
-        #         print('decoded_edges')
-        #         for d in range(2):
-        #             for c in range(len(edges)):
-        #                 for r in range(len(edges)):
-        #                     print(edges[c][r][d], end=" ")
-        #                 print()
-        #             print("=======")
-        #         exit()
 
         pv_action = self.tt.pv_move(eng, maximizing)
         if pv_action != None:
             actions.insert(0, pv_action)
 
-        for a in self.move_ordering(actions, eng, self.tt, depth, root_player):
+        flag = EXACT
+        move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
+        move_order = [(False, action) for action in move_order]
+
+        for skipped, a in move_order:
 
             # 적용
             player_before = eng.cur_player
             out = eng.apply_action(a)
+
+            ## Skipping Suspicious Move
+            if self.skip_move:
+                n_maximizing = (root_player == eng.cur_player)
+                n_depth = depth - 1
+                ent = self.tt.probe(eng=eng, maximizing=n_maximizing, depth=n_depth)
+                if ent != None and ent.depth >= n_depth:
+                    if not skipped and ((not maximizing and ent.flag == LOWERBOUND) or (maximizing and ent.flag == UPPERBOUND)):
+                        self.skipped_move += 1
+                        move_order.append((True, a))
+                        eng.undo_action(a, out["completed_boxes"], player_before)
+                        continue 
 
             _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha, beta)
 
@@ -188,11 +273,12 @@ class AB_TT_Search(BaseSearchEngine):
                 self._update_topk(best_actions=best_actions, best_vals=best_vals, a=a, val=val, k=self.k, maximizing=maximizing)
                 beta = min(beta, best_vals[0])
 
-            if beta <= alpha:
+            if alpha >= beta:
+                self.cutoffs += 1
+                flag = LOWERBOUND if maximizing else UPPERBOUND
                 break  # alpha-beta cut
-        
-        self.tt.store(eng, maximizing=maximizing, depth=depth, value=best_vals[0], best_action=best_actions[0])
-        
+
+        self.tt.store(eng, maximizing=maximizing, depth=depth, flag=flag, value=best_vals[0], best_action=best_actions[0])
         return best_actions, best_vals
      
     def configure(self, **kwargs):
@@ -207,6 +293,28 @@ class AB_TT_Search(BaseSearchEngine):
 
         return self
     
+    def _check_time(self):
+        if time.perf_counter() >= self.deadline:
+            raise TimeoutError()
+
+    def get_log(self):
+        return {
+            'nodes': self.nodes,
+            'cutoffs': self.cutoffs,
+            'tt_hits': self.tt_hits,
+            'tt_cutoffs': self.tt_cutoffs,
+            'skipped_move': self.skipped_move,
+            'depth': self.searched_d
+        }
+    
+    def reset_log(self):
+        self.nodes = 0
+        self.cutoffs = 0
+        self.tt_hits = 0
+        self.tt_cutoffs = 0
+        self.skipped_move = 0
+        self.searched_d = 0
+
     def clear_tt(self):
         self.tt = TranspositionTable()
 
@@ -224,7 +332,7 @@ class AB_TT_Search(BaseSearchEngine):
                 break
 
         # 2-2) 정렬 위치 찾아 삽입 (수동 구현)
-        n = len(best_vals)
+        n = len(best_vals) 
         inserted = False
         for i in range(n):
             if (maximizing and val > best_vals[i]) or ((not maximizing) and val < best_vals[i]):

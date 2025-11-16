@@ -7,6 +7,7 @@ from Util.DnB_Engine_Util import *
 Action = List[int]
 
 
+
 class AlphaBetaSearch(BaseSearchEngine):
 
     def init(self, evaluate, move_ordering, depth):

@@ -42,14 +42,21 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
     player = []
     Policy_log = []
     episode_over = False
+    p0_time_manager = TimeManager()
+    p1_time_manager = TimeManager()
+
     while not episode_over:
         cur_player =  observation['cur_player']
+        time_manager = p0_time_manager if cur_player == 0 else p1_time_manager
         policy = p0_policy if cur_player == 0 else p1_policy
 
         t0 = time.perf_counter()
-        action, val = policy.get_action(observation, info, env)
-        Policy_log.append(policy.get_log())
+        time_manager.start_move()
+        action, val = policy.get_action(observation, info, env, time_manager)
+        time_manager.end_move()        
         t1 = time.perf_counter()
+        Policy_log.append(policy.get_log())
+        Policy_log[-1]['time_spent'] = t1 - t0
 
         if verbose:
             print('action:', action)
@@ -134,7 +141,6 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
             Evaluation_log['scores'] = [score[::-1] for score in Evaluation_log['scores']]
             Policy_log['player'] = [1 - p for p in Policy_log['player']]
         Action_log['first_player'] = 0 if first_player == p0_policy else 1
-        Policy_logs.append(Policy_log)
 
         Evaluation_logs.append({
             'episode_id': episode,
@@ -159,7 +165,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'move_ordering_vs_no_move_ordering'
+    run_name = 'no_tc_vs_tc'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -178,29 +184,31 @@ if __name__ == "__main__":
     config_p0 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 5),
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
-        'skip_move': True,
+        'skip_move': False,
+        # 'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8)
+        'use_time_control': False
 
     }
-    p0_policy = SearchPolicy(AB_TT_Search(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC(), config_p0)
 
     config_p1 = {
         'evaluate':evaluate_rel,
-        'move_ordering':None,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 5),
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
-        'skip_move': True,
-
+        'skip_move': False,
+        'use_time_control': True
     }
-    p1_policy = SearchPolicy(AB_TT_Search(), config_p1)
+    p1_policy = SearchPolicy(AB_TT_Search_TC(), config_p1)
     env.render_mode = 'rgb_array'
 
-    # SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True)
+    # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=50, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=15, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

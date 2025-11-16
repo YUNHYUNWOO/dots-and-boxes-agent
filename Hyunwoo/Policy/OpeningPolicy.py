@@ -1,7 +1,7 @@
 from typing import List, Tuple, Dict, Optional
 import numpy as np
 import random
-from .BasePolicy import BasePolicy
+from .BasePolicy import BasePolicy, TimeManager
 # ---------- Helpers to work with the Env observation ----------
 
 
@@ -145,6 +145,6 @@ def dots_and_boxes_policy(edges: List[List[List[int]]]):
 
 class OpeningPolicy(BasePolicy):
 
-    def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env) -> Tuple[int,int,int]:
+    def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env, time_manager:TimeManager) -> Tuple[int,int,int]:
         
         return list(dots_and_boxes_policy(observation['edges'])), None

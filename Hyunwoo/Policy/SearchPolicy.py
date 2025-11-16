@@ -1,15 +1,13 @@
 from DotsAndBoxes import DnBEnv
-from .BasePolicy import BasePolicy
+from .BasePolicy import BasePolicy,TimeManager
 from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from Util.DnB_Engine_Util import *
-from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntry
+from Search import BaseSearchEngine
 from .Scheduler import *
 import numpy as np
 
 Action = List[int]
-
-
 
 
 
@@ -34,7 +32,7 @@ class SearchPolicy(BasePolicy):
 
         return config
     
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
@@ -51,7 +49,7 @@ class SearchPolicy(BasePolicy):
         self.SearchEngine.configure(**config)
         self.eng.set_state(state)
 
-        best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state)
+        best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state, time_manager=time_manager)
         
         return best_action, best_val
 
@@ -59,6 +57,4 @@ class SearchPolicy(BasePolicy):
         log = self.SearchEngine.get_log()
         self.SearchEngine.reset_log()
         return log
-def main():
-    AlphaBetaSearch = AlphaBetaSearch(evaluate=evaluate, move_ordering=None, depth=3)
-    SearchPolicy(SearchEngine=AlphaBetaSearch)
+
