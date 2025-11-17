@@ -7,38 +7,62 @@ import gymnasium as gym
 from gymnasium import spaces
 
 import importlib
-import random
 
 from DotsAndBoxes import DnBEnv
+import time
 
-class Policy():
+class TimeManager():
+    def __init__(self):
+        self.total_budget = 24.0
+        self.used_time = 0.0
+        self._move_start = None
+
+    def remaining(self):
+        return max(0.0, self.total_budget - self.used_time)
+    
+    def start_move(self):
+        self._move_start = time.perf_counter()
+    
+    def end_move(self):
+        dt = time.perf_counter() - self._move_start
+        self.used_time += dt
+        return dt
+    
+    def reset(self):
+        self.total_budget = 24.0
+        self.used_time = 0.0
+
+class BasePolicy():
     def __init__(self):
         ## 필요한거 있으면 추가
+        self.time_manager = TimeManager()
         pass
 
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
         raise NotImplementedError
 
+    def get_log(self):
+        return None
 
 ## 예시 정책
-class RandomPolicy(Policy):
+class RandomPolicy(BasePolicy):
     def __init__(self):
         super().__init__()
 
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         action_mask = info['action_mask']
         action = env.action_space.sample()
         # info['action_mask']가 True인 액션은 이미 선택된 액션이므로 다시 샘플링
         while action_mask[action[0], action[1], action[2]]:
             action = env.action_space.sample()
 
-        return action
+        return action, None
 
 
-class FixedOrderPolicy(Policy):
+class FixedOrderPolicy(BasePolicy):
     def __init__(self, n_box):
         super().__init__()
         self.n_box = n_box
@@ -48,60 +72,16 @@ class FixedOrderPolicy(Policy):
                 for c in range(n_box + 1):
                     if (ori == 0 and c == n_box) or (ori == 1 and r == n_box):
                         continue
-                    self.action_order.append((ori, r, c))
+                    self.action_order.append((c, r, ori))
         self.current_index = 0
 
 
-    def get_action(self, observation, info, env):
-        action_mask = info['action_mask']
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         action = self.action_order[self.current_index]
-        while action_mask[action[0], action[1], action[2]]:
+        while info['action_mask'][action[0], action[1], action[2]]:
             self.current_index = (self.current_index + 1) % len(self.action_order)
             action = self.action_order[self.current_index]
 
         self.current_index = (self.current_index + 1) % len(self.action_order)
-        return action
-
-
-# 정책에 의한 전체 에피소드를 시뮬레이션 하는 함수
-# 만약 pygame window가 작동하지 않으면 env 생성시 render_mode를 'human'으로 설정할 것
-def SimulateEpisode(env, policy: Policy, verbose=False):
-    # verbose는 디버깅 출력 여부
-    observation, info = env.reset()
-    action_mask = info['action_mask']
-
-    if verbose:
-        print(f"Starting observation: {observation}")
-
-    episode_over = False
-    total_reward = 0
-
-    while not episode_over:
-        action = policy.get_action(observation, info, env)
         
-        if verbose:
-            print('action:', action)
-            print(info['action_mask'])
-            print('Number of Claimed Edges:', np.sum(action_mask == False))
-
-        observation, reward, terminated, truncated, info = env.step(action)
-
-        total_reward += reward
-        episode_over = terminated or truncated
-
-    if verbose:
-        print(f"Episode finished! Total reward: {total_reward}")
-        print(f'Action spasce: {env.action_space}')
-        print(f'Observation spasce: {env.observation_space}')
-
-    env.close()
-
-
-if __name__ == "__main__":
-
-    n_box = 5
-    env = DnBEnv(render_mode='human', n_box=n_box)
-    
-    # policy = FixedOrderPolicy(n_box=n_box)
-    policy = RandomPolicy()
-    SimulateEpisode(env, policy, verbose=True)
+        return action, None
