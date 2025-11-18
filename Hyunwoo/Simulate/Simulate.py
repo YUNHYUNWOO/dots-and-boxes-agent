@@ -78,7 +78,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         vals.append(val)
         scores.append([s for s in info['score']])
 
-        Action_log.append(action)
+        Action_log.append([cur_player] + action)
 
     if verbose:
         print(f"Episode finished! Winner: {info['winner']}")
@@ -94,7 +94,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         'scores': scores,
         'winner': info['winner'],
     }
-    Action_log = {'Action_log': ", ".join(str(x) for a in Action_log for x in a)}
+    Action_log = {'Action_log': '5, 5, ' + (", ".join(str(x) for a in Action_log for x in a))}
     Policy_log = {
         'player': player,
         'logs' : Policy_log
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     config_p0 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'depth': ExponentialSchedulerInt(15, 2, 35, 18),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
@@ -202,14 +202,15 @@ if __name__ == "__main__":
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'use_time_control': True
+        'use_time_control': True,
+        'budget_scheduler': Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
     }
     p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
     env.render_mode = 'rgb_array'
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=2, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=8, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

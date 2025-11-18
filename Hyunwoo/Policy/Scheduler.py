@@ -161,7 +161,8 @@ class Budget_Scheduler(BaseScheduler):
                  center: float = None,
                  scale: float = None,
                  alpha: float = 3.0,
-                 p: float = 0.3):
+                 p: float = 0.3,
+                 w_2:float = 1.7):
         self.num_turns = num_turns
 
         t = np.arange(num_turns)
@@ -170,6 +171,7 @@ class Budget_Scheduler(BaseScheduler):
         w = g / g.sum()
         u = np.ones((num_turns,)) / num_turns
         self.w = p * u + w * (1 - p)
+        self.w_2 = w_2
 
     def value(self, t:int)->float:
         idx = int(t)
@@ -182,7 +184,7 @@ class Budget_Scheduler(BaseScheduler):
         if tail_sum <= 0:
             return 1.0  # 남은 weight가 없다면 남은 시간 전부 다 써도 된다고 가정
 
-        return float(self.w[idx] / tail_sum)
+        return self.w_2 * float(self.w[idx] / tail_sum)
     
     def get_config(self):
         return None
