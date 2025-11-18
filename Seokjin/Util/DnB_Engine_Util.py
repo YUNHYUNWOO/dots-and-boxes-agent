@@ -39,24 +39,24 @@ def is_box_complete(h_bits: int, v_bits: int, bc: int, br: int) -> bool:
     #v1 = (v_bits >> v_index(bc, br)) & 1
     #v2 = (v_bits >> v_index(bc + 1, br)) & 1
 
-    h1 = br * (N - 1) + bc
-    h2 = (br + 1) * (N - 1) + bc
-    v1 = br * N + bc
-    v2 = br * N + bc + 1
+    # h1 = br * (N - 1) + bc
+    # h2 = (br + 1) * (N - 1) + bc
+    # v1 = br * N + bc
+    # v2 = br * N + bc + 1
 
-    return (h_bits >> h1 & 1) & (h_bits >> h2 & 1) & (v_bits >> v1 & 1) & (v_bits >> v2 & 1)
+    return (h_bits >> (br * (N - 1) + bc) & 1) & (h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (v_bits >> (br * N + bc) & 1) & (v_bits >> (br * N + bc + 1) & 1)
 
 def count_completed_boxes(h_bits: int, v_bits: int) -> int:
     cnt = 0
     for br in range(N_BOX):
         for bc in range(N_BOX):
-            if is_box_complete(h_bits, v_bits, bc, br):
+            if (h_bits >> (br * (N - 1) + bc) & 1) & (h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (v_bits >> (br * N + bc) & 1) & (v_bits >> (br * N + bc + 1) & 1):
                 cnt += 1
     return cnt
 
 def edge_is_claimed(h_edge:int, v_edge:int, c: int, r: int, d: int) -> bool:
-    if d == H: return ((h_edge >> h_index(c, r)) & 1)
-    else:      return ((v_edge >> v_index(c, r)) & 1)
+    if d == H: return ((h_edge >> (r * (N - 1) + c)) & 1)
+    else:      return ((v_edge >> (r * N + c)) & 1)
 
 def edges_adjacent_to_box(c, r):
     return [

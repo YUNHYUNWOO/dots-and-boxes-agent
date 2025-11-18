@@ -79,7 +79,7 @@ class AB_TT_Search_TC(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=28, scale=7, alpha=1, p=0.3)
+        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=30, scale=7, alpha=1, p=0.3)
         self.use_time_control = True
 
         ## Loging
@@ -278,7 +278,7 @@ class AB_TT_Search_TC(BaseSearchEngine):
 
         print(rem, w, rem * w)
 
-        budget = rem * w * 1.2
+        budget = rem * w * 1.5
         MIN_BUDGET = 0.02   # 최소 20ms
         MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
         budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))

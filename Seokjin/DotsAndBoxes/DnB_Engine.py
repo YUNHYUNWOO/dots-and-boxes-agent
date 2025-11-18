@@ -23,6 +23,8 @@ class DotsAndBoxesEngine:
         self.v_mask = (1 << V_COUNT) - 1  # 30 bits
         self.cur_player: int = 0
         self.score: List[int] = [0, 0]
+        self.h_edge_to_box =  [[[-1, -1] for _ in range(N - 1)] for _ in range(N)]
+        self.v_edge_to_box = [[[-1, -1] for _ in range(N)] for _ in range(N - 1)]
         if state is not None:
             self.set_state(state)
 
@@ -45,36 +47,36 @@ class DotsAndBoxesEngine:
           - h,v는 유효 비트 수 이내여야 함
           - score 합 == 현재 비트보드에서 완성된 박스 수
         """
-        if not isinstance(state, dict):
-            raise TypeError("state must be a dict")
+        # if not isinstance(state, dict):
+        #     raise TypeError("state must be a dict")
 
         # --- edges ---
-        if "edges" not in state or not isinstance(state["edges"], (list, tuple)) or len(state["edges"]) != 2:
-            raise ValueError("state['edges'] must be [h, v]")
+        # if "edges" not in state or not isinstance(state["edges"], (list, tuple)) or len(state["edges"]) != 2:
+        #     raise ValueError("state['edges'] must be [h, v]")
 
         h, v = state["edges"]
-        if not isinstance(h, int) or not isinstance(v, int):
-            raise TypeError("edges must be integers")
+        # if not isinstance(h, int) or not isinstance(v, int):
+        #     raise TypeError("edges must be integers")
 
         h_mask = (1 << H_COUNT) - 1  # 30 bits
         v_mask = (1 << V_COUNT) - 1  # 30 bits
 
         # 초과 비트가 켜져 있으면 잘못된 상태
-        if h & ~h_mask:
-            raise ValueError("H edges contain out-of-range bits")
-        if v & ~v_mask:
-            raise ValueError("V edges contain out-of-range bits")
+        # if h & ~h_mask:
+        #     raise ValueError("H edges contain out-of-range bits")
+        # if v & ~v_mask:
+        #     raise ValueError("V edges contain out-of-range bits")
 
-        # --- cur_player ---
-        if "cur_player" not in state or state["cur_player"] not in (0, 1):
-            raise ValueError("state['cur_player'] must be 0 or 1")
+        # # --- cur_player ---
+        # if "cur_player" not in state or state["cur_player"] not in (0, 1):
+        #     raise ValueError("state['cur_player'] must be 0 or 1")
 
-        # --- score ---
-        if "score" not in state or not isinstance(state["score"], (list, tuple)) or len(state["score"]) != 2:
-            raise ValueError("state['score'] must be [p0, p1]")
+        # # --- score ---
+        # if "score" not in state or not isinstance(state["score"], (list, tuple)) or len(state["score"]) != 2:
+        #     raise ValueError("state['score'] must be [p0, p1]")
         s0, s1 = state["score"]
-        if not (isinstance(s0, int) and isinstance(s1, int) and s0 >= 0 and s1 >= 0):
-            raise ValueError("scores must be non-negative integers")
+        # if not (isinstance(s0, int) and isinstance(s1, int) and s0 >= 0 and s1 >= 0):
+        #     raise ValueError("scores must be non-negative integers")
 
         # 일단 반영 후 일관성 검사
         self.h_bits = h
@@ -83,11 +85,48 @@ class DotsAndBoxesEngine:
         self.score = [s0, s1]
 
         # 박스 개수 일관성 체크
-        completed = count_completed_boxes(self.h_bits, self.v_bits)
-        if s0 + s1 != completed:
-            raise ValueError(
-                f"Inconsistent state: sum(score)={s0+s1} but completed_boxes={completed}"
-            )
+        # completed = count_completed_boxes(self.h_bits, self.v_bits)
+        # if s0 + s1 != completed:
+        #     raise ValueError(
+        #         f"Inconsistent state: sum(score)={s0+s1} but completed_boxes={completed}"
+        #     )
+
+        # 엣지별 BOX 전처리
+        for r in range(N):
+            for c in range(N - 1):
+                # 이 엣지는 어떤 박스의 "윗변"?
+                if r < N_BOX:        # 아래 박스 존재
+                    bc, br = c, r
+                    box_idx = br * N_BOX + bc
+                    self.h_edge_to_box[r][c][0] = box_idx
+
+                # 이 엣지는 어떤 박스의 "아랫변"?
+                if 0 < r <= N_BOX:   # 위 박스 존재
+                    bc, br = c, r - 1
+                    box_idx = br * N_BOX + bc
+                    # 첫 칸이 비어있으면 첫 칸에, 아니면 두 번째 칸에
+                    if self.h_edge_to_box[r][c][0] == -1:
+                        self.h_edge_to_box[r][c][0] = box_idx
+                    else:
+                        self.h_edge_to_box[r][c][1] = box_idx
+
+        # --- 수직 엣지(V): 크기 (N-1) × N ---
+        for r in range(N - 1):
+            for c in range(N):
+                # 이 엣지는 어떤 박스의 "왼쪽변"?
+                if c < N_BOX:      # 오른쪽 박스 존재
+                    bc, br = c, r
+                    box_idx = br * N_BOX + bc
+                    self.v_edge_to_box[r][c][0] = box_idx
+
+                # 이 엣지는 어떤 박스의 "오른쪽변"?
+                if 0 < c <= N_BOX:  # 왼쪽 박스 존재
+                    bc, br = c - 1, r
+                    box_idx = br * N_BOX + bc
+                    if self.v_edge_to_box[r][c][0] == -1:
+                        self.v_edge_to_box[r][c][0] = box_idx
+                    else:
+                        self.v_edge_to_box[r][c][1] = box_idx
 
     @classmethod
     def from_state(cls, state: Dict):
@@ -112,35 +151,63 @@ class DotsAndBoxesEngine:
     # ---- API ----
     def apply_action(self, action: Tuple[int, int, int]) -> Dict:
         c, r, d = action
-        check_bounds(c, r, d)
-        if edge_is_claimed(self.h_bits, self.v_bits, c, r, d):
-            raise ValueError("Edge already claimed")
+        # check_bounds(c, r, d)
+        # if edge_is_claimed(self.h_bits, self.v_bits, c, r, d):
+        #     raise ValueError("Edge already claimed")
 
-        self._set_edge(c, r, d)
+        # self._set_edge(c, r, d)
 
-        completed = [] 
+        if d == H: self.h_bits |= (1 << (r * (N - 1) + c))
+        else:      self.v_bits |= (1 << (r * N + c))
+
+        completed = []
+        box_mask = 0
+        box_cnt = 0
+        made_box = False
 
         #h1 = (self.h_bits >> h_index(0, 0)) & 1
         #h2 = (self.h_bits >> h_index(0, 0 + 1)) & 1
         #v1 = (self.v_bits >> v_index(0, 0)) & 1
         #v2 = (self.v_bits >> v_index(0 + 1, 0)) & 1
 
-        for (bc, br) in boxes_adjacent_to_edge(c, r, d):
-            if is_box_complete(self.h_bits, self.v_bits, bc, br):
-                completed.append((bc, br))
-
-        if completed:
-            self.score[self.cur_player] += len(completed)
-            made_box = True
+        if d == H:
+            b1, b2 = self.h_edge_to_box[r][c]
+            if b1 != -1:
+                bc, br = b1 % N_BOX, b1 // N_BOX
+                if (self.h_bits >> (br * (N - 1) + bc) & 1) & (self.h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (self.v_bits >> (br * N + bc) & 1) & (self.v_bits >> (br * N + bc + 1) & 1):
+                    completed.append((bc, br))
+                    box_mask |= (1 << (br * N_BOX + bc))
+                    box_cnt += 1
+                    made_box = True
+            if b2 != -1:
+                bc, br = b2 % N_BOX, b2 // N_BOX
+                if (self.h_bits >> (br * (N - 1) + bc) & 1) & (self.h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (self.v_bits >> (br * N + bc) & 1) & (self.v_bits >> (br * N + bc + 1) & 1):
+                    completed.append((bc, br))
+                    box_mask |= (1 << (br * N_BOX + bc))
+                    box_cnt += 1
+                    made_box = True
         else:
-            made_box = False
+            b1, b2 = self.v_edge_to_box[r][c]
+            if b1 != -1:
+                bc, br = b1 % N_BOX, b1 // N_BOX
+                if (self.h_bits >> (br * (N - 1) + bc) & 1) & (self.h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (self.v_bits >> (br * N + bc) & 1) & (self.v_bits >> (br * N + bc + 1) & 1):
+                    completed.append((bc, br))
+                    box_mask |= (1 << (br * N_BOX + bc))
+                    box_cnt += 1
+                    made_box = True
+            if b2 != -1:
+                bc, br = b2 % N_BOX, b2 // N_BOX
+                if (self.h_bits >> (br * (N - 1) + bc) & 1) & (self.h_bits >> ((br + 1) * (N - 1) + bc) & 1) & (self.v_bits >> (br * N + bc) & 1) & (self.v_bits >> (br * N + bc + 1) & 1):
+                    completed.append((bc, br))
+                    box_mask |= (1 << (br * N_BOX + bc))
+                    box_cnt += 1
+                    made_box = True
+
+        self.score[self.cur_player] += box_cnt
+        if not (made_box):
             self.cur_player = 1 - self.cur_player
 
-        over = self.is_game_over()
-
-        box_mask = 0
-        for (bc, br) in completed:
-            box_mask |= (1 << (br * N_BOX + bc))
+        over = bool((self.h_bits == self.h_mask) and (self.v_bits == self.v_mask))
 
         return {
             "state": self.get_state(),
@@ -155,12 +222,15 @@ class DotsAndBoxesEngine:
                     completed_boxes: List[Tuple[int, int]],
                     player_turn: int) -> Dict:
         c, r, d = action
-        check_bounds(c, r, d)
+        # check_bounds(c, r, d)
 
-        if not edge_is_claimed(self.h_bits, self.v_bits, c, r, d):
-            raise ValueError("Cannot undo: Edge is not set")
+        # if not edge_is_claimed(self.h_bits, self.v_bits, c, r, d):
+        #     raise ValueError("Cannot undo: Edge is not set")
 
-        self._clear_edge(c, r, d)
+        # self._clear_edge(c, r, d)
+
+        if d == H: self.h_bits &= ~(1 << (r * (N - 1) + c))
+        else:      self.v_bits &= ~(1 << (r * N + c))
 
         if completed_boxes:
             self.score[player_turn] -= len(completed_boxes)
@@ -168,6 +238,6 @@ class DotsAndBoxesEngine:
                 raise ValueError("Undo would make score negative (invalid history)")
 
         self.cur_player = player_turn
-        over = self.is_game_over()
+        over = bool((self.h_bits == self.h_mask) and (self.v_bits == self.v_mask))
 
         return {"state": self.get_state(), "is_game_over": over}
