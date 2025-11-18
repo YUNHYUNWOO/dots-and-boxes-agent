@@ -166,11 +166,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-<<<<<<< HEAD
     run_name = 'no_tc_d2_18_vs_tc_d30_1.5w_optv3'
-=======
-    run_name = 'v1 vs v2'
->>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -214,11 +210,7 @@ if __name__ == "__main__":
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-<<<<<<< HEAD
     Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
-=======
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=8, verbose=False)
->>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

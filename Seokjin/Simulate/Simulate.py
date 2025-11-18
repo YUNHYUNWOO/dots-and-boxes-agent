@@ -166,9 +166,11 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'no_tc_d2_18_vs_tc_d30_1.5w_optv5'
+    run_name = 'cv_vs_rel_opt'
+    run_name2 = 'cv_tc_vs_rel_tc_opt'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
+    env2 = DnBEnv(render_mode='human', n_box=n_box)
 
     # p1_policy_part1 = OpeningPolicy()
     # config_p1 = {
@@ -183,13 +185,13 @@ if __name__ == "__main__":
     # p1_policy = MixedPolicy(p1_policy_scheduler)
     
     config_p0 = {
-        'evaluate':evaluate_rel,
+        'evaluate':evaluate_cv,
         'move_ordering':move_ordering,
         'depth': ExponentialSchedulerInt(15, 2, 35, 18),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        # 'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8)
+        'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
         'use_time_control': False
 
     }
@@ -198,18 +200,44 @@ if __name__ == "__main__":
     config_p1 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': 30,
+        'depth': ExponentialSchedulerInt(15, 2, 35, 18),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
+        'skip_move': False,
+        'use_time_control': False
+    }
+    p1_policy = SearchPolicy(AB_TT_Search_TC(), config_p1)
+
+    config_p2 = {
+        'evaluate':evaluate_cv,
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
+        'skip_move': False,
+        'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
+        'use_time_control': True
+
+    }
+    p2_policy = SearchPolicy(AB_TT_Search_TC(), config_p2)
+
+    config_p3 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
         'use_time_control': True
     }
-    p1_policy = SearchPolicy(AB_TT_Search_TC(), config_p1)
+    p3_policy = SearchPolicy(AB_TT_Search_TC(), config_p3)
     env.render_mode = 'rgb_array'
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
+    Evaluation_logs2, Actions_logs2, Policy_logs2 = SimulateMultipleEpisodes(env, p2_policy, p3_policy, n_episodes=30, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
+    save_path2 = os.path.join(BASE_SAVE_PATH, run_name2)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
-
+    save_sim_logs(Evaluation_logs2, Actions_logs2, Policy_logs2, save_path=save_path2)

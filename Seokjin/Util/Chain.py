@@ -44,7 +44,7 @@ def init_box_data(edges: List):
             open_dirs = []
             
             for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
-                if not edge_is_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+                if not edge_is_claimed(edges[0], edges[1], adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
                     open_dirs.append(d)
 
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
@@ -188,8 +188,195 @@ def get_cv(comps):
     cv = get_fcv(comps) + get_tb(comps)
     return cv
 
+# ----- 체인/루프 컴포넌트 정보 확장 분석 -----
 
+def _build_component_info(components, adj):
+    """
+    components: get_connected_Components 가 돌려준 [ [box_id, ...], ... ]
+    adj       : init_box_data 가 돌려준 인접 리스트
 
+    반환:
+      comp_info: 각 컴포넌트에 대한 정보 리스트
+        [{
+            'type': 'chain' | 'loop' | 'complex',
+            'length': int,
+            'boxes': set(box_id, ...),  # 이 컴포넌트에 속한 박스들
+            'deg': { box_id: internal_degree, ... }
+         }, ...]
+      box_to_comp: { box_id: comp_index }
+      deg_map    : { box_id: internal_degree }  (빠른 조회용)
+    """
+    comp_info = []
+    box_to_comp = {}
+    deg_map = {}
+
+    for idx, comp in enumerate(components):
+        comp_set = set(comp)
+        deg = {}
+
+        # 내부 degree 계산
+        for u in comp:
+            d = 0
+            for v in adj[u]:
+                if v in comp_set:
+                    d += 1
+            deg[u] = d
+            deg_map[u] = d
+            box_to_comp[u] = idx
+
+        num_deg1 = sum(1 for u in comp if deg[u] == 1)
+        num_other = sum(1 for u in comp if deg[u] not in (1, 2))
+
+        # 분류 규칙:
+        #  - loop : 모든 박스 degree == 2
+        #  - chain: degree==1 인 박스가 정확히 2개 (양 끝), 나머지는 2
+        #           + 길이 1짜리(고립된 1박스)도 편의상 chain 취급
+        if num_deg1 == 0 and num_other == 0:
+            ctype = 'loop'
+        elif (num_deg1 == 2 and num_other == 0) or (len(comp) == 1):
+            ctype = 'chain'
+        else:
+            ctype = 'complex'
+
+        comp_info.append({
+            'type': ctype,
+            'length': len(comp),
+            'boxes': comp_set,
+            'deg': deg
+        })
+
+    return comp_info, box_to_comp, deg_map
+
+# ----- 특정 엣지가 체인/루프를 여는 수인지 판별 -----
+
+def is_opening_edge(edges, o, r, c):
+    """
+    주어진 보드 상태(edges)에서, 엣지 (o, r, c)가
+    '체인 또는 루프를 여는 수'인지 판별한다.
+
+    인자:
+      edges : encode_Edges 로 인코딩된 현재 보드의 엣지 비트마스크
+      o     : H 또는 V (Util 에서 import 한 상수)
+      r, c  : 엣지의 인덱스
+
+    반환:
+      (is_opening, info)
+
+      is_opening: bool
+      info: None 또는
+        [
+          {
+            'type': 'chain' | 'loop',      # 어떤 종류의 컴포넌트를 여는지
+            'component_index': int,        # components 리스트에서의 인덱스
+            'component_length': int        # 체인/루프 길이(박스 개수)
+          },
+          ...
+        ]
+
+      보통 한 엣지가 여러 컴포넌트에 동시에 속하지 않으므로
+      info 리스트는 길이 0 또는 1 일 것이다.
+    """
+
+    # 현재 보드에서 체인/루프 후보 박스 정보 구축
+    adj, external_open, is_candidate = init_box_data(edges)
+    components = get_connected_Components(adj, is_candidate)
+
+    if not components:
+        return False, None
+
+    comp_info, box_to_comp, deg_map = _build_component_info(components, adj)
+
+    # 이 엣지에 인접한 박스들 찾기 (최대 2개)
+    adj_boxes = boxes_adjacent_to_edge(o, r, c)
+
+    opening_details = []
+
+    # 인접한 박스들 중에서, 체인/루프 컴포넌트를 여는지 검사
+    for (bc, br) in adj_boxes:
+        if not (0 <= bc < N_BOX and 0 <= br < N_BOX):
+            continue
+
+        bid = box_id(bc, br)
+
+        # 체인/루프 후보 박스가 아니면 무시
+        if not is_candidate.get(bid, False):
+            continue
+
+        comp_idx = box_to_comp.get(bid)
+        if comp_idx is None:
+            continue
+
+        info = comp_info[comp_idx]
+        ctype = info['type']
+
+        # 1) 루프: 루프 컴포넌트에 붙은 어떤 열린 엣지를 그리면
+        #    그 루프를 깨는(여는) 수가 된다고 본다.
+        if ctype == 'loop':
+            opening_details.append({
+                'type': 'loop',
+                'component_index': comp_idx,
+                'component_length': info['length']
+            })
+            continue
+
+        # 2) 체인: 체인의 '끝점' 박스에 붙은 외부 엣지를 그릴 때
+        #    그 체인을 여는 수가 된다.
+        if ctype == 'chain':
+            comp_boxes = info['boxes']
+            deg = info['deg']
+
+            # 이 엣지에 인접한 박스들 중, 이 체인 컴포넌트에 속한 것들
+            boxes_in_comp_adjacent = []
+            for (bc2, br2) in adj_boxes:
+                if not (0 <= bc2 < N_BOX and 0 <= br2 < N_BOX):
+                    continue
+                bid2 = box_id(bc2, br2)
+                if bid2 in comp_boxes:
+                    boxes_in_comp_adjacent.append(bid2)
+
+            # 체인 내부의 '연결 엣지'라면 두 박스(양쪽)가 같은 체인에 속한다.
+            # 체인을 여는 '입구 엣지'는 체인 박스 하나에만 붙는다.
+            if len(boxes_in_comp_adjacent) != 1:
+                continue
+
+            endpoint_bid = boxes_in_comp_adjacent[0]
+
+            # 체인의 끝점이어야 한다 (degree 1) 또는 길이1 체인(고립된 박스)은 degree 0
+            if deg_map.get(endpoint_bid, 0) > 1:
+                # 내부 박스라면 이 엣지는 체인 내부를 잇는 엣지 → 여는 수 아님
+                continue
+
+            # 이 엣지가 진짜로 그 박스의 "열린 변"인지 확인
+            # (안 그려진 edge 이고, 그 박스에 인접한 엣지 중 하나여야 함)
+            c_box = endpoint_bid % N_BOX
+            r_box = endpoint_bid // N_BOX
+            is_open_of_box = False
+            for o2, rr2, cc2 in edges_adjacent_to_box(c_box, r_box):
+                if not edge_is_claimed(edges[0], edges[1], o2, rr2, cc2):
+                    if o2 == o and rr2 == r and cc2 == c:
+                        is_open_of_box = True
+                        break
+
+            if not is_open_of_box:
+                continue
+
+            opening_details.append({
+                'type': 'chain',
+                'component_index': comp_idx,
+                'component_length': info['length']
+            })
+
+    if not opening_details:
+        return False, None
+
+    # 중복 제거 (같은 컴포넌트가 여러 번 추가됐을 수 있음)
+    unique = {}
+    for d in opening_details:
+        key = (d['type'], d['component_index'])
+        if key not in unique:
+            unique[key] = d
+
+    return True, list(unique.values())
 
 def main():
     test_data = [
@@ -230,6 +417,8 @@ def main():
     print(is_candidate)
     components = get_connected_Components(adj, is_candidate)
     print(classify_component(components, adj))
+
+    print(is_opening_edge(edges, 0, 0, 1))
 
 if __name__ == '__main__':
     main()

@@ -5,33 +5,41 @@ from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntr
 
 
 def _adjacent_boxes(c: int, r: int, d: int) -> List[Tuple[int, int]]:
-    boxes = []
     if d == H:
-        if 0 <= r - 1 < N_BOX: boxes.append((c, r - 1))
-        if 0 <= r < N_BOX:     boxes.append((c, r))
+            if 0 <= r - 1 < N_BOX: return [(c, r - 1), (c, r)]
+            elif r < N_BOX: return [(c, r)]
     else:
-        if 0 <= c - 1 < N_BOX: boxes.append((c - 1, r))
-        if 0 <= r < N_BOX and 0 <= c < N_BOX: boxes.append((c, r))
-    return boxes
+        if 0 <= r < N_BOX and 0 <= c - 1 < N_BOX: return [(c - 1, r), (c, r)]
+        if 0 <= r < N_BOX and c < N_BOX: return [(c, r)]
 
 def _box_edge_count(hb: int, vb: int, bc: int, br: int) -> int:
     cnt = 0
     # H(br,bc), H(br+1,bc)
-    if (hb >> h_index(bc, br)) & 1:       cnt += 1
-    if (hb >> h_index(bc, br + 1)) & 1:   cnt += 1
+    if (hb >> (br * (N - 1) + bc)) & 1:       cnt += 1
+    if (hb >> ((br + 1) * (N - 1) + bc)) & 1:   cnt += 1
     # V(br,bc), V(br,bc+1)
-    if (vb >> v_index(bc, br)) & 1:       cnt += 1
-    if (vb >> v_index(bc + 1, br)) & 1:   cnt += 1
+    if (vb >> (br * N + bc)) & 1:       cnt += 1
+    if (vb >> (br * N + bc + 1)) & 1:   cnt += 1
     return cnt
 
 def _makes_third_edge(edges, action) -> bool:
     """액션이 인접 박스 중 '3번째 엣지'를 만들어서 상대에게 4번째를 헌납할 위험인지 체크."""
     c, r, d = action
     h, v = edges
-    for (bc, br) in _adjacent_boxes(c, r, d):
-        if _box_edge_count(h, v, bc, br) == 2:
-            # 지금 두면 3이 됨 (위험수)
-            return True
+    if d == H:
+        if 0 <= r < N_BOX:
+            if _box_edge_count(h, v, c, r) == 2:
+                return True
+        if 0 <= r - 1 < N_BOX:
+            if _box_edge_count(h, v, c, r - 1) == 2:
+                return True
+    else:
+        if 0 <= r < N_BOX:
+            if 0 <= c < N_BOX and _box_edge_count(h, v, c, r) == 2:
+                return True
+            elif c - 1 < N_BOX and _box_edge_count(h, v, c, r) == 2:
+                return True
+
     return False
 
 def evaluate_rel(eng: DotsAndBoxesEngine) -> int:

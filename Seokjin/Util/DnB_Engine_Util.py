@@ -109,12 +109,11 @@ def get_legal_actions(encoded_edges, n_box=5):
       - V(r,c): r in [0..n-2], c in [0..n-1], idx = r*n + c
     반환: [[r, c, d], ...]  (d: 0=H, 1=V)
     """
-    n = n_box + 1
     h, v = encoded_edges
 
     # 유효 비트 길이로 마스킹 (초과 비트가 켜져 있어도 안전)
-    H_COUNT = n * (n - 1)   # 수평 엣지 개수
-    V_COUNT = (n - 1) * n   # 수직 엣지 개수
+    H_COUNT = N * (N_BOX)   # 수평 엣지 개수
+    V_COUNT = (N_BOX) * N   # 수직 엣지 개수
     h &= (1 << H_COUNT) - 1
     v &= (1 << V_COUNT) - 1
 
@@ -122,16 +121,16 @@ def get_legal_actions(encoded_edges, n_box=5):
 
     # 수평 엣지들: r ∈ [0..n-1], c ∈ [0..n-2]
     # 각 행마다 (n-1)비트를 묶어서 읽으면 인덱스 계산 실수를 줄일 수 있음
-    for r in range(n):
-        row_bits = (h >> (r * (n - 1))) & ((1 << (n - 1)) - 1)
-        for c in range(n - 1):
+    for r in range(N):
+        row_bits = (h >> (r * (N_BOX))) & ((1 << (N_BOX)) - 1)
+        for c in range(N_BOX):
             if ((row_bits >> c) & 1) == 0:     # 아직 미설치
                 actions.append([c, r, 0])      # d=0 (H)
 
     # 수직 엣지들: r ∈ [0..n-2], c ∈ [0..n-1]
-    for r in range(n - 1):
-        row_bits = (v >> (r * n)) & ((1 << n) - 1)
-        for c in range(n):
+    for r in range(N_BOX):
+        row_bits = (v >> (r * N)) & ((1 << N) - 1)
+        for c in range(N):
             if ((row_bits >> c) & 1) == 0:     # 아직 미설치
                 actions.append([c, r, 1])      # d=1 (V)
 
