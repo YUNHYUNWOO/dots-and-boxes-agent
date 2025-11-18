@@ -19,4 +19,4 @@ class MixedPolicy(BasePolicy):
         t = 60 - np.sum(info['action_mask'] == False)
         policy = self.get_policy(t)
         
-        return policy.get_action(observation, info, env)
+        return policy.get_action(observation, info, env, time_manager)

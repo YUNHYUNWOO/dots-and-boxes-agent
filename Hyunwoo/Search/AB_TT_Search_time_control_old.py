@@ -63,9 +63,33 @@ class TranspositionTable:
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
 
+def default_get_budget_for_this_move(t, time_manager):
+    """
+        budget_for_this_move(t):
+        -> returns budget for turn t
+    """
+    rem = time_manager.remaining()
+    base = rem / ( 2 * N_BOX * (N_BOX + 1) - t)
+
+    progress = t / (2 * N_BOX * (N_BOX + 1))
+
+    if progress < 0.3:
+        w = 0.1
+    elif progress < 0.75:
+        w = 4.2
+    else :
+        w = 2.0
+
+    budget = base * w
+    MIN_BUDGET = 0.02   # 최소 20ms
+    MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
+    budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
+    SAFETY = 0.05
+    budget = max(0.0, budget - SAFETY)
+    return budget
 
 
-class AB_TT_Search_TC_v2(BaseSearchEngine):
+class AB_TT_Search_TC_v1(BaseSearchEngine):
 
     def __init__(self):
         self.tt = TranspositionTable()
@@ -79,12 +103,10 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-<<<<<<< HEAD
-        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=30, scale=7, alpha=1, p=0.3)
-=======
-        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
->>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
         self.use_time_control = True
+        self.get_budget_for_this_move = default_get_budget_for_this_move
+        self.use_aspiration = False,
+        self.aspiration_window = 2
 
         ## Loging
         self.nodes = 0
@@ -115,17 +137,40 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
 
         print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
+        prev_value = 0
         try:
             if self.use_iterative_deepening:
                 actions, vals = None, None
+
                 for d in range(self.depth + 1):
                     self._check_time()
                     
+                    if self.use_aspiration and d > 1:
+                        window = self.aspiration_window
+                        alpha = prev_value - window
+                        beta = prev_value + window
+                    else:
+                        alpha, beta = -10**9, 10**9
+
+                    actions, vals = self.alpha_beta(eng=eng, 
+                        depth=d,
+                        root_player=state['cur_player'],
+                        alpha= alpha,
+                        beta= beta)
+                    
+                    if self.use_aspiration and (vals[0] <= alpha or vals[0] >= beta):
+                        action, score = self.alpha_beta(eng=eng, 
+                        depth=d,
+                        root_player=state['cur_player'],
+                        alpha= -10**9,
+                        beta= 10**9)
+
                     actions, vals = self.alpha_beta(eng=eng, 
                                     depth=d,
                                     root_player=state['cur_player'],
                                     alpha= -10**9,
                                     beta= 10**9)
+                    prev_value = vals[0]
                     self.searched_d = d
             else :
                 actions, vals = self.alpha_beta(eng=eng, 
@@ -271,28 +316,6 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
     def _check_time(self):
         if time.perf_counter() >= self.deadline:
             raise TimeoutError()
-
-    def get_budget_for_this_move(self, t, time_manager):
-        """
-            budget_for_this_move(t):
-            -> returns budget for turn t
-        """
-        rem = time_manager.remaining()
-        w = self.budget_scheduler.value(t)
-
-<<<<<<< HEAD
-        print(rem, w, rem * w)
-
-        budget = rem * w * 1.5
-=======
-        budget = rem * w
->>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
-        MIN_BUDGET = 0.02   # 최소 20ms
-        MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
-        budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
-        SAFETY = 0.05
-        budget = max(0.0, budget - SAFETY)
-        return budget
 
     def get_log(self):
         return {

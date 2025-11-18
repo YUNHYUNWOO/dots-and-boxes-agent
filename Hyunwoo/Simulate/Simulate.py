@@ -78,7 +78,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         vals.append(val)
         scores.append([s for s in info['score']])
 
-        Action_log.append(action)
+        Action_log.append([cur_player] + action)
 
     if verbose:
         print(f"Episode finished! Winner: {info['winner']}")
@@ -94,7 +94,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         'scores': scores,
         'winner': info['winner'],
     }
-    Action_log = {'Action_log': ", ".join(str(x) for a in Action_log for x in a)}
+    Action_log = {'Action_log': '5, 5, ' + (", ".join(str(x) for a in Action_log for x in a))}
     Policy_log = {
         'player': player,
         'logs' : Policy_log
@@ -166,7 +166,11 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
+<<<<<<< HEAD
     run_name = 'no_tc_d2_18_vs_tc_d30_1.5w_optv3'
+=======
+    run_name = 'v1 vs v2'
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -190,10 +194,10 @@ if __name__ == "__main__":
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
         # 'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8)
-        'use_time_control': False
+        'use_time_control': False,
 
     }
-    p0_policy = SearchPolicy(AB_TT_Search_TC(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p0)
 
     config_p1 = {
         'evaluate':evaluate_rel,
@@ -202,14 +206,19 @@ if __name__ == "__main__":
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'use_time_control': True
+        'use_time_control': True,
+        'budget_scheduler': Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
     }
-    p1_policy = SearchPolicy(AB_TT_Search_TC(), config_p1)
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
     env.render_mode = 'rgb_array'
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
+<<<<<<< HEAD
     Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+=======
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=8, verbose=False)
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

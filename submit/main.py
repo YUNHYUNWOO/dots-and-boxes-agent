@@ -62,9 +62,15 @@ def count_completed_boxes(h_bits: int, v_bits: int) -> int:
                 cnt += 1
     return cnt
 
+<<<<<<< HEAD
 def edge_is_claimed(h_edge:int, v_edge:int, c: int, r: int, d: int) -> bool:
     if d == H: return ((h_edge >> (r * (N - 1) + c)) & 1)
     else:      return ((v_edge >> (r * N + c)) & 1)
+=======
+def edge_is_claimed(edges, c: int, r: int, d: int) -> bool:
+    if d == H: return ((edges[0] >> h_index(c, r)) & 1) == 1
+    else:      return ((edges[1] >> v_index(c, r)) & 1) == 1
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
 
 def edges_adjacent_to_box(c, r):
     return [
@@ -388,7 +394,11 @@ class DotsAndBoxesEngine:
     # ---- API ----
     def apply_action(self, action: Tuple[int, int, int]) -> Dict:
         c, r, d = action
+<<<<<<< HEAD
         # check_bounds(c, r, d)
+=======
+        check_bounds(c, r, d)
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
 
         # self._set_edge(c, r, d)
 
@@ -519,6 +529,33 @@ class TranspositionTable:
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
 
+<<<<<<< HEAD
+=======
+def default_get_budget_for_this_move(t, time_manager):
+    """
+        budget_for_this_move(t):
+        -> returns budget for turn t
+    """
+    rem = time_manager.remaining()
+    base = rem / ( 2 * N_BOX * (N_BOX + 1) - t)
+
+    progress = t / (2 * N_BOX * (N_BOX + 1))
+
+    if progress < 0.3:
+        w = 0.1
+    elif progress < 0.75:
+        w = 4.2
+    else :
+        w = 2.0
+
+    budget = base * w
+    MIN_BUDGET = 0.02   # 최소 20ms
+    MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
+    budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
+    SAFETY = 0.05
+    budget = max(0.0, budget - SAFETY)
+    return budget
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
 
 
 class AB_TT_Search_TC(BaseSearchEngine):
@@ -535,8 +572,13 @@ class AB_TT_Search_TC(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
+<<<<<<< HEAD
         self.budget_scheduler = Budget_Scheduler(num_turns=60, center=30, scale=7, alpha=1, p=0.3)
         self.use_time_control = True
+=======
+        self.use_time_control = True
+        self.get_budget_for_this_move = default_get_budget_for_this_move
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
 
         ## Loging
         self.nodes = 0
@@ -595,6 +637,10 @@ class AB_TT_Search_TC(BaseSearchEngine):
         if actions == None:
             # 어떤 깊이도 끝까지 못 돌린 극단 상황
             actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+<<<<<<< HEAD
+=======
+            
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
             vals = [0]
 
         if self.deterministic == True:
@@ -724,6 +770,7 @@ class AB_TT_Search_TC(BaseSearchEngine):
         if time.perf_counter() >= self.deadline:
             raise TimeoutError()
 
+<<<<<<< HEAD
     def get_budget_for_this_move(self, t, time_manager):
         """
             budget_for_this_move(t):
@@ -742,6 +789,8 @@ class AB_TT_Search_TC(BaseSearchEngine):
         budget = max(0.0, budget - SAFETY)
         return budget
 
+=======
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     def get_log(self):
         return {
             'nodes': self.nodes,
@@ -799,6 +848,15 @@ class TimeManager():
         self.used_time = 0.0
         self._move_start = None
 
+<<<<<<< HEAD
+=======
+class TimeManager():
+    def __init__(self):
+        self.total_budget = 24.0
+        self.used_time = 0.0
+        self._move_start = None
+
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     def remaining(self):
         return max(0.0, self.total_budget - self.used_time)
     
@@ -1557,15 +1615,24 @@ def init():
     # 예시2: 학습된 모델을 사용하지 않는 경우
 
     policy_part1 = OpeningPolicy()
+
     config = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
+<<<<<<< HEAD
         'depth': 30,
+=======
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
         'use_iterative_deepening': True,
         'deterministic': True,
         'skip_move': False,
         'use_time_control': True
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
     policy_part2 = SearchPolicy(AB_TT_Search_TC(), config)
     policy_scheduler = PiecewiseConstantScheduler([[15, 60, policy_part2]], default_value=policy_part1)
     model = MixedPolicy(policy_scheduler)
@@ -1582,7 +1649,10 @@ def run(board_lines, xsize, ysize):
     # board_lines는 3차원 리스트의 형태로, board_lines[x][y][z]은 해당 자리(x, y, z는 아래 설명 참고)에 수가 놓였는지, 놓이지 않았는지에 대한 값으로 0 또는 1을 가집니다.
     # 이러한 입력 값을 바탕으로, 다음과 같이 놓을 수를 반환해주시면 됩니다.
     global time_manager
+<<<<<<< HEAD
 
+=======
+>>>>>>> bd33ce3fd092a9d138ec7efd3152318b4c1178ba
 
     def get_init_action_mask(n_box) -> np.ndarray:
         # shape: (n_box+1, n_box+1)
