@@ -4,11 +4,12 @@ import numpy as np
 import torch
 from collections import OrderedDict
 import time
-
+from scipy.stats import skewnorm
 
 model = None
 TIME_LIMIT = 24.0
 time_used = 0.0
+time_manager = None
 
 N_BOX = 5
 N = N_BOX + 1
@@ -454,10 +455,12 @@ class BaseSearchEngine():
     def search(self, eng: DotsAndBoxesEngine, state):
         raise NotImplementedError
  
+
 Action = List[int]
 EXACT = 0
 LOWERBOUND = 1
 UPPERBOUND = 2
+        
 
 class TTEntry:
     __slots__ = ("value", "depth", "flag", "best_action")
@@ -506,14 +509,16 @@ class TranspositionTable:
 
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
-    
-class AB_TT_Search(BaseSearchEngine):
+
+
+
+class AB_TT_Search_TC(BaseSearchEngine):
 
     def __init__(self):
         self.tt = TranspositionTable()
         self._tt_reset_keys = ['evaluate']
         self.evaluate = None
-        self.move_ordering = lambda x: x
+        self.move_ordering = None
         self.depth = None
         self.use_iterative_deepening = False
         self.deterministic = False
@@ -521,6 +526,8 @@ class AB_TT_Search(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
+        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=28, scale=7, alpha=1, p=0.3)
+        self.use_time_control = True
 
         ## Loging
         self.nodes = 0
@@ -528,8 +535,9 @@ class AB_TT_Search(BaseSearchEngine):
         self.tt_hits = 0
         self.tt_cutoffs = 0
         self.skipped_move = 0
+        self.searched_d = 0
 
-    def search(self, eng, state):
+    def search(self, eng, state, time_manager):
         
         assert self.evaluate != None
         assert self.depth != None
@@ -538,17 +546,47 @@ class AB_TT_Search(BaseSearchEngine):
             self.move_ordering = default_move_ordering
 
         actions = None
-        if self.use_iterative_deepening:
-            actions, vals = self.iterative_deepening(eng, state)
-        else :
-            actions, vals = self.alpha_beta(eng=eng, 
-                                depth=self.depth,
-                                root_player=state['cur_player'],
-                                alpha= -10**9,
-                                beta= 10**9
-                                )
-        # print('actions: ', actions)
-        # print('vals: ', vals)
+
+        def count_moves(edges) -> int:
+            h_bits, v_bits = edges
+            return h_bits.bit_count() + v_bits.bit_count() 
+        t = count_moves(eng.get_state()['edges'])
+        
+        budget = self.get_budget_for_this_move(t, time_manager)
+        # print('t', t, 'budget', budget)
+        
+        self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
+
+        print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
+        try:
+            if self.use_iterative_deepening:
+                actions, vals = None, None
+                for d in range(self.depth + 1):
+                    self._check_time()
+                    
+                    actions, vals = self.alpha_beta(eng=eng, 
+                                    depth=d,
+                                    root_player=state['cur_player'],
+                                    alpha= -10**9,
+                                    beta= 10**9)
+                    self.searched_d = d
+            else :
+                actions, vals = self.alpha_beta(eng=eng, 
+                                    depth=self.depth,
+                                    root_player=state['cur_player'],
+                                    alpha= -10**9,
+                                    beta= 10**9
+                                    )
+            # print('actions: ', actions)
+            # print('vals: ', vals)
+
+        except TimeoutError:
+            pass
+
+        if actions == None:
+            # 어떤 깊이도 끝까지 못 돌린 극단 상황
+            actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+            vals = [0]
 
         if self.deterministic == True:
             idx = 0
@@ -559,17 +597,6 @@ class AB_TT_Search(BaseSearchEngine):
             idx = np.random.choice(len(actions), p=probs)
 
         return actions[idx], vals[idx]
-
-    def iterative_deepening(self, eng, state):
-        best_action = None
-        for d in range(self.depth + 1):
-            best_actions, best_vals = self.alpha_beta(eng=eng, 
-                               depth=d,
-                               root_player=state['cur_player'],
-                               alpha= -10**9,
-                               beta= 10**9)
-            
-        return best_actions, best_vals
     
     def alpha_beta(self,    
                eng: DotsAndBoxesEngine,
@@ -579,6 +606,10 @@ class AB_TT_Search(BaseSearchEngine):
                beta: int = 10**9
                ) -> Tuple[Optional[Action], int]:
         self.nodes += 1
+        if (self.nodes & 1023) == 0:  # 1024의 배수일 때
+            self._check_time()
+
+
         """
         반환: (가치, 최선의 액션)
         - depth: 남은 탐색 깊이
@@ -636,7 +667,7 @@ class AB_TT_Search(BaseSearchEngine):
                 ent = self.tt.probe(eng=eng, maximizing=n_maximizing, depth=n_depth)
                 if ent != None and ent.depth >= n_depth:
                     if not skipped and ((not maximizing and ent.flag == LOWERBOUND) or (maximizing and ent.flag == UPPERBOUND)):
-                        self.skip_move += 1
+                        self.skipped_move += 1
                         move_order.append((True, a))
                         eng.undo_action(a, out["completed_boxes"], player_before)
                         continue 
@@ -680,13 +711,36 @@ class AB_TT_Search(BaseSearchEngine):
 
         return self
     
+    def _check_time(self):
+        if time.perf_counter() >= self.deadline:
+            raise TimeoutError()
+
+    def get_budget_for_this_move(self, t, time_manager):
+        """
+            budget_for_this_move(t):
+            -> returns budget for turn t
+        """
+        rem = time_manager.remaining()
+        w = self.budget_scheduler.value(t)
+
+        print(rem, w, rem * w)
+
+        budget = rem * w
+        MIN_BUDGET = 0.02   # 최소 20ms
+        MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
+        budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
+        SAFETY = 0.05
+        budget = max(0.0, budget - SAFETY)
+        return budget
+
     def get_log(self):
         return {
             'nodes': self.nodes,
             'cutoffs': self.cutoffs,
             'tt_hits': self.tt_hits,
             'tt_cutoffs': self.tt_cutoffs,
-            'skip_move': self.skip_move
+            'skipped_move': self.skipped_move,
+            'depth': self.searched_d
         }
     
     def reset_log(self):
@@ -694,7 +748,8 @@ class AB_TT_Search(BaseSearchEngine):
         self.cutoffs = 0
         self.tt_hits = 0
         self.tt_cutoffs = 0
-        self.skip_move = 0
+        self.skipped_move = 0
+        self.searched_d = 0
 
     def clear_tt(self):
         self.tt = TranspositionTable()
@@ -729,13 +784,34 @@ class AB_TT_Search(BaseSearchEngine):
         if len(best_vals) > k:
             best_actions.pop()
             best_vals.pop()
+class TimeManager():
+    def __init__(self):
+        self.total_budget = 24.0
+        self.used_time = 0.0
+        self._move_start = None
+
+    def remaining(self):
+        return max(0.0, self.total_budget - self.used_time)
+    
+    def start_move(self):
+        self._move_start = time.perf_counter()
+    
+    def end_move(self):
+        dt = time.perf_counter() - self._move_start
+        self.used_time += dt
+        return dt
+    
+    def reset(self):
+        self.total_budget = 24.0
+        self.used_time = 0.0
 
 class BasePolicy():
     def __init__(self):
         ## 필요한거 있으면 추가
+        self.time_manager = TimeManager()
         pass
 
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
@@ -743,6 +819,7 @@ class BasePolicy():
 
     def get_log(self):
         return None
+
 
 def _adjacent_boxes(c: int, r: int, d: int) -> List[Tuple[int, int]]:
     boxes = []
@@ -847,6 +924,7 @@ def move_ordering(actions, eng: DotsAndBoxesEngine, tt: TranspositionTable, dept
 
 # =======================================
 
+
 class SearchPolicy(BasePolicy):
     def __init__(self, SearchEngine:BaseSearchEngine, config_schedule: Dict):
         ## 필요한거 있으면 추가
@@ -866,7 +944,7 @@ class SearchPolicy(BasePolicy):
 
         return config
     
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
@@ -883,7 +961,7 @@ class SearchPolicy(BasePolicy):
         self.SearchEngine.configure(**config)
         self.eng.set_state(state)
 
-        best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state)
+        best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state, time_manager=time_manager)
         
         return best_action, best_val
 
@@ -1031,9 +1109,10 @@ def dots_and_boxes_policy(edges: List[List[List[int]]]):
 
 class OpeningPolicy(BasePolicy):
 
-    def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env) -> Tuple[int,int,int]:
+    def get_action(self, observation: Dict[str, np.ndarray], info: Dict, env, time_manager:TimeManager) -> Tuple[int,int,int]:
         
         return list(dots_and_boxes_policy(observation['edges'])), None
+
 
 import math
 from typing import List, Tuple, Dict, Optional, Any
@@ -1189,6 +1268,39 @@ class InverseSqrtScheduler(BaseScheduler):
 # ---------------------------
 # 복합/구간/주기형 스케줄러들
 # ---------------------------
+
+
+class Budget_Scheduler(BaseScheduler):
+    def __init__(self,
+                 num_turns: int,
+                 center: float = None,
+                 scale: float = None,
+                 alpha: float = 3.0,
+                 p: float = 0.3):
+        self.num_turns = num_turns
+
+        t = np.arange(num_turns)
+        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
+        
+        w = g / g.sum()
+        u = np.ones((num_turns,)) / num_turns
+        self.w = p * u + w * (1 - p)
+
+    def value(self, t:int)->float:
+        idx = int(t)
+        if idx < 0:
+            idx = 0
+        if idx >= self.num_turns:
+            idx = self.num_turns - 1
+
+        tail_sum = float(self.w[idx:].sum())
+        if tail_sum <= 0:
+            return 1.0  # 남은 weight가 없다면 남은 시간 전부 다 써도 된다고 가정
+
+        return float(self.w[idx] / tail_sum)
+    
+    def get_config(self):
+        return None
 
 class StepScheduler(BaseScheduler):
     """계단형: [(t1, v1), (t2, v2), ...], t < t1 -> v1, t1<=t<t2 -> v2 ... 마지막 이상은 마지막 값."""
@@ -1409,7 +1521,7 @@ class MixedPolicy(BasePolicy):
         # print(self.policy_scheduler.get_config())
         return self.policy_scheduler.value(t)
     
-    def get_action(self, observation, info, env):
+    def get_action(self, observation, info, env, time_manager:TimeManager):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
@@ -1417,14 +1529,14 @@ class MixedPolicy(BasePolicy):
         t = 60 - np.sum(info['action_mask'] == False)
         policy = self.get_policy(t)
         
-        return policy.get_action(observation, info, env)
+        return policy.get_action(observation, info, env, time_manager)
     
 # 반드시 init(),run()함수를 구현해줘야 합니다. 없으면 에러가 발생합니다.
 def init():
     # << 체점 시 양쪽 에이전트에 대해서 처음 한 번 실행되는 함수입니다. >>
     # 딥러닝을 통해 게임 에이전트 모델을 training하신 경우에는 모델을 델러오고, 평가 모드로 전환하는 부분을 이곳에 넣으셔야 합니다.
     # 딥러닝을 사용하지 않으셨더라도, Model-based AI로 에이전트를 만드신 분들도 이곳에서 모델/데이터 로딩을 하시면 됩니다.
-    global model
+    global model, time_manager
     
     # 예시1: 학습된 모델 로드
     # current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1439,14 +1551,16 @@ def init():
     config = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 18),
+        'depth': 30,
         'use_iterative_deepening': True,
         'deterministic': True,
+        'use_time_control': True
     }
-    policy_part2 = SearchPolicy(AB_TT_Search(), config)
+    policy_part2 = SearchPolicy(AB_TT_Search_TC(), config)
     policy_scheduler = PiecewiseConstantScheduler([[15, 60, policy_part2]], default_value=policy_part1)
     model = MixedPolicy(policy_scheduler)
 
+    time_manager = TimeManager()
     # model = OpeningPolicy()
 
     # 위의 코드는 모델을 사용하지 않는다는 의미입니다. 모델이 필요없는 Rule-based AI를 구현하신 분들은 이렇게 작성하시면 됩니다.
@@ -1457,9 +1571,8 @@ def run(board_lines, xsize, ysize):
     # 함수의 입력은 위와 같이 현재 board의 현재 상태 (놓인 수들)과 보드의 크기가 제공됩니다.
     # board_lines는 3차원 리스트의 형태로, board_lines[x][y][z]은 해당 자리(x, y, z는 아래 설명 참고)에 수가 놓였는지, 놓이지 않았는지에 대한 값으로 0 또는 1을 가집니다.
     # 이러한 입력 값을 바탕으로, 다음과 같이 놓을 수를 반환해주시면 됩니다.
-    global time_used
+    global time_manager
 
-    start = time.perf_counter()
 
     def get_init_action_mask(n_box) -> np.ndarray:
         # shape: (n_box+1, n_box+1)
@@ -1486,8 +1599,9 @@ def run(board_lines, xsize, ysize):
                     action_mask[r,c,d] = board_lines[r][c][d]
 
     if count == 0 or count == 1:
-        time_used = 0.0
+        time_manager.reset()
 
+    time_manager.start_move()
     obs = {
         'edges': board_lines,
         'cur_player': 0,
@@ -1496,14 +1610,11 @@ def run(board_lines, xsize, ysize):
     info = {
         'action_mask': action_mask
     }
-
-    remaining = TIME_LIMIT - time_used
-    if remaining <= 0.5:
-        return list(dots_and_boxes_policy(obs['edges']))
     
-    action, _ = model.get_action(observation=obs, info=info, env=None)
-    end = time.perf_counter()
-    time_used += (end - start)
+    action, _ = model.get_action(observation=obs, info=info, env=None, time_manager=time_manager)
+
+    time_manager.end_move()
+
     return action
 
 
