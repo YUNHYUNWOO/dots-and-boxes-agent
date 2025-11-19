@@ -108,6 +108,8 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
     return Evaluation_log, Action_log, Policy_log
 
 
+
+
 def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, n_episodes: int, verbose=False):
     """
     po_policy와 p1_policy가 번갈아가며 선후공을 맡아 n_episodes만큼 시뮬레이션을 수행합니다.
@@ -173,43 +175,47 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 if __name__ == "__main__":
 
 
-    run_name = 'move_ordering_vs_move_ordering_v2'
+    run_name = 'none_vs_extension'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
     config_p0 = {
         'evaluate':evaluate_relv2,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15,2,35,18),
+        'depth': ExponentialSchedulerInt(15,2,35,24),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
         # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
-        'use_time_control': True,
-        'use_pvs_search': False
+        'use_time_control': False,
+        'use_pvs_search': True
     }
-    p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v3(), config_p0)
 
     
     config_p1 = {
-        'evaluate':evaluate_relv2,
-        'move_ordering':move_ordering_v2,
-        'depth': ExponentialSchedulerInt(15,2,35,18),
+        'evaluate':evaluate_comps,
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15,2,35,24),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
-        'use_time_control': True,
+        'w_eval': 0.1,
+        # 'use_extension': True,
+        # 'extension_limit': 20,
+        'use_pvs_search': True,
+        'use_time_control': False,
+        
     }
 
-    p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
 
     env.render_mode = 'human'
-    # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=PlayablePolicy(), verbose=True))
+    print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
     env.render_mode = 'rgb_array'
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=20, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=15, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

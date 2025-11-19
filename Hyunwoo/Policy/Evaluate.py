@@ -1,4 +1,4 @@
-from Util import get_connected_Components, init_box_data, get_cv, get_legal_actions, classify_component
+from Util import get_connected_Components, init_box_data, init_box_data_for_components, get_cv, get_legal_actions, classify_component
 from DotsAndBoxes import DotsAndBoxesEngine
 from Util.DnB_Engine_Util import *
 from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntry
@@ -24,7 +24,7 @@ def evaluate_cv(eng):
     comps = classify_component(comps, adj)
     return get_cv(comps)
 
-def evaluate_relv2(eng: DotsAndBoxesEngine) -> int:
+def evaluate_relv2(eng: DotsAndBoxesEngine):
     moves = get_legal_actions(eng.get_state()['edges'])
     edges = eng.get_state()['edges']
 
@@ -43,8 +43,11 @@ def evaluate_relv2(eng: DotsAndBoxesEngine) -> int:
     bad_moves /= 100
     return -bad_moves
 
-
-        
+def evaluate_comps(eng: DotsAndBoxesEngine):
+    edges = eng.get_state()['edges']
+    adj, external_open, is_candidate = init_box_data_for_components(edges)
+    comps = get_connected_Components(adj, is_candidate)
+    return len(comps)
 # def opens_chain(edges, action) -> bool:
 #     adj, external_open, is_candidate = init_box_data(edges)
 #     comps = get_connected_Components(adj, is_candidate)

@@ -45,7 +45,7 @@ def init_box_data(edges: List):
             for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
                 if not edge_is_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
                     open_dirs.append(d)
-
+                    
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
 
             len_open = len(open_dirs)
@@ -56,7 +56,6 @@ def init_box_data(edges: List):
             # 엔드게임 쪽 체인분해는 보통 '1개 또는 2개의 열린 변'만을 다룬다.
             # (3개 이상이면 아직 미들게임 safe 영역)
             # 필요하면 여기서 필터링:
-
             if not(1 < len_open < 4): continue
 
             is_candidate[box_id(c, r)] = True
@@ -74,6 +73,50 @@ def init_box_data(edges: List):
                     external_open[box_id(c, r)] += 1
     
     return adj, external_open, is_candidate
+
+def init_box_data_for_components(edges: List):
+
+    # returns these three
+    adj = { box_id(c, r): [] for r in range(N_BOX) for c in range(N_BOX) }
+    external_open = { box_id(c, r): 0 for r in range(N_BOX) for c in range(N_BOX) }
+    is_candidate = { box_id(c, r): False for r in range(N_BOX) for c in range(N_BOX) }
+
+    for r in range(N_BOX):
+        for c in range(N_BOX):
+            # 이 박스의 열린 변 개수 세기
+            open_dirs = []
+            
+            for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
+                if not edge_is_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+                    open_dirs.append(d)
+                    
+            #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
+
+            len_open = len(open_dirs)
+            if len_open == 0:
+                # 이미 완성된 박스 -> 체인/루프 후보 아님
+                continue
+
+            # 엔드게임 쪽 체인분해는 보통 '1개 또는 2개의 열린 변'만을 다룬다.
+            # (3개 이상이면 아직 미들게임 safe 영역)
+            # 필요하면 여기서 필터링:
+
+            is_candidate[box_id(c, r)] = True
+
+            for d in open_dirs:
+                nc = c + dc[d]
+                nr = r + dr[d]
+
+                if 0 <= nc < N_BOX and 0 <= nr < N_BOX:
+                    # 이웃 박스와 공유하는 변이 열려 있음 → 내부 연결
+                    # 이웃도 후보이든 아니든, 일단 edge는 만들고 나중에 필터링해도 됨
+                    adj[box_id(c, r)].append(box_id(nc, nr))
+                else:
+                    # 보드 바깥과 연결된 열린 변
+                    external_open[box_id(c, r)] += 1
+    
+    return adj, external_open, is_candidate
+
 
 def get_connected_Components(adj, is_candidate):
     """
@@ -207,10 +250,22 @@ def main():
            [1, 1, 1, 1, 1, 1],
            [1, 1, 1, 1, 0, 1],
            [0, 0, 0, 0, 0, 0]]
+        ],
+        [[[0, 0, 0, 0, 0, 0], 
+          [0, 0, 0, 0, 0, 0], 
+          [0, 0, 0, 0, 0, 0], 
+          [1, 1, 1, 1, 1, 1], 
+          [0, 0, 0, 0, 0, 0], 
+          [0, 0, 0, 0, 0, 0]], 
+          [[0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0],
+           [0, 0, 0, 0, 0, 0]]
         ]
     ]
     
-    # d, r, c -> c, r, d
     def transpose(edges):
         t_edges = [[[0 for _ in range(2)] for _ in range(N)] for _ in range(N)]
 
@@ -219,20 +274,23 @@ def main():
                 for d in range(2):
                     t_edges[c][r][d] = edges[d][r][c]
         return t_edges
-    
-    edges = transpose(test_data[0])
-    print(len(edges), len(edges[0]), len(edges[0][0]))
 
-                
-    
-    print(len(test_data[0]), len(test_data[0][0]), len(test_data[0][0][0]))
-    edges = encode_Edges(transpose(test_data[0]))
+    for data in test_data:
+        # d, r, c -> c, r, d
 
-    adj, external_open, is_candidate = init_box_data(edges)
-    print(is_candidate)
-    components = get_connected_Components(adj, is_candidate)
-    print(components)
-    print(classify_component(components, adj))
+        edges = transpose(data)
+        print(len(edges), len(edges[0]), len(edges[0][0]))
+
+                    
+        
+        print(len(test_data[0]), len(test_data[0][0]), len(test_data[0][0][0]))
+        edges = encode_Edges(edges)
+
+        adj, external_open, is_candidate = init_box_data_for_components(edges)
+        print(is_candidate)
+        components = get_connected_Components(adj, is_candidate)
+        print(components)
+        print(classify_component(components, adj))
 
 if __name__ == '__main__':
     main()

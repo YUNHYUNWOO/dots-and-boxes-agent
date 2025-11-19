@@ -32,6 +32,7 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         self.use_time_control = False
         self.use_extension = False
         self.extension_limit = 5
+        self.use_pvs_search = False
 
         ## Loging
         self.nodes = 0
@@ -162,9 +163,11 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
 
         move_order = [(False, action) for action in move_order]
 
-
+        first_move = True
+        flag = EXACT
+        first_move = True
+        flag = EXACT
         for skipped, a in move_order:
-
             # 적용
             player_before = eng.cur_player
             out = eng.apply_action(a)
@@ -181,20 +184,58 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
                         eng.undo_action(a, out["completed_boxes"], player_before)
                         continue 
             
-                        
             immediate_val = len(out["completed_boxes"])
             sign = 1 if (root_player == player_before) else -1
             alpha_child = alpha - sign * immediate_val
             beta_child  = beta  - sign * immediate_val    
 
+            next_depth = depth - 1
+            next_ext_cnt = extension_cnt
             if self.use_extension and extension_cnt < self.extension_limit and \
-                (complete_extension(info, out, a) or \
-                 give_away_extension(info, out, a)):
-                _, vals = self.alpha_beta(eng, depth, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt+1)
-            else :
-                _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt)
+                depth == 1 and \
+               (complete_extension(info, out, a)):
+                next_depth = depth      # 같은 depth로 재탐색
+                next_ext_cnt = extension_cnt + 1
 
-            val = vals[0]
+            if not self.use_pvs_search or first_move:
+                _, vals = self.alpha_beta(eng, next_depth, root_player, alpha_child, beta_child, info, extension_cnt=next_ext_cnt)
+                first_move = False
+                val = vals[0]
+            else:
+                if maximizing:
+                    narrow_alpha = alpha_child
+                    narrow_beta = alpha_child + 1
+                else:
+                    narrow_alpha = beta_child - 1
+                    narrow_beta  = beta_child
+
+                # (a) zero-window 검색
+                _, vals = self.alpha_beta(
+                    eng, next_depth, root_player,
+                    narrow_alpha, narrow_beta,
+                    info, extension_cnt=next_ext_cnt
+                )
+                val = vals[0]
+
+                val_narrow = sign * immediate_val + val
+                need_full = False
+                if maximizing:
+                    # max 노드: 현재 best(alpha)를 넘어섰고, beta보다 작으면 정확한 값 필요
+                    if val_narrow > alpha and val_narrow < beta:
+                        need_full = True
+                else:
+                    # min 노드: 현재 best(beta)보다 낮았고, alpha보다 크면 정확한 값 필요
+                    if val_narrow < beta and val_narrow > alpha:
+                        need_full = True
+
+                if need_full:
+                    _, vals = self.alpha_beta(
+                        eng, next_depth, root_player,
+                        alpha_child, beta_child,
+                        info, extension_cnt=next_ext_cnt
+                    )
+                    val = vals[0]
+
             val = sign * immediate_val + val
 
             # 되돌리기

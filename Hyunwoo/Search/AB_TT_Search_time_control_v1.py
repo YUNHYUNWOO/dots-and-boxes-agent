@@ -96,13 +96,6 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
                 for d in range(1, self.depth + 1):
                     self._check_time()
 
-                    if self.use_pvs_search:
-                        actions, vals = self.alpha_beta_pvs(eng=eng, depth=d, root_player=state['cur_player'],
-                                                            alpha=-10**9, beta=10**9)
-                    else:
-                        actions, vals = self.alpha_beta(eng=eng, depth=d, root_player=state['cur_player'],
-                                                        alpha=-10**9, beta=10**9)
-
                     actions, vals = self.alpha_beta(eng=eng, 
                             depth=d,
                             root_player=state['cur_player'],
@@ -151,7 +144,6 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         if (self.nodes % 512) == 0:  # 1024의 배수일 때
             self._check_time()
 
-
         """
         반환: (가치, 최선의 액션)
         - depth: 남은 탐색 깊이
@@ -189,14 +181,14 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
 
         actions = get_legal_actions(eng.get_state()['edges'])
 
-        flag = EXACT
         move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
         pv_action = self.tt.pv_move(eng, maximizing)
         if pv_action != None:
             move_order.insert(0, pv_action)
-
         move_order = [(False, action) for action in move_order]
-
+        
+        first_move = True
+        flag = EXACT
         for skipped, a in move_order:
             # 적용
             player_before = eng.cur_player
@@ -219,15 +211,52 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             alpha_child = alpha - sign * immediate_val
             beta_child  = beta  - sign * immediate_val    
 
+            next_depth = depth - 1
+            next_ext_cnt = extension_cnt
             if self.use_extension and extension_cnt < self.extension_limit and \
-                (complete_extension(info, out, a) or \
-                 give_away_extension(info, out, a)):
-                _, vals = self.alpha_beta(eng, depth, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt+1)
-            else :
-                _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt)
+                depth == 1 and \
+               (complete_extension(info, out, a)):
+                next_depth = depth      # 같은 depth로 재탐색
+                next_ext_cnt = extension_cnt + 1
 
-            val = vals[0]
+            if not self.use_pvs_search or first_move:
+                _, vals = self.alpha_beta(eng, next_depth, root_player, alpha_child, beta_child, info, extension_cnt=next_ext_cnt)
+                first_move = False
+                val = vals[0]
+            else:
+                if maximizing:
+                    narrow_alpha = alpha_child
+                    narrow_beta = alpha_child + 1
+                else:
+                    narrow_alpha = beta_child - 1
+                    narrow_beta  = beta_child
 
+                # (a) zero-window 검색
+                _, vals = self.alpha_beta(
+                    eng, next_depth, root_player,
+                    narrow_alpha, narrow_beta,
+                    info, extension_cnt=next_ext_cnt
+                )
+                val = vals[0]
+
+                val_narrow = sign * immediate_val + val
+                need_full = False
+                if maximizing:
+                    # max 노드: 현재 best(alpha)를 넘어섰고, beta보다 작으면 정확한 값 필요
+                    if val_narrow > alpha and val_narrow < beta:
+                        need_full = True
+                else:
+                    # min 노드: 현재 best(beta)보다 낮았고, alpha보다 크면 정확한 값 필요
+                    if val_narrow < beta and val_narrow > alpha:
+                        need_full = True
+
+                if need_full:
+                    _, vals = self.alpha_beta(
+                        eng, next_depth, root_player,
+                        alpha_child, beta_child,
+                        info, extension_cnt=next_ext_cnt
+                    )
+                    val = vals[0]
 
             val = sign * immediate_val + val
 
@@ -250,154 +279,6 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         self.tt.store(eng, maximizing=maximizing, depth=depth, flag=flag, value=best_vals[0], best_action=best_actions[0])
         return best_actions, best_vals
     
-    def alpha_beta_pvs(self,    
-                eng: DotsAndBoxesEngine,
-                depth: int,
-                root_player: int,
-                alpha: int = -10**9,
-                beta: int = 10**9,
-                info: dict = None,
-                extension_cnt=0
-                ) -> Tuple[Optional[Action], int]:
-        self.nodes += 1
-        if (self.nodes % 512) == 0:
-            self._check_time()
-
-        # 종료 조건
-        if depth == 0 or eng.is_game_over():
-            sign = 1 if root_player == eng.cur_player else -1
-            return None, [sign * self.evaluate(eng) * self.w_eval]
-
-        maximizing = (eng.cur_player == root_player)
-
-        # --- TT probe (기존 alpha_beta와 동일하게) ---
-        ent = self.tt.probe(eng=eng, maximizing=maximizing, depth=depth)
-        if ent is not None and ent.depth >= depth:
-            self.tt_hits += 1
-            if ent.flag == EXACT:
-                return [ent.best_action], [ent.value]
-            elif ent.flag == LOWERBOUND:
-                if ent.value >= beta:
-                    self.tt_cutoffs += 1
-                    return [ent.best_action], [ent.value]
-                alpha = max(alpha, ent.value)
-            elif ent.flag == UPPERBOUND:
-                if ent.value <= alpha:
-                    self.tt_cutoffs += 1
-                    return [ent.best_action], [ent.value]
-                beta = min(beta, ent.value)
-
-        best_vals: List[float] = [-10**9 if maximizing else 10**9 for _ in range(self.k)]
-        best_actions: List[Action] = [None for _ in range(self.k)]
-
-        actions = get_legal_actions(eng.get_state()['edges'])
-
-        flag = EXACT
-        move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
-        pv_action = self.tt.pv_move(eng, maximizing)
-        if pv_action is not None:
-            # 중복 방지
-            if pv_action in move_order:
-                move_order.remove(pv_action)
-            move_order.insert(0, pv_action)
-
-        move_order = [(False, action) for action in move_order]
-
-        first_move = True  # PVS 핵심 플래그
-
-        for skipped, a in move_order:
-            player_before = eng.cur_player
-            out = eng.apply_action(a)
-
-            # --- skip_move 로직 (그대로 유지) ---
-            if self.skip_move:
-                n_maximizing = (root_player == eng.cur_player)
-                n_depth = depth - 1
-                ent2 = self.tt.probe(eng=eng, maximizing=n_maximizing, depth=n_depth)
-                if ent2 is not None and ent2.depth >= n_depth:
-                    if (not skipped) and ((not maximizing and ent2.flag == LOWERBOUND) or
-                                        (maximizing and ent2.flag == UPPERBOUND)):
-                        self.skipped_move += 1
-                        move_order.append((True, a))
-                        eng.undo_action(a, out["completed_boxes"], player_before)
-                        continue
-
-            # --- depth extension 그대로 ---
-            next_depth = depth - 1
-            next_ext_cnt = extension_cnt
-            if self.use_extension and extension_cnt < self.extension_limit and \
-            (complete_extension(info, out, a) or give_away_extension(info, out, a)):
-                next_depth = depth      # 같은 depth로 다시 들어감
-                next_ext_cnt = extension_cnt + 1
-
-            # --- PVS 부분: 첫 수 vs 나머지 수 ---
-            if first_move:
-                # 첫 번째 수는 항상 풀 윈도우
-                _, vals = self.alpha_beta_pvs(
-                    eng, next_depth, root_player, alpha, beta,
-                    info, extension_cnt=next_ext_cnt
-                )
-                val = vals[0]
-                first_move = False
-            else:
-                # 1) 먼저 좁은 윈도우로 검색 (zero-window)
-                if maximizing:
-                    narrow_alpha, narrow_beta = alpha, alpha + 1
-                else:
-                    narrow_alpha, narrow_beta = beta - 1, beta
-
-                _, vals = self.alpha_beta_pvs(
-                    eng, next_depth, root_player, narrow_alpha, narrow_beta,
-                    info, extension_cnt=next_ext_cnt
-                )
-                val = vals[0]
-
-                # 2) fail-high / fail-low 시에만 풀 윈도우 재검색
-                need_full = False
-                if maximizing:
-                    # zero-window에서 alpha를 넘지 못했다면(<= alpha) 어차피 best 못 이김
-                    # > alpha이면 이길 가능성 → full window로 다시 탐색
-                    if val > alpha and val < beta:
-                        need_full = True
-                else:
-                    # min 노드: zero-window에서 beta 미만이 아니면(>= beta) 어차피 best 못 이김
-                    # < beta 이고 > alpha 이면 full window
-                    if val < beta and val > alpha:
-                        need_full = True
-
-                if need_full:
-                    _, vals = self.alpha_beta_pvs(
-                        eng, next_depth, root_player, alpha, beta,
-                        info, extension_cnt=next_ext_cnt
-                    )
-                    val = vals[0]
-
-            # --- immediate score 반영 (기존 방식 유지) ---
-            immediate_val = len(out["completed_boxes"])
-            sign = 1 if (root_player == player_before) else -1
-            val = sign * immediate_val + val
-
-            # 되돌리기
-            eng.undo_action(a, out["completed_boxes"], player_before)
-
-            # 갱신
-            if maximizing:
-                self._update_topk(best_actions, best_vals, a, val, self.k, maximizing=True)
-                alpha = max(alpha, best_vals[0])
-            else:
-                self._update_topk(best_actions, best_vals, a, val, self.k, maximizing=False)
-                beta = min(beta, best_vals[0])
-
-            if alpha >= beta:
-                self.cutoffs += 1
-                flag = LOWERBOUND if maximizing else UPPERBOUND
-                break
-
-        self.tt.store(eng, maximizing=maximizing, depth=depth,
-                    flag=flag, value=best_vals[0], best_action=best_actions[0])
-        return best_actions, best_vals
-
-
     def configure(self, **kwargs):
         # print(self._tt_reset_keyss)
         need_reset = False
