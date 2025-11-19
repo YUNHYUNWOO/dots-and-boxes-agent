@@ -166,7 +166,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'no_tc_d2_18_vs_tc_d30_1.5w_optv3'
+    run_name = 'cv_opt_vs_rel_opt_scheduler15'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -185,11 +185,11 @@ if __name__ == "__main__":
     config_p0 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 18),
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        # 'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8)
+        'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8),
         'use_time_control': False,
 
     }
@@ -198,12 +198,12 @@ if __name__ == "__main__":
     config_p1 = {
         'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': 30,
+        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'use_time_control': True,
-        'budget_scheduler': Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
+        'use_time_control': False,
+        # 'budget_scheduler': Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
     }
     p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
     env.render_mode = 'rgb_array'

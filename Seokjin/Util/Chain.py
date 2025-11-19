@@ -24,28 +24,37 @@ from Util import (
 def box_id(c, r):
     return r * N_BOX + c
 
-
 EDGES = List[int]
 dc = [ 0, 1, 0, -1]
 dr = [-1, 0, 1,  0]
 
-
 def init_box_data(edges: List):
 
     # returns these three
-    adj = { box_id(c, r): [] for r in range(N_BOX) for c in range(N_BOX) }
-    external_open = { box_id(c, r): 0 for r in range(N_BOX) for c in range(N_BOX) }
-    is_candidate = { box_id(c, r): False for r in range(N_BOX) for c in range(N_BOX) }
+    adj = { (r * N_BOX + c): [] for r in range(N_BOX) for c in range(N_BOX) }
+    external_open = { (r * N_BOX + c): 0 for r in range(N_BOX) for c in range(N_BOX) }
+    is_candidate = { (r * N_BOX + c): False for r in range(N_BOX) for c in range(N_BOX) }
 
+    h_edge, v_edge = edges[0], edges[1]
+    cnt = 0
 
     for r in range(N_BOX):
         for c in range(N_BOX):
             # 이 박스의 열린 변 개수 세기
             open_dirs = []
             
-            for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
-                if not edge_is_claimed(edges[0], edges[1], adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
-                    open_dirs.append(d)
+            # for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
+            #     if not edge_is_claimed(edges[0], edges[1], adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+            #         open_dirs.append(d)
+
+            if not ((h_edge >> (r * (N - 1) + c)) & 1):  # 선이 안 그려져 있음 = open
+                open_dirs.append(0)
+            if not ((v_edge >> (r * N + c + 1)) & 1):  # 선이 안 그려져 있음 = open
+                open_dirs.append(1)
+            if not ((h_edge >> ((r + 1) * (N - 1) + c)) & 1):  # 선이 안 그려져 있음 = open
+                open_dirs.append(2)
+            if not ((v_edge >> (r * N + c)) & 1):  # 선이 안 그려져 있음 = open
+                open_dirs.append(3)
 
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
 
@@ -57,10 +66,11 @@ def init_box_data(edges: List):
             # (3개 이상이면 아직 미들게임 safe 영역)
             # 필요하면 여기서 필터링:
 
+            if len(open_dirs) >= 2:
+                cnt += 1
             if len(open_dirs) != 2: continue
 
-
-            is_candidate[box_id(c, r)] = True
+            is_candidate[(r * N_BOX + c)] = True
 
             for d in open_dirs:
                 nc = c + dc[d]
@@ -69,23 +79,23 @@ def init_box_data(edges: List):
                 if 0 <= nc < N_BOX and 0 <= nr < N_BOX:
                     # 이웃 박스와 공유하는 변이 열려 있음 → 내부 연결
                     # 이웃도 후보이든 아니든, 일단 edge는 만들고 나중에 필터링해도 됨
-                    adj[box_id(c, r)].append(box_id(nc, nr))
+                    adj[(r * N_BOX + c)].append((nr * N_BOX + nc))
                 else:
                     # 보드 바깥과 연결된 열린 변
-                    external_open[box_id(c, r)] += 1
+                    external_open[(r * N_BOX + c)] += 1
     
-    return adj, external_open, is_candidate
+    return adj, external_open, is_candidate, cnt
 
 def get_connected_Components(adj, is_candidate):
     """
         Todo: Juction, 3거리의 체인과 비스무리한건 휴리스틱에서 걸러줘야함.
     """
-    visited = { box_id(r,c): False for r in range(N_BOX) for c in range(N_BOX) }
+    visited = { (r * N_BOX + c): False for r in range(N_BOX) for c in range(N_BOX) }
     components = []  # 각 컴포넌트는 [box_id1, box_id2, ...] 리스트
 
     for r in range(N_BOX):
         for c in range(N_BOX):
-            u = box_id(r,c)
+            u = (r * N_BOX + c)
             if not is_candidate[u]:
                 continue
             if visited[u]:
@@ -114,7 +124,6 @@ def get_connected_Components(adj, is_candidate):
     return components
 
 def classify_component(comps, adj):
-
     res = []
     for comp in comps:
 
@@ -156,12 +165,11 @@ def classify_component(comps, adj):
             }) 
 
         # 3) 그 외는 복잡한 irregular 구조 (미들게임에서 나올 수 있음)
-        res.append({
-            'type': 'complex',
-            'length': len(comp)
-        }) 
+        # res.append({
+        #     'type': 'complex',
+        #     'length': len(comp)
+        # }) 
     return res
-
 
 def get_cv(comps):
     def get_fcv(comps):

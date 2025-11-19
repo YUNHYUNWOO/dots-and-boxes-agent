@@ -80,7 +80,7 @@ def default_get_budget_for_this_move(t, time_manager):
     else :
         w = 2.0
 
-    budget = base * w
+    budget = base * w * 1.5
     MIN_BUDGET = 0.02   # 최소 20ms
     MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
     budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
