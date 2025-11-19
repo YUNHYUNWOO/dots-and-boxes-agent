@@ -3,4 +3,4 @@ from .SearchPolicy import *
 from .MixedPolicy import *
 from .OpeningPolicy import * 
 from .PlayablePolicy import PlayablePolicy
-from .Heuristic import move_ordering, evaluate_cv, evaluate_rel
+from .Evaluate import evaluate_cv, evaluate_rel, evaluate_relv2

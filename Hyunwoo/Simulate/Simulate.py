@@ -5,11 +5,13 @@ from gymnasium import spaces
 from DotsAndBoxes import DnBEnv
 from Policy import *
 from Search import *
+from Search import move_ordering_v2
 from Util import *
 import tqdm.auto as tqdm
 import os
 import time
 from .Log import save_sim_logs
+
 
 BASE_SAVE_PATH = './Simulate/SimResult'
 
@@ -50,14 +52,18 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         time_manager = p0_time_manager if cur_player == 0 else p1_time_manager
         policy = p0_policy if cur_player == 0 else p1_policy
 
-        print(cur_player)
+        if verbose:
+            print('cur_player: ', cur_player)
+
         t0 = time.perf_counter()
         time_manager.start_move()
         action, val = policy.get_action(observation, info, env, time_manager)
         time_manager.end_move()        
         t1 = time.perf_counter()
         Policy_log.append(policy.get_log())
-        Policy_log[-1]['time_spent'] = t1 - t0
+
+        if Policy_log[-1] != None:
+            Policy_log[-1]['time_spent'] = t1 - t0
 
         if verbose:
             print('action:', action)
@@ -166,51 +172,44 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'cv_opt_vs_rel_opt_scheduler15'
+
+    run_name = 'move_ordering_vs_move_ordering_v2'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
-    # p1_policy_part1 = OpeningPolicy()
-    # config_p1 = {
-    #     'evaluate':evaluate_rel,
-    #     'move_ordering':None,
-    #     'depth': ExponentialSchedulerInt(15, 2, 35, 5),
-    #     'use_iterative_deepening': True,
-    #     'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False)
-    # }
-    # p1_policy_part2 = SearchPolicy(AB_TT_Search(), config_p1)
-    # p1_policy_scheduler = PiecewiseConstantScheduler([[30, 60, p1_policy_part2]], default_value=p1_policy_part1)
-    # p1_policy = MixedPolicy(p1_policy_scheduler)
-    
     config_p0 = {
-        'evaluate':evaluate_rel,
+        'evaluate':evaluate_relv2,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'depth': ExponentialSchedulerInt(15,2,35,18),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'w_eval': ExponentialScheduler(15, 0.2, 30, 0.8),
-        'use_time_control': False,
-
+        # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
+        'use_time_control': True,
+        'use_pvs_search': False
     }
-    p0_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
 
+    
     config_p1 = {
-        'evaluate':evaluate_rel,
-        'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15, 2, 35, 15),
+        'evaluate':evaluate_relv2,
+        'move_ordering':move_ordering_v2,
+        'depth': ExponentialSchedulerInt(15,2,35,18),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'use_time_control': False,
-        # 'budget_scheduler': Budget_Scheduler(num_turns=60, center=32, scale=5, alpha=1, p=0.3, w_2=1.7)
+        # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
+        'use_time_control': True,
     }
-    p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
+
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
+
+    env.render_mode = 'human'
+    # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=PlayablePolicy(), verbose=True))
+
     env.render_mode = 'rgb_array'
 
-    # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
-
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=20, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
 

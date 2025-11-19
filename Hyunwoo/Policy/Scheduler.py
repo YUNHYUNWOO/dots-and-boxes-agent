@@ -155,14 +155,36 @@ class InverseSqrtScheduler(BaseScheduler):
 # 복합/구간/주기형 스케줄러들
 # ---------------------------
 
-class Budget_Scheduler(BaseScheduler):
+class Budget_Scheduler_v2(BaseScheduler):
+    def __init__(self,
+                 num_turns: int,
+                 center: float = None,
+                 scale: float = None,
+                 alpha: float = 3.0,
+                 p: float = 0.3):
+        self.num_turns = num_turns
+
+        t = np.arange(num_turns)
+        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
+        
+        w = g / g.sum()
+        u = np.ones((num_turns,)) / num_turns
+        self.w = np.cumsum(p * u + w * (1 - p))
+
+    def value(self, t:int)->float:
+        return self.w[t]
+    
+    def get_config(self):
+        return None
+    
+class Budget_Scheduler_v3(BaseScheduler):
     def __init__(self,
                  num_turns: int,
                  center: float = None,
                  scale: float = None,
                  alpha: float = 3.0,
                  p: float = 0.3,
-                 w_2:float = 1.7):
+                 w_2:float = 1.8):
         self.num_turns = num_turns
 
         t = np.arange(num_turns)

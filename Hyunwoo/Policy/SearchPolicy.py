@@ -1,5 +1,5 @@
 from DotsAndBoxes import DnBEnv
-from .BasePolicy import BasePolicy,TimeManager
+from .BasePolicy import BasePolicy, TimeManager
 from DotsAndBoxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from Util.DnB_Engine_Util import *
@@ -8,8 +8,6 @@ from .Scheduler import *
 import numpy as np
 
 Action = List[int]
-
-
 
 # =======================================
 
@@ -43,6 +41,7 @@ class SearchPolicy(BasePolicy):
             'cur_player': observation['cur_player'],
             'score': observation['score']
         }
+
         t = 60 - np.sum(info['action_mask'] == False)
         config = self.get_config(t)
 

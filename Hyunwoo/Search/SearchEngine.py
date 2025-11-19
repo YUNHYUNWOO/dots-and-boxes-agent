@@ -16,4 +16,3 @@ class BaseSearchEngine():
         raise NotImplementedError
 
 
-    
