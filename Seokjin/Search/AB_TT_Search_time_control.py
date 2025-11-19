@@ -5,9 +5,9 @@ from Util.DnB_Engine_Util import *
 import torch
 import torch.nn as nn
 import numpy as np
-from collections import OrderedDict
 from Util.DnB_Engine_Util import N_BOX
-from Policy.Scheduler import Budget_Scheduler
+from .Search_Heuristic import give_away_extension, complete_extension
+from .TranspositionTable import TranspositionTable, Action, EXACT, LOWERBOUND, UPPERBOUND
 
 Action = List[int]
 EXACT = 0
@@ -15,54 +15,8 @@ LOWERBOUND = 1
 UPPERBOUND = 2
         
 
-class TTEntry:
-    __slots__ = ("value", "depth", "flag", "best_action")
-    def __init__(self, value: int, depth: int, flag, best_action: Optional[Tuple[int,int,int]]):
-        self.value = value          # root 기준의 미래마진 값
-        self.depth = depth          # 이 값이 유효한 최소 보장 깊이
-        self.flag = flag            # EXACT / LOWERBOUND / UPPERBOUND
-        self.best_action = best_action
-
-
-class TranspositionTable:
-    def __init__(self):
-        self._t = OrderedDict()
-        self.capacity = 150000
-
-    @staticmethod
-    def key_from(eng: DotsAndBoxesEngine, maximizing: int):
-        h, v = eng.h_bits, eng.v_bits
-        return (h << 33) | (v << 1) | (1 if maximizing else 0)
-
-    def probe(self, eng, maximizing, depth) -> Optional[TTEntry]:
-        k = self.key_from(eng, maximizing)
-        ent = self._t.get(k)
-        if ent is not None and ent.depth >= depth:
-            return ent
-        return None
-
-    def store(self, eng, maximizing, depth, flag, value, best_action):
-        k = self.key_from(eng, maximizing)
-        prev = self._t.get(k)
-        # 더 깊은(depth 큰) 결과만 덮어씌우자
-        if (prev is None) or (depth >= prev.depth):
-            self._t[k] = TTEntry(value, depth, flag, best_action)
-
-        self._t[k] = TTEntry(value, depth, flag, best_action)
-        # 최근 사용으로 이동
-        self._t.move_to_end(k, last=True)
-        # 용량 초과 시 LRU부터 제거
-        if len(self._t) > self.capacity:
-            self._t.popitem(last=False)
-
-    def pv_move(self, eng, maximizing) -> Optional[Tuple[int,int,int]]:
-        ent = self._t.get(self.key_from(eng, maximizing))
-        return None if ent is None else ent.best_action
-
-
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
-
 
 
 class AB_TT_Search_TC(BaseSearchEngine):
@@ -79,8 +33,10 @@ class AB_TT_Search_TC(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=30, scale=7, alpha=1, p=0.3)
+        self.budget_scheduler = Budget_Scheduler(num_turns=60, center=30, scale=7, alpha=1, p=0.3, w_2=1.8)
         self.use_time_control = True
+        self.use_extension = False
+        self.extension_limit = 5
 
         ## Loging
         self.nodes = 0
@@ -156,7 +112,9 @@ class AB_TT_Search_TC(BaseSearchEngine):
                depth: int,
                root_player: int,
                alpha: int = -10**9,
-               beta: int = 10**9
+               beta: int = 10**9,
+               info: dict = None,
+               extension_cnt=0
                ) -> Tuple[Optional[Action], int]:
         self.nodes += 1
         if (self.nodes & 1023) == 0:  # 1024의 배수일 때
@@ -199,12 +157,11 @@ class AB_TT_Search_TC(BaseSearchEngine):
 
         actions = get_legal_actions(eng.get_state()['edges'])
 
+        move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
         pv_action = self.tt.pv_move(eng, maximizing)
         if pv_action != None:
-            actions.insert(0, pv_action)
+            move_order.insert(0, pv_action)
 
-        flag = EXACT
-        move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
         move_order = [(False, action) for action in move_order]
 
         for skipped, a in move_order:
@@ -225,9 +182,20 @@ class AB_TT_Search_TC(BaseSearchEngine):
                         eng.undo_action(a, out["completed_boxes"], player_before)
                         continue 
 
-            _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha, beta)
+            immediate_val = len(out["completed_boxes"])
+            sign = 1 if (root_player == player_before) else -1
+            alpha_child = alpha - sign * immediate_val
+            beta_child  = beta  - sign * immediate_val    
+
+            # if self.use_extension and extension_cnt < self.extension_limit and \
+            #     (complete_extension(info, out, a) or \
+            #      give_away_extension(info, out, a)):
+            #     _, vals = self.alpha_beta(eng, depth, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt+1)
+            # else :
+            _, vals = self.alpha_beta(eng, depth - 1, root_player, alpha_child, beta_child, info, extension_cnt=extension_cnt)
 
             val = vals[0]
+            val = sign * immediate_val + val
 
             immediate_val = len(out["completed_boxes"])
             sign = 1 if (root_player == player_before) else -1
@@ -278,7 +246,7 @@ class AB_TT_Search_TC(BaseSearchEngine):
 
         print(rem, w, rem * w)
 
-        budget = rem * w * 1.5
+        budget = rem * w
         MIN_BUDGET = 0.02   # 최소 20ms
         MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
         budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))

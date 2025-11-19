@@ -50,7 +50,6 @@ class SearchPolicy(BasePolicy):
         self.eng.set_state(state)
 
         best_action, best_val = self.SearchEngine.search(eng=self.eng, state=state, time_manager=time_manager)
-        
         return best_action, best_val
 
     def get_log(self):

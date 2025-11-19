@@ -166,7 +166,7 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 if __name__ == "__main__":
 
-    run_name = 'cv_opt_vs_rel_opt_scheduler15'
+    run_name = 'rel_vs_relv2_test'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     # p1_policy = MixedPolicy(p1_policy_scheduler)
     
     config_p0 = {
-        'evaluate':evaluate_cv,
+        'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
         'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
@@ -193,10 +193,10 @@ if __name__ == "__main__":
         'use_time_control': False
 
     }
-    p0_policy = SearchPolicy(AB_TT_Search_TC(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v3(), config_p0)
 
     config_p1 = {
-        'evaluate':evaluate_rel,
+        'evaluate':evaluate_relv2,
         'move_ordering':move_ordering,
         'depth': ExponentialSchedulerInt(15, 2, 35, 15),
         'use_iterative_deepening': True,
@@ -204,11 +204,11 @@ if __name__ == "__main__":
         'skip_move': False,
         'use_time_control': False
     }
-    p1_policy = SearchPolicy(AB_TT_Search_TC(), config_p1)
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v3(), config_p1)
     env.render_mode = 'rgb_array'
 
     # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
 
-    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=10, verbose=False)
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=30, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)

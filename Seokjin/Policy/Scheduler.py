@@ -155,7 +155,7 @@ class InverseSqrtScheduler(BaseScheduler):
 # 복합/구간/주기형 스케줄러들
 # ---------------------------
 
-class Budget_Scheduler(BaseScheduler):
+class Budget_Scheduler_v2(BaseScheduler):
     def __init__(self,
                  num_turns: int,
                  center: float = None,
@@ -169,7 +169,31 @@ class Budget_Scheduler(BaseScheduler):
         
         w = g / g.sum()
         u = np.ones((num_turns,)) / num_turns
+        self.w = np.cumsum(p * u + w * (1 - p))
+
+    def value(self, t:int)->float:
+        return self.w[t]
+    
+    def get_config(self):
+        return None
+    
+class Budget_Scheduler_v3(BaseScheduler):
+    def __init__(self,
+                 num_turns: int,
+                 center: float = None,
+                 scale: float = None,
+                 alpha: float = 3.0,
+                 p: float = 0.3,
+                 w_2:float = 1.8):
+        self.num_turns = num_turns
+
+        t = np.arange(num_turns)
+        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
+        
+        w = g / g.sum()
+        u = np.ones((num_turns,)) / num_turns
         self.w = p * u + w * (1 - p)
+        self.w_2 = w_2
 
     def value(self, t:int)->float:
         idx = int(t)
@@ -182,7 +206,7 @@ class Budget_Scheduler(BaseScheduler):
         if tail_sum <= 0:
             return 1.0  # 남은 weight가 없다면 남은 시간 전부 다 써도 된다고 가정
 
-        return float(self.w[idx] / tail_sum)
+        return self.w_2 * float(self.w[idx] / tail_sum)
     
     def get_config(self):
         return None

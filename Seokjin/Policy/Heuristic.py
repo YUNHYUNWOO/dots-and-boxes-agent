@@ -1,106 +1,65 @@
-from Util import get_connected_Components, init_box_data, get_cv, get_legal_actions, classify_component
+from Util import get_connected_Components, init_box_data, get_cv, get_legal_actions, classify_component, makes_third_edge, adjacent_boxes, boxes_adjacent_to_edge
 from DotsAndBoxes import DotsAndBoxesEngine
 from Util.DnB_Engine_Util import *
 from Search import BaseSearchEngine, AlphaBetaSearch, TranspositionTable, TTEntry
-
-
-def _adjacent_boxes(c: int, r: int, d: int) -> List[Tuple[int, int]]:
-    if d == H:
-            if 0 <= r - 1 < N_BOX: return [(c, r - 1), (c, r)]
-            elif r < N_BOX: return [(c, r)]
-    else:
-        if 0 <= r < N_BOX and 0 <= c - 1 < N_BOX: return [(c - 1, r), (c, r)]
-        if 0 <= r < N_BOX and c < N_BOX: return [(c, r)]
-
-def _box_edge_count(hb: int, vb: int, bc: int, br: int) -> int:
-    cnt = 0
-    # H(br,bc), H(br+1,bc)
-    if (hb >> (br * (N - 1) + bc)) & 1:       cnt += 1
-    if (hb >> ((br + 1) * (N - 1) + bc)) & 1:   cnt += 1
-    # V(br,bc), V(br,bc+1)
-    if (vb >> (br * N + bc)) & 1:       cnt += 1
-    if (vb >> (br * N + bc + 1)) & 1:   cnt += 1
-    return cnt
-
-def _makes_third_edge(edges, action) -> bool:
-    """액션이 인접 박스 중 '3번째 엣지'를 만들어서 상대에게 4번째를 헌납할 위험인지 체크."""
-    c, r, d = action
-    h, v = edges
-    if d == H:
-        if 0 <= r < N_BOX:
-            if _box_edge_count(h, v, c, r) == 2:
-                return True
-        if 0 <= r - 1 < N_BOX:
-            if _box_edge_count(h, v, c, r - 1) == 2:
-                return True
-    else:
-        if 0 <= r < N_BOX:
-            if 0 <= c < N_BOX and _box_edge_count(h, v, c, r) == 2:
-                return True
-            elif c - 1 < N_BOX and _box_edge_count(h, v, c, r) == 2:
-                return True
-
-    return False
 
 def evaluate_rel(eng: DotsAndBoxesEngine) -> int:
     moves = get_legal_actions(eng.get_state()['edges'])
     edges = eng.get_state()['edges']
 
-    bad_moves = sum(1 for m in moves if _makes_third_edge(edges, m))
+    bad_moves = sum(1 for m in moves if makes_third_edge(edges, m))
     # bad_moves가 적을수록 좋다
     bad_moves /= 100
     return -bad_moves
+
+def evaluate_relv2(eng: DotsAndBoxesEngine) -> int:
+    moves = get_legal_actions(eng.get_state()['edges'])
+    edges = eng.get_state()['edges']
+
+    bad_moves = sum(1 for m in moves if makes_third_edge(edges, m))
+    # bad_moves가 적을수록 좋다
+
+    cnt = 0
+    for br in range(N_BOX):
+        for bc in range(N_BOX):
+            if (edges[0] >> (br * (N - 1) + bc) & 1) & (edges[0] >> ((br + 1) * (N - 1) + bc) & 1) & (edges[1] >> (br * N + bc) & 1) & (edges[1] >> (br * N + bc + 1) & 1): 
+                cnt += 1
+    
+    if (cnt % 2) == 0:
+        bad_moves += 6
+
+    bad_moves /= 100
+
+    return -bad_moves
+
+def evaluate_relv3(eng: DotsAndBoxesEngine) -> int:
+    edges = eng.get_state()['edges']
+
+    cnt = 0
+    for br in range(N_BOX):
+        for bc in range(N_BOX):
+            if (edges[0] >> (br * (N - 1) + bc) & 1) & (edges[0] >> ((br + 1) * (N - 1) + bc) & 1) & (edges[1] >> (br * N + bc) & 1) & (edges[1] >> (br * N + bc + 1) & 1): 
+                cnt += 1
+    
+    if (cnt % 2) == 0:
+        return -cnt * 5
+
+    return 5
 
 
 def evaluate_cv(eng):
     edges = eng.get_state()['edges']
 
-    adj, external_open, is_candidate = init_box_data(edges)
+    adj, external_open, is_candidate, cnt_safe_box = init_box_data(edges)
     comps = get_connected_Components(adj, is_candidate)
     comps = classify_component(comps, adj)
     return get_cv(comps)
-
-def compelete_box(edges, action) -> bool:
-    c, r, d = action
-    hb, vb = edges
-    for (bc, br) in _adjacent_boxes(c, r, d):
-        if _box_edge_count(hb, vb, bc, br) == 3:
-            # 지금 두면 박스가 완성됨
-            return True
 
 # def opens_chain(edges, action) -> bool:
 #     adj, external_open, is_candidate = init_box_data(edges)
 #     comps = get_connected_Components(adj, is_candidate)
 
 #     for comp in comps:       
-
-
-## Move_Ordering
-def move_ordering(actions, eng: DotsAndBoxesEngine, tt: TranspositionTable, depth:int, root_player:int):
-    
-    state = eng.get_state()
-    edges = state["edges"]
-    cur_player = state["cur_player"]
-    score = state["score"]
-
-    ranked = []
-
-    forced = []
-    safe = []
-    for a in actions:
-        if compelete_box(edges, a):
-            forced.append(a)
-        
-        if not _makes_third_edge(edges, a):
-            safe.append(a)
-
-    rest = actions
-    rest = [a for a in rest if a not in forced]
-    rest = [a for a in rest if a not in safe]
-
-    ranked = forced + safe + rest
-
-    return ranked
 
 
 

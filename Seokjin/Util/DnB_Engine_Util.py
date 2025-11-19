@@ -136,6 +136,43 @@ def get_legal_actions(encoded_edges, n_box=5):
 
     return actions
 
+def adjacent_boxes(c: int, r: int, d: int) -> List[Tuple[int, int]]:
+    if d == H:
+            if 0 <= r - 1 < N_BOX: return [(c, r - 1), (c, r)]
+            elif r < N_BOX: return [(c, r)]
+    else:
+        if 0 <= r < N_BOX and 0 <= c - 1 < N_BOX: return [(c - 1, r), (c, r)]
+        if 0 <= r < N_BOX and c < N_BOX: return [(c, r)]
+
+def box_edge_count(hb: int, vb: int, bc: int, br: int) -> int:
+    cnt = 0
+    # H(br,bc), H(br+1,bc)
+    if (hb >> (br * (N - 1) + bc)) & 1:       cnt += 1
+    if (hb >> ((br + 1) * (N - 1) + bc)) & 1:   cnt += 1
+    # V(br,bc), V(br,bc+1)
+    if (vb >> (br * N + bc)) & 1:       cnt += 1
+    if (vb >> (br * N + bc + 1)) & 1:   cnt += 1
+    return cnt
+
+def makes_third_edge(edges, action) -> bool:
+    """액션이 인접 박스 중 '3번째 엣지'를 만들어서 상대에게 4번째를 헌납할 위험인지 체크."""
+    c, r, d = action
+    h, v = edges
+    if d == H:
+        if 0 <= r < N_BOX:
+            if box_edge_count(h, v, c, r) == 2:
+                return True
+        if 0 <= r - 1 < N_BOX:
+            if box_edge_count(h, v, c, r - 1) == 2:
+                return True
+    else:
+        if 0 <= r < N_BOX:
+            if 0 <= c < N_BOX and box_edge_count(h, v, c, r) == 2:
+                return True
+            elif c - 1 < N_BOX and box_edge_count(h, v, c, r) == 2:
+                return True
+    return False
+
 def _test_get_available_actions_encoded():
     for i in range(10000):
         h = random.randint(0, 1 << 30)

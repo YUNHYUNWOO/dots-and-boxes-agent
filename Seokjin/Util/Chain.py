@@ -36,7 +36,7 @@ def init_box_data(edges: List):
     is_candidate = { (r * N_BOX + c): False for r in range(N_BOX) for c in range(N_BOX) }
 
     h_edge, v_edge = edges[0], edges[1]
-    cnt = 0
+    cnt_safe_box = 0
 
     for r in range(N_BOX):
         for c in range(N_BOX):
@@ -58,6 +58,9 @@ def init_box_data(edges: List):
 
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
 
+            if len(open_dirs) == 3:
+                cnt_safe_box += 1
+
             if len(open_dirs) == 0:
                 # 이미 완성된 박스 -> 체인/루프 후보 아님
                 continue
@@ -66,8 +69,6 @@ def init_box_data(edges: List):
             # (3개 이상이면 아직 미들게임 safe 영역)
             # 필요하면 여기서 필터링:
 
-            if len(open_dirs) >= 2:
-                cnt += 1
             if len(open_dirs) != 2: continue
 
             is_candidate[(r * N_BOX + c)] = True
@@ -84,7 +85,7 @@ def init_box_data(edges: List):
                     # 보드 바깥과 연결된 열린 변
                     external_open[(r * N_BOX + c)] += 1
     
-    return adj, external_open, is_candidate, cnt
+    return adj, external_open, is_candidate, cnt_safe_box
 
 def get_connected_Components(adj, is_candidate):
     """
@@ -150,19 +151,13 @@ def classify_component(comps, adj):
         #   - 외부와 열린 변이 없다 (external_open == 0 포함됨)
         is_loop = (num_deg1 == 0 and len(num_other) == 0)
         if is_loop:
-            res.append({
-                'type': 'loop',
-                'length': len(comp)
-            }) 
+            res.append((0, len(comp))) 
 
         # 2) 체인(chain):
         #   - degree == 1 인 박스가 정확히 2개 (양 끝)
         #   - 나머지는 degree == 2
         if num_deg1 == 2 and len(num_other) == 0:
-            res.append({
-                'type': 'chain',
-                'length': len(comp)
-            }) 
+            res.append((1, len(comp))) 
 
         # 3) 그 외는 복잡한 irregular 구조 (미들게임에서 나올 수 있음)
         # res.append({
@@ -171,29 +166,40 @@ def classify_component(comps, adj):
         # }) 
     return res
 
-def get_cv(comps):
-    def get_fcv(comps):
-        fcv = 0
-        for comp in comps:
-            if (comp['type'] == 'chain') and comp['length'] >= 3:
-                fcv += comp['length'] - 4
-        
-            if (comp['type'] == 'loop'):
-                fcv += comp['length'] - 8
-        return fcv
+# def get_cv(comps, cnt_safe_box):
+#     cv = 0
+#     tb = 4
+#     cnt = 0
+#     for comp in comps:
+#         if (comp[0] == 1) and comp[1] >= 3: # chain
+#             cv += comp[1] - 4
+#             cnt += comp[1]
+#         elif (comp[0] == 0): # loop
+#             cv += comp[1] - 8
+#             cnt += comp[1]
+#             tb = 8
+#     cv += tb
 
-    def get_tb(comps):
-        tb = 0
-        for comp in comps:
-            if (comp['type'] == 'chain'):
-                tb = 4
-        
-            if (comp['type'] == 'loop'):
-                tb = 8
-                break
-        return tb
-    
-    cv = get_fcv(comps) + get_tb(comps)
+#     if (cnt_safe_box + cnt) < 25: # 3변 이상 칠해진 상자 존재, 
+#         cv -= 4 * max(1, cnt_safe_box)
+#     return cv
+
+def get_cv(comps):
+    cv = 0
+    tb = 4
+    cnt = 0
+    for comp in comps:
+        if (comp[0] == 1) and comp[1] >= 3: # chain
+            cv += comp[1] - 4
+            cnt += comp[1]
+        elif (comp[0] == 0): # loop
+            cv += comp[1] - 8
+            cnt += comp[1]
+            tb = 8
+    cv += tb
+
+    if (cnt_safe_box + cnt) < 25: # 3변 이상 칠해진 상자 존재, 
+        cv -= 4 * max(1, cnt_safe_box)
     return cv
 
 # ----- 체인/루프 컴포넌트 정보 확장 분석 -----
