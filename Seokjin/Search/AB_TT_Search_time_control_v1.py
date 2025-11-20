@@ -124,8 +124,10 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             pass
 
         if actions == None:
+            actions = [self.tt.pv_move(eng, maximizing=True)]
             # 어떤 깊이도 끝까지 못 돌린 극단 상황
-            actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+            if actions[0] == None:
+                actions = get_legal_actions(eng.get_state()['edges'])[0:1]
             vals = [0]
 
         if self.deterministic == True:

@@ -26,7 +26,7 @@ def default_get_budget_for_this_move(t, time_manager):
     progress = t / (2 * N_BOX * (N_BOX + 1))
 
     if progress < 0.3:
-        w = 0.1
+        w = 0.3
     elif progress < 0.75:
         w = 4.2
     else :
@@ -74,7 +74,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         assert self.depth != None
 
         if self.move_ordering == None:
-            self.move_ordering = default_move_ordering
+            self.move_ordering = default_move_orderingW
 
         actions = None
 
@@ -114,10 +114,10 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             # print('vals: ', vals)
 
         except TimeoutError:
+            print('timeout')
             pass
 
         if actions == None:
-            # 어떤 깊이도 끝까지 못 돌린 극단 상황
             actions = get_legal_actions(eng.get_state()['edges'])[0:1]
             vals = [0]
 
@@ -155,7 +155,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
             
-            return None, [sign * self.evaluate(eng) * self.w_eval]
+            return None, [sign * self.evaluate(eng) * self.w_eval + random.random() * 1e-10]
 
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)

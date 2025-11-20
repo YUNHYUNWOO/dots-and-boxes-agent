@@ -11,6 +11,7 @@ import tqdm.auto as tqdm
 import os
 import time
 from .Log import save_sim_logs
+import pickle
 
 
 BASE_SAVE_PATH = './Simulate/SimResult'
@@ -175,47 +176,55 @@ def SimulateMultipleEpisodes(env, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 if __name__ == "__main__":
 
 
-    run_name = 'none_vs_extension'
+    run_name = 'chain_aware_test'
     n_box = 5
     env = DnBEnv(render_mode='human', n_box=n_box)
 
     config_p0 = {
-        'evaluate':evaluate_relv2,
+        'evaluate':evaluate_rel,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15,2,35,24),
+        'depth': ExponentialSchedulerInt(15,2,35,25),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
+        'use_extension': True,
+        'extension_limit': 20,
         # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
-        'use_time_control': False,
+        'use_time_control': True,
         'use_pvs_search': True
     }
-    p0_policy = SearchPolicy(AB_TT_Search_TC_v3(), config_p0)
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
 
     
     config_p1 = {
-        'evaluate':evaluate_comps,
+        'evaluate':evaluate_chain_aware,
         'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15,2,35,24),
+        'depth': ExponentialSchedulerInt(15,2,35,25),
         'use_iterative_deepening': True,
         'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
         'skip_move': False,
-        'w_eval': 0.1,
-        # 'use_extension': True,
-        # 'extension_limit': 20,
+        'use_extension': True,
+        'extension_limit': 20,
         'use_pvs_search': True,
-        'use_time_control': False,
-        
+        'use_time_control': True,
     }
 
-    p1_policy = SearchPolicy(AB_TT_Search_TC_v2(), config_p1)
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
 
     env.render_mode = 'human'
-    print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=True))
+    print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=False))
 
     env.render_mode = 'rgb_array'
 
     Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=15, verbose=False)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
     save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
+    
+    p0_policy.SearchEngine.tt
+    my_object = {'data': p0_policy.SearchEngine.tt}
+
+    # 'wb' 모드로 파일 열기
+    with open('tt.pkl', 'wb') as f:
+        # pickle.dump()를 사용하여 객체 저장
+        pickle.dump(my_object, f)
 

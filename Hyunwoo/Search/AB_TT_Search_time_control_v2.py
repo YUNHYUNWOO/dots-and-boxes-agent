@@ -9,6 +9,7 @@ from Util.DnB_Engine_Util import N_BOX
 from Policy.Scheduler import Budget_Scheduler_v2, Budget_Scheduler_v3
 from .Search_Heuristic import give_away_extension, complete_extension
 from .TranspositionTable import TranspositionTable, Action, EXACT, LOWERBOUND, UPPERBOUND
+import random
 
 def default_move_ordering(actions, eng, tt, depth, root_player):
     return actions
@@ -28,11 +29,11 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-        self.budget = 0
         self.use_time_control = False
         self.use_extension = False
         self.extension_limit = 5
         self.use_pvs_search = False
+        self.budget_scheduler = Budget_Scheduler_v2(num_turns=60, center=35, scale=5, alpha=1, p=0.3)
 
         ## Loging
         self.nodes = 0
@@ -60,6 +61,7 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         budget = self.get_budget_for_this_move(t, time_manager)
         # print('t', t, 'budget', budget)
         self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
+        
 
         print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
         try:
@@ -89,8 +91,10 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
             pass
 
         if actions == None:
+            actions = [self.tt.pv_move(eng, maximizing=True)]
             # 어떤 깊이도 끝까지 못 돌린 극단 상황
-            actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+            if actions[0] == None:
+                actions = get_legal_actions(eng.get_state()['edges'])[0:1]
             vals = [0]
 
         if self.deterministic == True:
@@ -130,7 +134,7 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
-            return None, [sign * self.evaluate(eng) * self.w_eval]
+            return None, [sign * self.evaluate(eng) * self.w_eval + random.random() * 1e-10]
 
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)
@@ -253,7 +257,7 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
                 self.cutoffs += 1
                 flag = LOWERBOUND if maximizing else UPPERBOUND
                 break  # alpha-beta cut
-
+        
         self.tt.store(eng, maximizing=maximizing, depth=depth, flag=flag, value=best_vals[0], best_action=best_actions[0])
         return best_actions, best_vals
      
@@ -281,14 +285,12 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
             -> returns budget for turn t
         """
         rem = time_manager.remaining()
-        target_frac = self.budget
+        target_frac = self.budget_scheduler.value(t)
         used_frac = 1 - rem / time_manager.total_budget
 
         delta_frac = target_frac - used_frac
-        print('used', used_frac)
-        print('target', target_frac)
-        print('delta', delta_frac)
 
+        # 타겟 프랙션에 맞는 '이론상' 예산
         budget = time_manager.total_budget * delta_frac
 
         SAFETY = 0.05
@@ -298,7 +300,7 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         MAX_BUDGET = rem    # 남은 시간 이상은 쓸 수 없음
         budget = max(MIN_BUDGET, min(budget, MAX_BUDGET))
         
-        return budget
+        return self.budget
 
     def get_log(self):
         return {
@@ -351,5 +353,3 @@ class AB_TT_Search_TC_v2(BaseSearchEngine):
         if len(best_vals) > k:
             best_actions.pop()
             best_vals.pop()
-
-

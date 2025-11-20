@@ -56,4 +56,3 @@ class SearchPolicy(BasePolicy):
         log = self.SearchEngine.get_log()
         self.SearchEngine.reset_log()
         return log
-

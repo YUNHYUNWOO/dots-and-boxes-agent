@@ -56,7 +56,7 @@ def init_box_data(edges: List):
             # 엔드게임 쪽 체인분해는 보통 '1개 또는 2개의 열린 변'만을 다룬다.
             # (3개 이상이면 아직 미들게임 safe 영역)
             # 필요하면 여기서 필터링:
-            if not(1 < len_open < 4): continue
+            if len_open != 2: continue
 
             is_candidate[box_id(c, r)] = True
 
@@ -206,6 +206,40 @@ def classify_component(comps, adj):
 
     return res
 
+def compute_chain_risk(edges) -> float:
+    """
+    체인/루프/복잡 구조의 길이 기반 risk를 계산.
+    - 체인: L >= 3 이면 (L - 2)만큼 패널티
+    - 루프: L >= 4 이면 (L - 4) * 1.5 패널티
+    - complex: 길이 * 0.5 패널티
+    """
+    adj, _, is_candidate = init_box_data(edges)
+    comps = get_connected_Components(adj, is_candidate)
+
+    risk = 0.0
+
+    max_len = 0
+
+    infos = classify_component(comps, adj)
+    for info in infos:
+        typ = info["type"]
+        L   = info["length"]
+
+        # 최대 길이 갱신
+        if L > max_len:
+            max_len = L
+
+        # risk 계산
+        if typ == "chain":
+            if L >= 3:
+                risk += (L - 2)        # 3-chain = 1, 4-chain = 2, ...
+        elif typ == "loop":
+            if L >= 4:
+                risk += 1.5 * max(0, L - 4)
+        else:  # complex
+            risk += 0.5 * L           # 대충 junction 많은 구조는 약하게라도 패널티
+
+    return risk, max_len
 
 def get_cv(comps):
     def get_fcv(comps):
@@ -233,7 +267,15 @@ def get_cv(comps):
     cv = get_fcv(comps) + get_tb(comps)
     return cv
 
+def get_long_chain(comps):
+    cv = 0
+    for comp in comps:
+        if (comp['type'] == 'chain') and comp['length'] >= 3: # chain
+            cv += comp['length'] - 2
+        elif (comp['type'] == 'loop'): # loop
+            cv += comp['length'] - 4
 
+    return cv
 
 
 def main():

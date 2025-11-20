@@ -34,7 +34,7 @@ class AB_TT_Search_TC_v3(BaseSearchEngine):
         self.T = 0.01
         self.skip_move = True
         self.w_eval = 1
-        self.budget_scheduler = Budget_Scheduler_v3(num_turns=60, center=30, scale=7, alpha=1, p=0.3, w_2=1.5)
+        self.budget_scheduler = Budget_Scheduler_v3(num_turns=60, center=30, scale=7, alpha=1, p=0.3, w_2=1.8)
         self.use_time_control = True
         self.use_extension = False
         self.extension_limit = 5
