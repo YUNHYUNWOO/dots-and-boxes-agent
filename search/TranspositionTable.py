@@ -2,7 +2,6 @@ from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from collections import OrderedDict
 from dotsandboxes import DotsAndBoxesEngine
 
-Action = List[int]
 EXACT = 0
 LOWERBOUND = 1
 UPPERBOUND = 2

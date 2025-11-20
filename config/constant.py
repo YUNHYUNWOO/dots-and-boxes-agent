@@ -17,7 +17,6 @@ Action = tuple[int, int, Dir] # (c, r, d)
 Edge = tuple[int, int, Dir] # (c, r, d)
 Box = tuple[int, int] # (c, r, d)
 
-
 Board = list[list[list[int]]]
 BitBoard = tuple[int, int]
 
