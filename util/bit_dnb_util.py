@@ -4,33 +4,18 @@ import pandas
 
 from config import *
 
+from .dnb_util import (
+    get_boxes_adjacent_to_edge,
+    get_edges_adjacent_to_box,
+)
+
 def h_index(c: int, r: int) -> int:
     return r * (N - 1) + c
 
 def v_index(c: int, r: int) -> int:
     return r * N + c
 
-def check_bounds(edge:Edge|Action) -> None:
-    c, r, d = edge
-    if not (0 <= r < N and 0 <= c < N and d in (H, V)):
-        raise ValueError("Action out of bounds: r,c in [0,5], d in {0,1}")
-    if d == H and c >= N - 1:
-        raise ValueError("Invalid H edge: c must be <= 4")
-    if d == V and r >= N - 1:
-        raise ValueError("Invalid V edge: r must be <= 4")
-
-def get_boxes_adjacent_to_edge(edge:Edge) -> list[Box]:
-    c, r, d = edge
-    boxes = []
-    if d == H:
-        if 0 <= r - 1 < N_BOX: boxes.append((c, r - 1))
-        if 0 <= r < N_BOX:     boxes.append((c, r))
-    else:
-        if 0 <= c - 1 < N_BOX: boxes.append((c - 1, r))
-        if 0 <= r < N_BOX and 0 <= c < N_BOX: boxes.append((c, r))
-    return boxes
-
-def is_box_complete(board:BitBoard, box:Box) -> bool:
+def bit_is_box_complete(board:BitBoard, box:Box) -> bool:
     bc, br = box
 
     h_bits, v_bits = board
@@ -41,27 +26,18 @@ def is_box_complete(board:BitBoard, box:Box) -> bool:
 
     return (h1 & h2 & v1 & v2) == 1
 
-def count_completed_boxes(board:BitBoard) -> int:
-    h_bits, v_bits = board
+def bit_count_completed_boxes(board:BitBoard) -> int:
     cnt = 0
     for br in range(N_BOX):
         for bc in range(N_BOX):
-            if is_box_complete(h_bits, v_bits, bc, br):
+            if bit_is_box_complete(board, box=(bc, br)):
                 cnt += 1
     return cnt
 
-def is_edge_claimed(board:BitBoard, edge:Edge) -> bool:
+def bit_is_edge_claimed(board:BitBoard, edge:Edge) -> bool:
     c, r, d = edge
-    if d == H: return ((edges[0] >> h_index(c, r)) & 1) == 1
-    else:      return ((edges[1] >> v_index(c, r)) & 1) == 1
-
-def get_edges_adjacent_to_box(c, r):
-    return [
-        [c, r, 0],
-        [c + 1, r, 1],
-        [c, r + 1, 0],
-        [c, r, 1]
-    ]
+    if d == H: return ((board[0] >> h_index(c, r)) & 1) == 1
+    else:      return ((board[1] >> v_index(c, r)) & 1) == 1
 
 def encode_board(board:Board) -> BitBoard:
     """
@@ -77,37 +53,31 @@ def encode_board(board:Board) -> BitBoard:
             if r != N-1 and board[c][r][V]:
                 v |= 1 << v_index(c, r)
                 
-    return [h,v]
+    return (h,v)
 
 
 def decode_bitboard(bit_board:BitBoard) -> Board:
     """
-    encoding 방식이 n_box에 유연하게 대처하지 못하게 되어있음
-    n_box가 파라미터로 되어있지만 n_box를 빼는 순간 오류가 날 것
     """
     h, v = bit_board
 
-    edges = [[[0 for _ in range(2)] for _ in range(N)] for _ in range(N)]
-
+    board = [[[0 for _ in range(2)] for _ in range(N)] for _ in range(N)]
 
     for r in range(N):
         for c in range(N):
             if c != N-1: 
                 edges[c][r][H] = ((h >> h_index(c, r)) & 1) == 1
-
             if r != N-1: 
                 edges[c][r][V] = ((v >> v_index(c, r)) & 1) == 1
 
     return edges
 
-def get_legal_actions(bit_board:BitBoard) -> List[Action]:
+def bit_get_legal_actions(bit_board:BitBoard) -> List[Action]:
     """
-    encoded_edges = [h, v]
-      - H(r,c): r in [0..n-1], c in [0..n-2], idx = r*(n-1) + c
-      - V(r,c): r in [0..n-2], c in [0..n-1], idx = r*n + c
-    반환: [[r, c, d], ...]  (d: 0=H, 1=V)
+    bit_board = (h, v)
+    반환: [[c, r, d], ...]  (d: 0=H, 1=V)
     """
-    h, v = bit_board
+    h_bits, v_bits = bit_board
 
     # 유효 비트 길이로 마스킹 (초과 비트가 켜져 있어도 안전)
     H_COUNT = N * (N - 1)   # 수평 엣지 개수
@@ -120,21 +90,21 @@ def get_legal_actions(bit_board:BitBoard) -> List[Action]:
     # 수평 엣지들: r ∈ [0..n-1], c ∈ [0..n-2]
     # 각 행마다 (n-1)비트를 묶어서 읽으면 인덱스 계산 실수를 줄일 수 있음
     for r in range(N):
-        row_bits = (h >> (r * (N - 1))) & ((1 << (N - 1)) - 1)
+        row_bits = (h_bits >> (r * (N - 1))) & ((1 << (N - 1)) - 1)
         for c in range(N - 1):
             if ((row_bits >> c) & 1) == 0:     # 아직 미설치
                 actions.append([c, r, 0])      # d=0 (H)
 
     # 수직 엣지들: r ∈ [0..n-2], c ∈ [0..n-1]
     for r in range(N - 1):
-        row_bits = (v >> (r * N)) & ((1 << N) - 1)
+        row_bits = (v_bits >> (r * N)) & ((1 << N) - 1)
         for c in range(N):
             if ((row_bits >> c) & 1) == 0:     # 아직 미설치
                 actions.append([c, r, 1])      # d=1 (V)
 
     return actions
 
-def count_box_edge(board:Board, box:Box) -> int:
+def bit_count_box_edges(board:Board, box:Box) -> int:
     h_bits, v_bits = board
     bc, br = box
 
@@ -147,35 +117,17 @@ def count_box_edge(board:Board, box:Box) -> int:
     if (v_bits >> v_index(bc + 1, br)) & 1:   cnt += 1
     return cnt
 
-def makes_third_edge(board: Board, action: Action) -> bool:
-    """액션이 인접 박스 중 '3번째 엣지'를 만들어서 상대에게 4번째를 헌납할 위험인지 체크."""
+def bit_makes_third_edge(board: Board, action: Action) -> bool:
+    """
+    액션이 인접 박스 중 '3번째 엣지'를 만들어서 상대에게 4번째를 헌납할 위험인지 체크.
+    """
     c, r, d = action
-    h, v = edges
-    for (bc, br) in get_boxes_adjacent_to_edge(c, r, d):
-        if count_box_edge(h, v, bc, br) == 2:
+    for box in get_boxes_adjacent_to_edge(action):
+        if bit_count_box_edges(board=board, box=box) == 2:
             # 지금 두면 3이 됨 (위험수)
             return True
     return False
 
-def get_box_missing_edges(board:Board, box:Box):
-    """
-    박스 (bx, by)가 3변이 그려져 있다면,
-    남은 1개의 변(들)을 (x, y, d) 형태로 리턴.
-    (실제로는 항상 1개지만 구현상 리스트로)
-    """
-    bc, br = box
-    missing = []
-    # 위, 아래, 왼, 오
-    if board[bc][br][0] == 0:       # top
-        missing.append((bc, br, 0))
-    if board[bc][br+1][0] == 0:     # bottom
-        missing.append((bc, br+1, 0))
-    if board[bc][br][1] == 0:       # left
-        missing.append((bc, br, 1))
-    if board[bc+1][br][1] == 0:     # right
-        missing.append((bc+1, br, 1))
-    return missing
-    
     
 def _test_get_available_actions_encoded():
     for i in range(10000):
@@ -183,7 +135,7 @@ def _test_get_available_actions_encoded():
         v = random.randint(0, 1 << 30)
 
         encoded_edges = [h, v]
-        actions = get_legal_actions(encoded_edges=encoded_edges)
+        actions = bit_get_legal_actions(encoded_edges=encoded_edges)
 
         actions_edges = [[[0 for _ in range(2)] for _ in range(6)] for _ in range(6)]
 
@@ -198,17 +150,17 @@ def _test_get_available_actions_encoded():
                 print()
             print("=====")
 
-        decoded_edges = decode_Edges(encoded_edges)
+        decoded_edges = decode_bitboard(encoded_edges)
 
         for z in range(2):
             for r in range(6):
                 for c in range(6):
-                    print(decoded_edges[c][r][z], end = " ")
+                    print(decode_bitboard[c][r][z], end = " ")
                 print()
             print("=====")
             
 
-        h_comp, v_comp = encode_Edges(actions_edges)
+        h_comp, v_comp = encode_board(actions_edges)
         
         assert ((h_comp & h) == 0) and ((v_comp & v) == 0)
 
@@ -223,8 +175,8 @@ def _test_encode_decode():
         h = random.randint(0, 1 << 30)
         v = random.randint(0, 1 << 30)
 
-        edges = decode_Edges([h,v])
-        h_, v_ = encode_Edges(edges)
+        edges = decode_bitboard([h,v])
+        h_, v_ = encode_board(edges)
 
         assert (h_ == h and v_ == v)
         print(h, h_, v, v_)
@@ -238,7 +190,7 @@ def _test_encode_decode():
 if __name__ == "__main__":
     edges = [[[0 for _ in range(2)] for _ in range(6)] for _ in range(6)]
     edges[3][1][0] = 1
-    print(encode_Edges(edges), h_index(1, 3))
+    print(decode_bitboard(edges), h_index(1, 3))
 
     # test Edge Encode, Decode
     _test_encode_decode()

@@ -1,17 +1,24 @@
 from typing import Tuple, List, Dict, Optional
 from config import *
-from .DnB_Engine_Util import (
+from .validate import (
+    check_edge_bounds,
+    check_box_bounds,
+    check_board_bounds,
+)
+from .dnb_util import (
+    get_boxes_adjacent_to_edge,
+    get_edges_adjacent_to_box,
+)
+from .bit_dnb_util import (
     h_index,
     v_index,
-    check_bounds,
-    get_boxes_adjacent_to_edge,
-    is_box_complete,
-    count_completed_boxes,
-    is_edge_claimed,
-    get_edges_adjacent_to_box,
+    bit_is_box_complete,
+    bit_count_completed_boxes,
+    bit_is_edge_claimed,
     encode_board,
     decode_bitboard
 )
+
 # from DotsAndBoxes import DotsAndBoxesEngine
 # Board State는 엔진처럼 bitmask로 처리
 
@@ -36,8 +43,8 @@ def init_box_data(edges: List):
             # 이 박스의 열린 변 개수 세기
             open_dirs = []
             
-            for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
-                if not edge_is_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+            for d, adj_edge in enumerate(get_edges_adjacent_to_box(c, r)):
+                if not bit_is_edge_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
                     open_dirs.append(d)
                     
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
@@ -62,13 +69,10 @@ def init_box_data(edges: List):
                     # 이웃 박스와 공유하는 변이 열려 있음 → 내부 연결
                     # 이웃도 후보이든 아니든, 일단 edge는 만들고 나중에 필터링해도 됨
                     adj[box_id(c, r)].append(box_id(nc, nr))
-                else:
-                    # 보드 바깥과 연결된 열린 변
-                    external_open[box_id(c, r)] += 1
     
-    return adj, external_open, is_candidate
+    return adj, is_candidate
 
-def init_box_data_for_components(edges: List):
+def init_box_data_for_components(board: Board):
 
     # returns these three
     adj = { box_id(c, r): [] for r in range(N_BOX) for c in range(N_BOX) }
@@ -79,9 +83,9 @@ def init_box_data_for_components(edges: List):
         for c in range(N_BOX):
             # 이 박스의 열린 변 개수 세기
             open_dirs = []
-            
-            for d, adj_edge in enumerate(edges_adjacent_to_box(c, r)):
-                if not edge_is_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+            box = (c, r)
+            for d, adj_edge in enumerate(get_edges_adjacent_to_box(box)):
+                if not bit_is_edge_claimed(board, adj_edge):  # 선이 안 그려져 있음 = open
                     open_dirs.append(d)
                     
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
@@ -105,14 +109,11 @@ def init_box_data_for_components(edges: List):
                     # 이웃 박스와 공유하는 변이 열려 있음 → 내부 연결
                     # 이웃도 후보이든 아니든, 일단 edge는 만들고 나중에 필터링해도 됨
                     adj[box_id(c, r)].append(box_id(nc, nr))
-                else:
-                    # 보드 바깥과 연결된 열린 변
-                    external_open[box_id(c, r)] += 1
     
-    return adj, external_open, is_candidate
+    return adj, is_candidate
 
 
-def get_connected_Components(adj, is_candidate):
+def get_connected_components(adj, is_candidate):
     """
         Todo: Juction, 3거리의 체인과 비스무리한건 휴리스틱에서 걸러줘야함.
     """
@@ -320,7 +321,7 @@ def main():
                     
         
         print(len(test_data[0]), len(test_data[0][0]), len(test_data[0][0][0]))
-        edges = encode_Edges(edges)
+        edges = encode_board(edges)
 
         adj, external_open, is_candidate = init_box_data_for_components(edges)
         print(is_candidate)

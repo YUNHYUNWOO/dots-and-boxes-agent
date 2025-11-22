@@ -6,16 +6,14 @@ import torch
 import torch.nn as nn
 
 from config import N_BOX
-from util.DnB_Engine_Util import *
+from util.bit_dnb_util import *
 from dotsandboxes import DotsAndBoxesEngine
 from policy.scheduler import Budget_Scheduler_v2, Budget_Scheduler_v3
 
 from .search_engine import BaseSearchEngine
-from .search_heuristic import give_away_extension, complete_extension
-from .TranspositionTable import TranspositionTable, Action, EXACT, LOWERBOUND, UPPERBOUND
+from .search_heuristic import give_away_extension, complete_extension, default_move_ordering
+from .TranspositionTable import TranspositionTable, EXACT, LOWERBOUND, UPPERBOUND
 
-def default_move_ordering(actions, eng, tt, depth, root_player):
-    return actions
 
 def default_get_budget_for_this_move(t, time_manager):
     """
@@ -54,9 +52,9 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         self.deterministic = False
         self.k = 5
         self.T = 0.01
-        self.skip_move = True
+        self.skip_move = False
         self.w_eval = 1
-        self.use_time_control = True
+        self.use_time_control = False
         self.get_budget_for_this_move = default_get_budget_for_this_move
         self.use_extension = False
         self.extension_limit = 5
@@ -83,7 +81,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         def count_moves(edges) -> int:
             h_bits, v_bits = edges
             return h_bits.bit_count() + v_bits.bit_count() 
-        t = count_moves(eng.get_state()['edges'])
+        t = count_moves(eng.get_state().board)
         
         budget = self.get_budget_for_this_move(t, time_manager)
         # print('t', t, 'budget', budget)
@@ -100,7 +98,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
 
                     actions, vals = self.alpha_beta(eng=eng, 
                             depth=d,
-                            root_player=state['cur_player'],
+                            root_player=state.cur_player,
                             alpha= -10**9,
                             beta= 10**9)
                         
@@ -108,7 +106,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             else :
                 actions, vals = self.alpha_beta(eng=eng, 
                                     depth=self.depth,
-                                    root_player=state['cur_player'],
+                                    root_player=state.cur_player,
                                     alpha= -10**9,
                                     beta= 10**9
                                     )
@@ -119,19 +117,12 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             print('timeout')
             pass
 
+        # When time is Not enough to search any move
         if actions == None:
-            actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+            actions = bit_get_legal_actions(eng.get_state().board)[0:1]
             vals = [0]
 
-        if self.deterministic == True:
-            idx = 0
-        else:
-            v = torch.tensor(vals[:len(actions)], dtype=torch.float32)
-            v = v / self.T
-            probs = torch.softmax(v, dim=0).numpy()
-            idx = np.random.choice(len(actions), p=probs)
-
-        return actions[idx], vals[idx]
+        return actions[0], vals[0]
     
     def alpha_beta(self,    
                eng: DotsAndBoxesEngine,
@@ -141,7 +132,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
                beta: int = 10**9,
                info: dict = None,
                extension_cnt=0
-               ) -> Tuple[Optional[Action], int]:
+               ) -> Tuple[Optional[list[Action]], list[float]]:
         self.nodes += 1
         if (self.nodes % 512) == 0:  # 1024의 배수일 때
             self._check_time()
@@ -156,8 +147,9 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
         # 종료 조건
         if depth == 0 or eng.is_game_over():
             sign = 1 if root_player == eng.cur_player else -1
-            
-            return None, [sign * self.evaluate(eng) * self.w_eval + random.random() * 1e-10]
+            val = sign * self.evaluate(eng) * self.w_eval
+            val += (random.random() - 0.5) * 1e-10 if self.deterministic else 0
+            return None, [val]
 
         # 현재 노드가 '최대화'인지 여부
         maximizing = (eng.cur_player == root_player)
@@ -178,10 +170,10 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
                     return [ent.best_action], [ent.value]
                 beta = min(beta, ent.value)
 
-        best_vals:List[float] = [-10**9 if maximizing else 10**9 for i in range(self.k)]
+        best_vals: List[float] = [-10**9 if maximizing else 10**9 for i in range(self.k)]
         best_actions: List[Action] = [None for i in range(self.k)]
 
-        actions = get_legal_actions(eng.get_state()['edges'])
+        actions = bit_get_legal_actions(eng.get_state().board)
 
         move_order = self.move_ordering(actions, eng, self.tt, depth, root_player)
         pv_action = self.tt.pv_move(eng, maximizing)
@@ -263,7 +255,7 @@ class AB_TT_Search_TC_v1(BaseSearchEngine):
             val = sign * immediate_val + val
 
             # 되돌리기
-            eng.undo_action(a, out["completed_boxes"], player_before)
+            eng.undo_action(a, player_before)
 
             # 갱신
             if maximizing:

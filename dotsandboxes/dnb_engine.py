@@ -3,10 +3,10 @@ from config import *
 from util import (
     h_index,
     v_index,
-    check_bounds,
+    check_edge_bounds,
     get_boxes_adjacent_to_edge,
-    is_box_complete,
-    is_edge_claimed
+    bit_is_box_complete,
+    bit_is_edge_claimed
 )
 
 class DotsAndBoxesEngine:
@@ -33,11 +33,12 @@ class DotsAndBoxesEngine:
           - h,v는 유효 비트 수 이내여야 함
           - score 합 == 현재 비트보드에서 완성된 박스 수
         """
+        print(state)
         if not isinstance(state, DnBEngineState):
             raise TypeError("state must be a dict")
 
         # --- edges ---
-        if isinstance(state.board, (list, tuple)) or len(state.board) != 2:
+        if (not isinstance(state.board, (list, tuple))) or len(state.board) != 2:
             raise ValueError("state.board must be [h, v]")
 
         h_bits, v_bits = state.board
@@ -78,14 +79,14 @@ class DotsAndBoxesEngine:
         else:      self.v_bits &= ~(1 << v_index(c, r))
 
     def is_game_over(self) -> bool:
-        return (self.h_bits == self.h_mask) and \
-           (self.v_bits == self.v_mask)
+        return (self.h_bits == (1 << H_COUNT) - 1) and \
+           (self.v_bits == (1 << V_COUNT) - 1)
 
     # ---- API ----
     def apply_action(self, action: Action) -> Dict:
         c, r, d = action
-        check_bounds(c, r, d)
-        if is_edge_claimed((self.h_bits, self.v_bits), c, r, d):
+        check_edge_bounds(action)
+        if bit_is_edge_claimed(board=(self.h_bits, self.v_bits), edge=action):
             raise ValueError("Edge already claimed")
 
         self._set_edge(c, r, d)
@@ -97,9 +98,9 @@ class DotsAndBoxesEngine:
         v1 = (self.v_bits >> v_index(0, 0)) & 1
         v2 = (self.v_bits >> v_index(0 + 1, 0)) & 1
 
-        for (bc, br) in get_boxes_adjacent_to_edge(c, r, d):
-            if is_box_complete(self.h_bits, self.v_bits, bc, br):
-                completed.append((bc, br))
+        for box in get_boxes_adjacent_to_edge(action):
+            if bit_is_box_complete(board=(self.h_bits, self.v_bits), box=box):
+                completed.append(box)
 
         if completed:
             made_box = True
@@ -125,9 +126,9 @@ class DotsAndBoxesEngine:
                     action: Action,
                     player: Player) -> DnBEngineState:
         c, r, d = action
-        check_bounds(action)
+        check_edge_bounds(action)
 
-        if not is_edge_claimed((self.h_bits, self.v_bits), action):
+        if not bit_is_edge_claimed((self.h_bits, self.v_bits), action):
             raise ValueError("Cannot undo: Edge is not set")
 
         self._clear_edge(c, r, d)

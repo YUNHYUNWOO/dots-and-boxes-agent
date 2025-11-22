@@ -1,7 +1,7 @@
 from dotsandboxes import DotsAndBoxesEngine
 from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 from .search_engine import BaseSearchEngine
-from util.DnB_Engine_Util import *
+from util.bit_dnb_util import *
 import torch
 import torch.nn as nn
 import numpy as np

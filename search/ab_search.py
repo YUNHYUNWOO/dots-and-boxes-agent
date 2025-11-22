@@ -2,7 +2,7 @@ from typing import Any, Callable, Iterable, Tuple, Optional, NamedTuple, List
 
 from config import *
 from dotsandboxes import DotsAndBoxesEngine
-from util.DnB_Engine_Util import *
+from util.bit_dnb_util import *
 
 from .search_engine import BaseSearchEngine
 
@@ -55,7 +55,7 @@ class AlphaBetaSearch(BaseSearchEngine):
         best_val = -10**9 if maximizing else 10**9
         best_action: Optional[Action] = None
 
-        actions = get_legal_actions(eng.get_state()['edges'])
+        actions = bit_get_legal_actions(eng.get_state()['edges'])
         
         # print(actions)
         # edges = decode_Edges(eng.get_state()['edges'])

@@ -10,10 +10,6 @@ class BaseScheduler:
     
     def __call__(self, t: float) -> float:
         return self.value(t)
-    
-    def get_config(self) -> Dict:
-        raise NotImplementedError
-
 
 # ---------------------------
 # 단일 구간형 스케줄러들
@@ -24,8 +20,6 @@ class ConstantScheduler(BaseScheduler):
         self.v = float(v)
     def value(self, t: float) -> float:
         return self.v
-    def get_config(self):
-        return {"type": "constant", "v": self.v}
 
 
 class LinearSchedulerInt(BaseScheduler):
@@ -40,8 +34,6 @@ class LinearSchedulerInt(BaseScheduler):
             if t >= self.t1: return int(self.v1)
         x = (t - self.t0) / self.dt
         return int(self.v0 + (self.v1 - self.v0) * x)
-    def get_config(self):
-        return {"type": "linear", "t0": self.t0, "v0": self.v0, "t1": self.t1, "v1": self.v1, "clip": self.clip}
 
 class LinearScheduler(BaseScheduler):
     """t0~t1 구간에서 v0->v1 선형 보간."""
@@ -55,8 +47,6 @@ class LinearScheduler(BaseScheduler):
             if t >= self.t1: return self.v1
         x = (t - self.t0) / self.dt
         return self.v0 + (self.v1 - self.v0) * x
-    def get_config(self):
-        return {"type": "linear", "t0": self.t0, "v0": self.v0, "t1": self.t1, "v1": self.v1, "clip": self.clip}
     
 
 class ExponentialScheduler(BaseScheduler):
@@ -73,8 +63,6 @@ class ExponentialScheduler(BaseScheduler):
             if t >= self.t1: return self.v1
         x = (t - self.t0) / self.dt
         return self.v0 * (self.r ** x)
-    def get_config(self):
-        return {"type": "exponential", "t0": self.t0, "v0": self.v0, "t1": self.t1, "v1": self.v1, "clip": self.clip}
 
 
 class ExponentialSchedulerInt(BaseScheduler):
@@ -92,8 +80,6 @@ class ExponentialSchedulerInt(BaseScheduler):
             if t >= self.t1: return int(self.v1)
         x = (t - self.t0) / self.dt
         return int(self.v0 * (self.r ** x))
-    def get_config(self):
-        return {"type": "exponential", "t0": self.t0, "v0": self.v0, "t1": self.t1, "v1": self.v1, "clip": self.clip}
 
 class PolynomialScheduler(BaseScheduler):
     """다항 보간: v(t)=v0 + (v1-v0)*((t-t0)/(t1-t0))**power"""
@@ -108,9 +94,6 @@ class PolynomialScheduler(BaseScheduler):
             if t >= self.t1: return self.v1
         x = (t - self.t0) / self.dt
         return self.v0 + (self.v1 - self.v0) * (x ** self.power)
-    def get_config(self):
-        return {"type": "polynomial", "t0": self.t0, "v0": self.v0, "t1": self.t1, "v1": self.v1, "power": self.power, "clip": self.clip}
-    
 
 
 class CosineScheduler(BaseScheduler):
@@ -125,9 +108,6 @@ class CosineScheduler(BaseScheduler):
             if t >= self.t1: return self.vmin
         x = (t - self.t0) / self.dt
         return self.vmin + 0.5 * (self.vmax - self.vmin) * (1.0 + math.cos(math.pi * x + self.phase))
-    def get_config(self):
-        return {"type": "cosine", "t0": self.t0, "t1": self.t1, "v_min": self.vmin, "v_max": self.vmax, "phase": self.phase, "clip": self.clip}
-
 
 class SigmoidScheduler(BaseScheduler):
     """시그모이드 전이: 중앙 t_mid, 기울기 k."""
@@ -136,8 +116,6 @@ class SigmoidScheduler(BaseScheduler):
     def value(self, t: float) -> float:
         s = 1.0 / (1.0 + math.exp(-self.k * (t - self.t_mid)))
         return self.vl + (self.vh - self.vl) * s
-    def get_config(self):
-        return {"type": "sigmoid", "v_low": self.vl, "v_high": self.vh, "t_mid": self.t_mid, "k": self.k}
 
 
 class InverseSqrtScheduler(BaseScheduler):
@@ -147,8 +125,6 @@ class InverseSqrtScheduler(BaseScheduler):
         self.scale, self.offset = float(scale), float(offset)
     def value(self, t: float) -> float:
         return self.scale / math.sqrt(max(t + self.offset, 1e-12))
-    def get_config(self):
-        return {"type": "inverse_sqrt", "scale": self.scale, "offset": self.offset}
 
 
 # ---------------------------
@@ -174,9 +150,7 @@ class Budget_Scheduler_v2(BaseScheduler):
     def value(self, t:int)->float:
         return self.w[t]
     
-    def get_config(self):
-        return None
-    
+
 class Budget_Scheduler_v3(BaseScheduler):
     def __init__(self,
                  num_turns: int,
@@ -208,8 +182,6 @@ class Budget_Scheduler_v3(BaseScheduler):
 
         return self.w_2 * float(self.w[idx] / tail_sum)
     
-    def get_config(self):
-        return None
 
 class StepScheduler(BaseScheduler):
     """계단형: [(t1, v1), (t2, v2), ...], t < t1 -> v1, t1<=t<t2 -> v2 ... 마지막 이상은 마지막 값."""
@@ -221,8 +193,6 @@ class StepScheduler(BaseScheduler):
             if t < tt:
                 return vv
         return self.steps[-1][1]
-    def get_config(self):
-        return {"type": "step", "steps": self.steps}
 
 
 class PiecewiseScheduler(BaseScheduler):
@@ -249,13 +219,6 @@ class PiecewiseScheduler(BaseScheduler):
                 return s.value(t)
         # 이론상 도달X
         return sn.value(bn)
-    def get_config(self):
-        return {
-            "type": "piecewise",
-            "segments": [
-                {"t_start": a, "t_end": b, "scheduler": s.get_config()} for a, b, s in self.segments
-            ],
-        }
 
 class PiecewiseConstantScheduler(BaseScheduler):
     """
@@ -291,15 +254,6 @@ class PiecewiseConstantScheduler(BaseScheduler):
 
         raise ValueError(f"t={t} 에 해당하는 구간이 없고, default_value도 없음.")
 
-    def get_config(self) -> Dict:
-        return {
-            "type": "PiecewiseConstantScheduler",
-            "segments": [
-                {"start": s, "end": e, "value": v}
-                for (s, e, v) in self.segments
-            ],
-            "default_value": self.default_value,
-        }
     
 
 class WarmupHoldDecayScheduler(BaseScheduler):
@@ -324,14 +278,6 @@ class WarmupHoldDecayScheduler(BaseScheduler):
         if t <= self.total_end:
             return self.cos.value(t)
         return self.cos.value(self.total_end)
-    def get_config(self):
-        return {
-            "type": "warmup_hold_decay",
-            "warmup": self.warm.get_config(),
-            "hold_end": self.hold_end,
-            "total_end": self.total_end,
-            "cosine": self.cos.get_config(),
-        }
 
 
 class CyclicalScheduler(BaseScheduler):
@@ -356,9 +302,6 @@ class CyclicalScheduler(BaseScheduler):
             # 하강: vmax -> vmin
             d = (x - up_T) / (self.period - up_T)
             return self.vmax - (self.vmax - self.vmin) * d
-    def get_config(self):
-        return {"type": "cyclical", "v_min": self.vmin, "v_max": self.vmax, "period": self.period, "step_ratio": self.step_ratio, "start_t": self.start_t}
-
 
 class CosineRestartScheduler(BaseScheduler):
     """
@@ -383,8 +326,6 @@ class CosineRestartScheduler(BaseScheduler):
         if Ti <= 0: Ti = 1
         progress = step / Ti
         return self.vmin + 0.5 * (self.vmax - self.vmin) * (1 + math.cos(math.pi * progress))
-    def get_config(self):
-        return {"type": "cosine_restart", "v_min": self.vmin, "v_max": self.vmax, "T0": self.T0, "T_mult": self.T_mult, "start_t": self.start_t}
 
 
 class BooleanScheduler(BaseScheduler):
@@ -414,11 +355,4 @@ class BooleanScheduler(BaseScheduler):
                     return True
         return self.default
 
-    def get_config(self) -> Dict:
-        return {
-            "type": "boolean",
-            "true_intervals": self.true_intervals,
-            "default": self.default,
-            "inclusive": self.inclusive
-        }
 

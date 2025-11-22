@@ -6,13 +6,13 @@ import torch
 import torch.nn as nn
 
 from config import N_BOX
-from util.DnB_Engine_Util import *
+from util.bit_dnb_util import *
 from dotsandboxes import DotsAndBoxesEngine
 from policy.scheduler import Budget_Scheduler_v2, Budget_Scheduler_v3
 
 from .search_engine import BaseSearchEngine
-from .search_heuristic import give_away_extension, complete_extension
-from .TranspositionTable import TranspositionTable, Action, EXACT, LOWERBOUND, UPPERBOUND
+from .search_heuristic import give_away_extension, complete_extension, default_move_ordering
+from .TranspositionTable import TranspositionTable, EXACT, LOWERBOUND, UPPERBOUND
 
         
 
@@ -67,7 +67,7 @@ class AB_TT_Search_TC_v3(BaseSearchEngine):
         
         self.deadline = time_manager._move_start + budget if self.use_time_control else float('inf')
 
-        print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
+        # print(f't: {t}, remaining: {time_manager.remaining()} budget, {budget}')
         try:
             if self.use_iterative_deepening:
                 actions, vals = None, None
@@ -97,7 +97,7 @@ class AB_TT_Search_TC_v3(BaseSearchEngine):
             actions = [self.tt.pv_move(eng, maximizing=True)]
             # 어떤 깊이도 끝까지 못 돌린 극단 상황
             if actions[0] == None:
-                actions = get_legal_actions(eng.get_state()['edges'])[0:1]
+                actions = bit_get_legal_actions(eng.get_state()['edges'])[0:1]
             vals = [0]
 
         if self.deterministic == True:

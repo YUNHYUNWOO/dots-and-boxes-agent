@@ -1,11 +1,10 @@
 import random
 
 from config import *
-from util import (count_box_edge, get_boxes_adjacent_to_edge, get_box_missing_edges)
-
+from util import (count_box_edges, get_boxes_adjacent_to_edge, get_missing_edges)
 
 from .basepolicy import BasePolicy, TimeManager
-# ---------- Helpers to work with the Env observation ----------
+
 
 def dots_and_boxes_policy(board: Board) -> Action:
     """
@@ -43,14 +42,15 @@ def dots_and_boxes_policy(board: Board) -> Action:
     for br in range(N_BOX):
         for bc in range(N_BOX):
             box = (br, bc)
-            sides = count_box_edge(board, box)
+            sides = count_box_edges(board, box)
             if sides == 3:
-                missing = get_box_missing_edges(board, box)
+                missing = get_missing_edges(board, box)
                 # missing 중 실제로 available_moves에 있는 것만 사용
-                for mv in missing:
-                    if mv in available_moves:
-                        complete_box_moves.append(mv)
+                for a in missing:
+                    if a in available_moves:
+                        complete_box_moves.append(a)
 
+    print('complete_box_move: ', complete_box_moves)
     if complete_box_moves:
         return random.choice(complete_box_moves)
 
@@ -62,7 +62,7 @@ def dots_and_boxes_policy(board: Board) -> Action:
         boxes = get_boxes_adjacent_to_edge(action)
         unsafe = False
         for box in boxes:
-            sides_before = count_box_edge(board, box)
+            sides_before = count_box_edges(board, box)
             sides_after = sides_before + 1
             if sides_after == 3:
                 unsafe = True
@@ -78,4 +78,4 @@ def dots_and_boxes_policy(board: Board) -> Action:
 
 class OpeningPolicy(BasePolicy):
     def get_action(self, observation: dict, time_manager:TimeManager) -> Action:
-        return list(dots_and_boxes_policy(observation['board']))
+        return dots_and_boxes_policy(observation['board'])

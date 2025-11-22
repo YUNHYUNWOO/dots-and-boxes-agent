@@ -3,4 +3,3 @@ from .search_policy import *
 from .mixed_policy import *
 from .opening_policy import * 
 from .playable_policy import *
-from .evaluate import *

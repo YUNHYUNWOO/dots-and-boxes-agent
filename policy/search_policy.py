@@ -1,6 +1,6 @@
 import numpy as np
 
-from dotsandboxes import DnBEnv, DotsAndBoxesEngine
+from dotsandboxes import DotsAndBoxesEngine
 from util import *
 from search import BaseSearchEngine
 
@@ -32,13 +32,11 @@ class SearchPolicy(BasePolicy):
         # observation에는 에이전트가 관측하는 상태 정보
         # info는 그 외에 부가적인 정보들
             # 필수적으로 action mask가 포함되어있음
-        b_edges = encode_board(observation['edges'])
+        bitBoard = encode_board(observation['board'])
 
-        state = {
-            'edges': b_edges,
-            'cur_player': observation['cur_player'],
-            'score': observation['score']
-        }
+        state = DnBEngineState(board=bitBoard,
+                               cur_player=observation['cur_player'])
+        self.eng.set_state(state)
 
         def get_t(board:Board):
             t = 0
@@ -51,7 +49,6 @@ class SearchPolicy(BasePolicy):
         config = self.get_config(t)
 
         self.SearchEngine.configure(**config)
-        self.eng.set_state(state)
 
         best_action, _ = self.SearchEngine.search(eng=self.eng, state=state, time_manager=time_manager)
         

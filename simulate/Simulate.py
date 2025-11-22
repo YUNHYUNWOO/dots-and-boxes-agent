@@ -5,9 +5,12 @@ import numpy as np
 import tqdm.auto as tqdm
 
 from dotsandboxes import DnBEnv
-from policy import *
-from search import *
+from policy import BasePolicy, TimeManager, OpeningPolicy, FixedOrderPolicy, SearchPolicy
+# from search import *
 from util import *
+from heuristic import evaluate_rel, evaluate_comps
+from search import AB_TT_Search_TC_v1, move_ordering
+from policy.scheduler import ExponentialSchedulerInt, BooleanScheduler
 
 from .Log import save_sim_logs
 
@@ -80,7 +83,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         time_spent.append(t1 - t0)
         scores.append([s for s in info['score']])
 
-        Action_log.append([cur_player] + action)
+        Action_log.append((cur_player, *action))
 
     if verbose:
         print(f"Episode finished! Winner: {info['winner']}")
@@ -96,6 +99,7 @@ def SimulateEpisode(env, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=F
         'winner': info['winner'],
     }
     Action_log = {'Action_log': '5, 5, ' + (", ".join(str(x) for a in Action_log for x in a))}
+
     Policy_log = {
         'player': player,
         'logs' : Policy_log
@@ -174,44 +178,45 @@ if __name__ == "__main__":
 
     env = DnBEnv(render_mode='human')
 
-    # config_p0 = {
-    #     'evaluate':evaluate_rel,
-    #     'move_ordering':move_ordering,
-    #     'depth': ExponentialSchedulerInt(15,2,35,25),
-    #     'use_iterative_deepening': True,
-    #     'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
-    #     'skip_move': False,
-    #     'use_extension': True,
-    #     'extension_limit': 20,
-    #     # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
-    #     'use_time_control': True,
-    #     'use_pvs_search': True
-    # }
-    # p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
+    config_p0 = {
+        'evaluate':evaluate_rel,
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15,2,35,10),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
+        'skip_move': False,
+        'use_extension': True,
+        'extension_limit': 20,
+        # 'w_eval': ExponentialScheduler(15, 0.2, 25, 0.8),
+        'use_time_control': True,
+        'use_pvs_search': True
+    }
+    p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
 
     
-    # config_p1 = {
-    #     'evaluate':evaluate_chain_aware,
-    #     'move_ordering':move_ordering,
-    #     'depth': ExponentialSchedulerInt(15,2,35,25),
-    #     'use_iterative_deepening': True,
-    #     'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
-    #     'skip_move': False,
-    #     'use_extension': True,
-    #     'extension_limit': 20,
-    #     'use_pvs_search': True,
-    #     'use_time_control': True,
-    # }
-    # p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
+    config_p1 = {
+        'evaluate':evaluate_comps,
+        'move_ordering':move_ordering,
+        'depth': ExponentialSchedulerInt(15,2,35,10),
+        'use_iterative_deepening': True,
+        'deterministic': BooleanScheduler(true_intervals=[[10, 60]], default=False),
+        'skip_move': False,
+        'use_extension': True,
+        'extension_limit': 20,
+        'use_pvs_search': True,
+        'use_time_control': True,
+    }
+    p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
 
-    env.render_mode = 'human'
-    print(SimulateEpisode(env=env, p0_policy=OpeningPolicy(), p1_policy=FixedOrderPolicy(), verbose=False))
 
-    # env.render_mode = 'rgb_array'
+    # env.render_mode = 'human'
+    # print(SimulateEpisode(env=env, p0_policy=p0_policy, p1_policy=p1_policy, verbose=False))
 
-    # Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=15, verbose=False)
-    # save_path = os.path.join(BASE_SAVE_PATH, run_name)
-    # save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
+    env.render_mode = 'rgb_array'
+
+    Evaluation_logs, Actions_logs, Policy_logs = SimulateMultipleEpisodes(env, p0_policy, p1_policy, n_episodes=4, verbose=False)
+    save_path = os.path.join(BASE_SAVE_PATH, run_name)
+    save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path=save_path)
     
     # p0_policy.SearchEngine.tt
     # my_object = {'data': p0_policy.SearchEngine.tt}

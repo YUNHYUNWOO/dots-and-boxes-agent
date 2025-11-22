@@ -72,7 +72,7 @@ class FixedOrderPolicy(BasePolicy):
                     if (ori == 0 and c == N_BOX) or (ori == 1 and r == N_BOX):
                         continue
                     self.action_order.append((c, r, ori))
-        self.current_index = 0
+        self.cur_index = 0
 
 
     def get_action(self, observation, time_manager:TimeManager):
