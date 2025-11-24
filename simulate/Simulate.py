@@ -3,8 +3,11 @@ import time
 
 import numpy as np
 import tqdm.auto as tqdm
+import fire
+import json
 
 from dotsandboxes import DnBEnv
+from config.load_config import load_config
 from policy import BasePolicy, TimeManager, OpeningPolicy, FixedOrderPolicy, SearchPolicy
 from util import *
 from heuristic import evaluate_rel, evaluate_comps, move_ordering
@@ -122,9 +125,31 @@ def simulate_multiple_episodes(env: DnBEnv, p0_policy: BasePolicy, p1_policy: Ba
             print(f"=== Episode {episode + 1} ===")
         default_log, action_log, policy_log  = simulate_episode(env, first_player, second_player, verbose)
 
-        logger.log(default_log, action_log, policy_log, episode_id=episode, first_player_is_p0=(first_player==p1_policy))
+        logger.log(default_log, action_log, policy_log, episode_id=episode, first_player_is_p0=(first_player==p0_policy))
 
         first_player, second_player = second_player, first_player  # 다음 에피소드에서 선후공 교체
     
     logger.log_stats()
     return
+
+
+def run_config(config_path: str):
+    run_name, n_episodes, p0_policy, p1_policy, config_json = load_config(config_path)
+    save_path = os.path.join(BASE_SAVE_PATH, run_name)
+
+    os.makedirs(save_path, exist_ok=True)
+    with open(os.path.join(save_path, 'config.json'), 'w') as f:
+        json.dump(config_json, f, indent=4)
+
+    env = DnBEnv(render_mode='rgb_array')
+    simulate_multiple_episodes(env=env, 
+                               p0_policy=p0_policy, 
+                               p1_policy=p1_policy,
+                               n_episodes=n_episodes, 
+                               log=True, 
+                               save_path=save_path, 
+                               verbose=False)
+    
+
+if __name__ == "__main__":
+    fire.Fire(run_config)

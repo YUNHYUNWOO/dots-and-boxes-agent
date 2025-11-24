@@ -8,3 +8,4 @@ onnxruntime==1.18.1
 gymnasium
 pygame
 tqdm
+fire==0.7.1

@@ -12,10 +12,10 @@ from .basepolicy import BasePolicy, TimeManager
 # =======================================
 
 class SearchPolicy(BasePolicy):
-    def __init__(self, SearchEngine:BaseSearchEngine, config_schedule: dict):
+    def __init__(self, search_engine:BaseSearchEngine, config_schedule: dict):
         ## 필요한거 있으면 추가
         self.eng = DotsAndBoxesEngine()
-        self.SearchEngine = SearchEngine
+        self.search_engine = search_engine
         self.config_schedule = config_schedule
 
     def get_config(self, t):
@@ -51,14 +51,14 @@ class SearchPolicy(BasePolicy):
         t = get_t(observation['board'])
         config = self.get_config(t)
 
-        self.SearchEngine.configure(**config)
+        self.search_engine.configure(**config)
 
-        best_action, _ = self.SearchEngine.search(eng=self.eng, state=state, time_manager=time_manager)
+        best_action, _ = self.search_engine.search(eng=self.eng, state=state, time_manager=time_manager)
         
         return best_action
 
     def get_log(self):
-        log = self.SearchEngine.get_log()
-        self.SearchEngine.reset_log()
+        log = self.search_engine.get_log()
+        self.search_engine.reset_log()
         return log
 

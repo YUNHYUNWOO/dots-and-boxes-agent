@@ -3,7 +3,7 @@ from scipy.stats import skewnorm
 
 from config import *
 from .time_manager import TimeManager
-from .scheduler import BaseScheduler, BudgetScheduler_v2, BudgetScheduler_v3
+from .scheduler import BaseScheduler
 
 class BaseBudgetManager():
     def __init__(self):

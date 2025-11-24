@@ -209,7 +209,7 @@ def compute_chain_risk(edges) -> float:
     - complex: 길이 * 0.5 패널티
     """
     adj, _, is_candidate = init_box_data(edges)
-    comps = get_connected_Components(adj, is_candidate)
+    comps = get_connected_components(adj, is_candidate)
 
     risk = 0.0
 
@@ -325,7 +325,7 @@ def main():
 
         adj, external_open, is_candidate = init_box_data_for_components(edges)
         print(is_candidate)
-        components = get_connected_Components(adj, is_candidate)
+        components = get_connected_components(adj, is_candidate)
         print(components)
         print(classify_component(components, adj))
 

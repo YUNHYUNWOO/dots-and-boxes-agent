@@ -1,0 +1,2747 @@
+[
+    {
+        "episode_id": 0,
+        "policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 1347,
+                    "cutoffs": 59,
+                    "tt_hits": 1,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 760,
+                    "cutoffs": 56,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1098,
+                    "cutoffs": 54,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 993,
+                    "cutoffs": 53,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 893,
+                    "cutoffs": 50,
+                    "tt_hits": 6,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1062,
+                    "cutoffs": 53,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 908,
+                    "cutoffs": 51,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 972,
+                    "cutoffs": 46,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 686,
+                    "cutoffs": 49,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 814,
+                    "cutoffs": 47,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 532,
+                    "cutoffs": 47,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 482,
+                    "cutoffs": 44,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 486,
+                    "cutoffs": 43,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 434,
+                    "cutoffs": 43,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 419,
+                    "cutoffs": 41,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 496,
+                    "cutoffs": 43,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 319,
+                    "cutoffs": 41,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 458,
+                    "cutoffs": 38,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 384,
+                    "cutoffs": 38,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 378,
+                    "cutoffs": 37,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 5984,
+                    "cutoffs": 368,
+                    "tt_hits": 190,
+                    "tt_cutoffs": 24,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 3101,
+                    "cutoffs": 190,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 7,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 3031,
+                    "cutoffs": 277,
+                    "tt_hits": 80,
+                    "tt_cutoffs": 12,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 13463,
+                    "cutoffs": 1801,
+                    "tt_hits": 729,
+                    "tt_cutoffs": 235,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 8676,
+                    "cutoffs": 1355,
+                    "tt_hits": 503,
+                    "tt_cutoffs": 146,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 15514,
+                    "cutoffs": 3594,
+                    "tt_hits": 1349,
+                    "tt_cutoffs": 510,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 7647,
+                    "cutoffs": 2276,
+                    "tt_hits": 602,
+                    "tt_cutoffs": 321,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 9895,
+                    "cutoffs": 3979,
+                    "tt_hits": 1168,
+                    "tt_cutoffs": 800,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 2449,
+                    "cutoffs": 874,
+                    "tt_hits": 251,
+                    "tt_cutoffs": 181,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 7534,
+                    "cutoffs": 3192,
+                    "tt_hits": 890,
+                    "tt_cutoffs": 657,
+                    "skipped_move": 0,
+                    "depth": 7
+                },
+                {
+                    "nodes": 9871,
+                    "cutoffs": 4414,
+                    "tt_hits": 1400,
+                    "tt_cutoffs": 1041,
+                    "skipped_move": 0,
+                    "depth": 9
+                },
+                {
+                    "nodes": 16190,
+                    "cutoffs": 7658,
+                    "tt_hits": 2145,
+                    "tt_cutoffs": 1611,
+                    "skipped_move": 0,
+                    "depth": 10
+                },
+                {
+                    "nodes": 6773,
+                    "cutoffs": 3234,
+                    "tt_hits": 933,
+                    "tt_cutoffs": 714,
+                    "skipped_move": 0,
+                    "depth": 9
+                },
+                {
+                    "nodes": 13099,
+                    "cutoffs": 6592,
+                    "tt_hits": 2004,
+                    "tt_cutoffs": 1558,
+                    "skipped_move": 0,
+                    "depth": 12
+                },
+                {
+                    "nodes": 7868,
+                    "cutoffs": 3917,
+                    "tt_hits": 1172,
+                    "tt_cutoffs": 898,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 12604,
+                    "cutoffs": 6679,
+                    "tt_hits": 2227,
+                    "tt_cutoffs": 1739,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 17520,
+                    "cutoffs": 9530,
+                    "tt_hits": 3594,
+                    "tt_cutoffs": 2871,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 17541,
+                    "cutoffs": 9653,
+                    "tt_hits": 3849,
+                    "tt_cutoffs": 3083,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 12724,
+                    "cutoffs": 6817,
+                    "tt_hits": 2903,
+                    "tt_cutoffs": 2293,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 12604,
+                    "cutoffs": 6811,
+                    "tt_hits": 2649,
+                    "tt_cutoffs": 2084,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 14886,
+                    "cutoffs": 8810,
+                    "tt_hits": 3738,
+                    "tt_cutoffs": 3049,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 7305,
+                    "cutoffs": 4284,
+                    "tt_hits": 1725,
+                    "tt_cutoffs": 1388,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 7448,
+                    "cutoffs": 4105,
+                    "tt_hits": 1835,
+                    "tt_cutoffs": 1439,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 7412,
+                    "cutoffs": 3894,
+                    "tt_hits": 2084,
+                    "tt_cutoffs": 1631,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 10143,
+                    "cutoffs": 5248,
+                    "tt_hits": 3386,
+                    "tt_cutoffs": 2665,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 8451,
+                    "cutoffs": 4350,
+                    "tt_hits": 2858,
+                    "tt_cutoffs": 2196,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 7157,
+                    "cutoffs": 3551,
+                    "tt_hits": 2478,
+                    "tt_cutoffs": 1823,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 5328,
+                    "cutoffs": 2662,
+                    "tt_hits": 1836,
+                    "tt_cutoffs": 1382,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 4394,
+                    "cutoffs": 2158,
+                    "tt_hits": 1516,
+                    "tt_cutoffs": 1121,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2064,
+                    "cutoffs": 1021,
+                    "tt_hits": 647,
+                    "tt_cutoffs": 446,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 2045,
+                    "cutoffs": 1029,
+                    "tt_hits": 607,
+                    "tt_cutoffs": 412,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 1810,
+                    "cutoffs": 900,
+                    "tt_hits": 494,
+                    "tt_cutoffs": 332,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 1288,
+                    "cutoffs": 718,
+                    "tt_hits": 314,
+                    "tt_cutoffs": 237,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1016,
+                    "cutoffs": 545,
+                    "tt_hits": 241,
+                    "tt_cutoffs": 172,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 781,
+                    "cutoffs": 397,
+                    "tt_hits": 172,
+                    "tt_cutoffs": 112,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 539,
+                    "cutoffs": 238,
+                    "tt_hits": 121,
+                    "tt_cutoffs": 71,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 369,
+                    "cutoffs": 142,
+                    "tt_hits": 64,
+                    "tt_cutoffs": 25,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 229,
+                    "cutoffs": 67,
+                    "tt_hits": 27,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 124,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 69,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 1,
+        "policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 1446,
+                    "cutoffs": 56,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1160,
+                    "cutoffs": 57,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1089,
+                    "cutoffs": 53,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 886,
+                    "cutoffs": 54,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 962,
+                    "cutoffs": 53,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 776,
+                    "cutoffs": 52,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 932,
+                    "cutoffs": 50,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 944,
+                    "cutoffs": 49,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 727,
+                    "cutoffs": 49,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 589,
+                    "cutoffs": 49,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 576,
+                    "cutoffs": 46,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 603,
+                    "cutoffs": 44,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 454,
+                    "cutoffs": 45,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 454,
+                    "cutoffs": 43,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 360,
+                    "cutoffs": 43,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 457,
+                    "cutoffs": 40,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 346,
+                    "cutoffs": 41,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 487,
+                    "cutoffs": 38,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 366,
+                    "cutoffs": 39,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 293,
+                    "cutoffs": 38,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 7823,
+                    "cutoffs": 591,
+                    "tt_hits": 307,
+                    "tt_cutoffs": 118,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 4964,
+                    "cutoffs": 337,
+                    "tt_hits": 134,
+                    "tt_cutoffs": 27,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 27643,
+                    "cutoffs": 3150,
+                    "tt_hits": 1694,
+                    "tt_cutoffs": 542,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 19265,
+                    "cutoffs": 2580,
+                    "tt_hits": 1244,
+                    "tt_cutoffs": 409,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 18786,
+                    "cutoffs": 2570,
+                    "tt_hits": 1312,
+                    "tt_cutoffs": 384,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 39424,
+                    "cutoffs": 6364,
+                    "tt_hits": 3044,
+                    "tt_cutoffs": 781,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 36864,
+                    "cutoffs": 7200,
+                    "tt_hits": 3269,
+                    "tt_cutoffs": 972,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 31539,
+                    "cutoffs": 10034,
+                    "tt_hits": 3298,
+                    "tt_cutoffs": 1556,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 23773,
+                    "cutoffs": 9911,
+                    "tt_hits": 2945,
+                    "tt_cutoffs": 1927,
+                    "skipped_move": 0,
+                    "depth": 7
+                },
+                {
+                    "nodes": 13543,
+                    "cutoffs": 6033,
+                    "tt_hits": 1548,
+                    "tt_cutoffs": 1061,
+                    "skipped_move": 0,
+                    "depth": 7
+                },
+                {
+                    "nodes": 13246,
+                    "cutoffs": 7007,
+                    "tt_hits": 1976,
+                    "tt_cutoffs": 1584,
+                    "skipped_move": 0,
+                    "depth": 9
+                },
+                {
+                    "nodes": 4665,
+                    "cutoffs": 2312,
+                    "tt_hits": 622,
+                    "tt_cutoffs": 484,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 7203,
+                    "cutoffs": 3802,
+                    "tt_hits": 1355,
+                    "tt_cutoffs": 1107,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 9951,
+                    "cutoffs": 5148,
+                    "tt_hits": 1976,
+                    "tt_cutoffs": 1608,
+                    "skipped_move": 0,
+                    "depth": 12
+                },
+                {
+                    "nodes": 6153,
+                    "cutoffs": 3155,
+                    "tt_hits": 1225,
+                    "tt_cutoffs": 994,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 9478,
+                    "cutoffs": 4992,
+                    "tt_hits": 1841,
+                    "tt_cutoffs": 1483,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 9421,
+                    "cutoffs": 5021,
+                    "tt_hits": 1791,
+                    "tt_cutoffs": 1458,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 9105,
+                    "cutoffs": 5041,
+                    "tt_hits": 2095,
+                    "tt_cutoffs": 1806,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 11149,
+                    "cutoffs": 6572,
+                    "tt_hits": 2345,
+                    "tt_cutoffs": 1987,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 10080,
+                    "cutoffs": 6081,
+                    "tt_hits": 1864,
+                    "tt_cutoffs": 1552,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 7292,
+                    "cutoffs": 4208,
+                    "tt_hits": 1249,
+                    "tt_cutoffs": 1005,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 6009,
+                    "cutoffs": 3789,
+                    "tt_hits": 960,
+                    "tt_cutoffs": 828,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 6117,
+                    "cutoffs": 4397,
+                    "tt_hits": 846,
+                    "tt_cutoffs": 741,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 5312,
+                    "cutoffs": 3712,
+                    "tt_hits": 856,
+                    "tt_cutoffs": 751,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 4503,
+                    "cutoffs": 3023,
+                    "tt_hits": 860,
+                    "tt_cutoffs": 755,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 3701,
+                    "cutoffs": 2340,
+                    "tt_hits": 854,
+                    "tt_cutoffs": 749,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2918,
+                    "cutoffs": 1674,
+                    "tt_hits": 834,
+                    "tt_cutoffs": 730,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2646,
+                    "cutoffs": 1522,
+                    "tt_hits": 749,
+                    "tt_cutoffs": 647,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2112,
+                    "cutoffs": 1105,
+                    "tt_hits": 689,
+                    "tt_cutoffs": 590,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1872,
+                    "cutoffs": 979,
+                    "tt_hits": 600,
+                    "tt_cutoffs": 505,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1502,
+                    "cutoffs": 722,
+                    "tt_hits": 524,
+                    "tt_cutoffs": 434,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1311,
+                    "cutoffs": 639,
+                    "tt_hits": 436,
+                    "tt_cutoffs": 352,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1061,
+                    "cutoffs": 493,
+                    "tt_hits": 357,
+                    "tt_cutoffs": 280,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 851,
+                    "cutoffs": 375,
+                    "tt_hits": 281,
+                    "tt_cutoffs": 212,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 627,
+                    "cutoffs": 248,
+                    "tt_hits": 212,
+                    "tt_cutoffs": 152,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 482,
+                    "cutoffs": 179,
+                    "tt_hits": 146,
+                    "tt_cutoffs": 96,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 330,
+                    "cutoffs": 105,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 50,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 220,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 125,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 74,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 2,
+        "policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 1465,
+                    "cutoffs": 55,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1221,
+                    "cutoffs": 57,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1059,
+                    "cutoffs": 53,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 809,
+                    "cutoffs": 54,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1042,
+                    "cutoffs": 53,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 746,
+                    "cutoffs": 52,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 835,
+                    "cutoffs": 50,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1123,
+                    "cutoffs": 50,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1032,
+                    "cutoffs": 49,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 885,
+                    "cutoffs": 47,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 731,
+                    "cutoffs": 46,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 450,
+                    "cutoffs": 46,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 451,
+                    "cutoffs": 45,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 477,
+                    "cutoffs": 44,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 407,
+                    "cutoffs": 44,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 386,
+                    "cutoffs": 41,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 391,
+                    "cutoffs": 40,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 315,
+                    "cutoffs": 40,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 346,
+                    "cutoffs": 40,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 413,
+                    "cutoffs": 37,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 6005,
+                    "cutoffs": 267,
+                    "tt_hits": 109,
+                    "tt_cutoffs": 5,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 5509,
+                    "cutoffs": 405,
+                    "tt_hits": 152,
+                    "tt_cutoffs": 16,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 4238,
+                    "cutoffs": 261,
+                    "tt_hits": 90,
+                    "tt_cutoffs": 11,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 15330,
+                    "cutoffs": 2090,
+                    "tt_hits": 838,
+                    "tt_cutoffs": 266,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 10107,
+                    "cutoffs": 1551,
+                    "tt_hits": 577,
+                    "tt_cutoffs": 187,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 36348,
+                    "cutoffs": 7060,
+                    "tt_hits": 3432,
+                    "tt_cutoffs": 1230,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 15853,
+                    "cutoffs": 4065,
+                    "tt_hits": 1468,
+                    "tt_cutoffs": 603,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 15183,
+                    "cutoffs": 5295,
+                    "tt_hits": 1680,
+                    "tt_cutoffs": 1110,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 6998,
+                    "cutoffs": 2676,
+                    "tt_hits": 709,
+                    "tt_cutoffs": 515,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 14419,
+                    "cutoffs": 5859,
+                    "tt_hits": 1686,
+                    "tt_cutoffs": 1216,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 9021,
+                    "cutoffs": 4159,
+                    "tt_hits": 1263,
+                    "tt_cutoffs": 975,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 12119,
+                    "cutoffs": 5709,
+                    "tt_hits": 1831,
+                    "tt_cutoffs": 1389,
+                    "skipped_move": 0,
+                    "depth": 10
+                },
+                {
+                    "nodes": 6925,
+                    "cutoffs": 3382,
+                    "tt_hits": 1162,
+                    "tt_cutoffs": 897,
+                    "skipped_move": 0,
+                    "depth": 9
+                },
+                {
+                    "nodes": 13059,
+                    "cutoffs": 6349,
+                    "tt_hits": 2294,
+                    "tt_cutoffs": 1811,
+                    "skipped_move": 0,
+                    "depth": 10
+                },
+                {
+                    "nodes": 8703,
+                    "cutoffs": 4758,
+                    "tt_hits": 1885,
+                    "tt_cutoffs": 1581,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 13450,
+                    "cutoffs": 7499,
+                    "tt_hits": 2904,
+                    "tt_cutoffs": 2357,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 13756,
+                    "cutoffs": 8159,
+                    "tt_hits": 3039,
+                    "tt_cutoffs": 2459,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 13684,
+                    "cutoffs": 7916,
+                    "tt_hits": 3208,
+                    "tt_cutoffs": 2559,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 15457,
+                    "cutoffs": 9091,
+                    "tt_hits": 3503,
+                    "tt_cutoffs": 2793,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 9200,
+                    "cutoffs": 5384,
+                    "tt_hits": 2192,
+                    "tt_cutoffs": 1755,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 9808,
+                    "cutoffs": 5451,
+                    "tt_hits": 2317,
+                    "tt_cutoffs": 1829,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 10691,
+                    "cutoffs": 5973,
+                    "tt_hits": 2395,
+                    "tt_cutoffs": 1882,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 10678,
+                    "cutoffs": 6595,
+                    "tt_hits": 2397,
+                    "tt_cutoffs": 1988,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 5393,
+                    "cutoffs": 3142,
+                    "tt_hits": 1104,
+                    "tt_cutoffs": 880,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 4726,
+                    "cutoffs": 2690,
+                    "tt_hits": 973,
+                    "tt_cutoffs": 787,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 4061,
+                    "cutoffs": 2253,
+                    "tt_hits": 947,
+                    "tt_cutoffs": 800,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 3309,
+                    "cutoffs": 2066,
+                    "tt_hits": 760,
+                    "tt_cutoffs": 656,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 3173,
+                    "cutoffs": 2047,
+                    "tt_hits": 664,
+                    "tt_cutoffs": 562,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2732,
+                    "cutoffs": 1724,
+                    "tt_hits": 595,
+                    "tt_cutoffs": 496,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2293,
+                    "cutoffs": 1399,
+                    "tt_hits": 525,
+                    "tt_cutoffs": 430,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1823,
+                    "cutoffs": 1041,
+                    "tt_hits": 463,
+                    "tt_cutoffs": 373,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1599,
+                    "cutoffs": 925,
+                    "tt_hits": 375,
+                    "tt_cutoffs": 291,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1220,
+                    "cutoffs": 652,
+                    "tt_hits": 312,
+                    "tt_cutoffs": 235,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1023,
+                    "cutoffs": 550,
+                    "tt_hits": 232,
+                    "tt_cutoffs": 163,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 804,
+                    "cutoffs": 420,
+                    "tt_hits": 170,
+                    "tt_cutoffs": 110,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 549,
+                    "cutoffs": 250,
+                    "tt_hits": 120,
+                    "tt_cutoffs": 70,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 356,
+                    "cutoffs": 130,
+                    "tt_hits": 76,
+                    "tt_cutoffs": 37,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 214,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 125,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 67,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 3,
+        "policy_log": {
+            "player": [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 1303,
+                    "cutoffs": 58,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1085,
+                    "cutoffs": 54,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1118,
+                    "cutoffs": 53,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 862,
+                    "cutoffs": 54,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 672,
+                    "cutoffs": 53,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1049,
+                    "cutoffs": 51,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 912,
+                    "cutoffs": 48,
+                    "tt_hits": 6,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 902,
+                    "cutoffs": 48,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 614,
+                    "cutoffs": 50,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 730,
+                    "cutoffs": 48,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 351,
+                    "cutoffs": 48,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 505,
+                    "cutoffs": 45,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 646,
+                    "cutoffs": 41,
+                    "tt_hits": 7,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 529,
+                    "cutoffs": 43,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 479,
+                    "cutoffs": 42,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 462,
+                    "cutoffs": 42,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 530,
+                    "cutoffs": 40,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 478,
+                    "cutoffs": 38,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 497,
+                    "cutoffs": 37,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 462,
+                    "cutoffs": 35,
+                    "tt_hits": 6,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 8684,
+                    "cutoffs": 516,
+                    "tt_hits": 318,
+                    "tt_cutoffs": 54,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 6141,
+                    "cutoffs": 410,
+                    "tt_hits": 217,
+                    "tt_cutoffs": 35,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 23567,
+                    "cutoffs": 2248,
+                    "tt_hits": 1449,
+                    "tt_cutoffs": 422,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 20185,
+                    "cutoffs": 2163,
+                    "tt_hits": 1230,
+                    "tt_cutoffs": 402,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 14134,
+                    "cutoffs": 1739,
+                    "tt_hits": 1065,
+                    "tt_cutoffs": 359,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 38912,
+                    "cutoffs": 6236,
+                    "tt_hits": 3391,
+                    "tt_cutoffs": 1000,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 37888,
+                    "cutoffs": 6697,
+                    "tt_hits": 3319,
+                    "tt_cutoffs": 991,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 37888,
+                    "cutoffs": 8945,
+                    "tt_hits": 3609,
+                    "tt_cutoffs": 1428,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 34816,
+                    "cutoffs": 12394,
+                    "tt_hits": 3961,
+                    "tt_cutoffs": 2483,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 17659,
+                    "cutoffs": 6937,
+                    "tt_hits": 2066,
+                    "tt_cutoffs": 1439,
+                    "skipped_move": 0,
+                    "depth": 7
+                },
+                {
+                    "nodes": 28232,
+                    "cutoffs": 12308,
+                    "tt_hits": 4236,
+                    "tt_cutoffs": 3244,
+                    "skipped_move": 0,
+                    "depth": 9
+                },
+                {
+                    "nodes": 11703,
+                    "cutoffs": 4848,
+                    "tt_hits": 1569,
+                    "tt_cutoffs": 1150,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 10643,
+                    "cutoffs": 5328,
+                    "tt_hits": 2048,
+                    "tt_cutoffs": 1677,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 18278,
+                    "cutoffs": 9459,
+                    "tt_hits": 3688,
+                    "tt_cutoffs": 3057,
+                    "skipped_move": 0,
+                    "depth": 12
+                },
+                {
+                    "nodes": 28107,
+                    "cutoffs": 15645,
+                    "tt_hits": 6267,
+                    "tt_cutoffs": 5294,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 14056,
+                    "cutoffs": 8118,
+                    "tt_hits": 3257,
+                    "tt_cutoffs": 2712,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 13954,
+                    "cutoffs": 7981,
+                    "tt_hits": 3244,
+                    "tt_cutoffs": 2712,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 14676,
+                    "cutoffs": 8765,
+                    "tt_hits": 3622,
+                    "tt_cutoffs": 3023,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 8679,
+                    "cutoffs": 4939,
+                    "tt_hits": 2046,
+                    "tt_cutoffs": 1669,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 8084,
+                    "cutoffs": 4350,
+                    "tt_hits": 1957,
+                    "tt_cutoffs": 1578,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 8276,
+                    "cutoffs": 4477,
+                    "tt_hits": 2231,
+                    "tt_cutoffs": 1830,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 8059,
+                    "cutoffs": 4267,
+                    "tt_hits": 2560,
+                    "tt_cutoffs": 2042,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 8003,
+                    "cutoffs": 4258,
+                    "tt_hits": 2545,
+                    "tt_cutoffs": 1978,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 7965,
+                    "cutoffs": 4081,
+                    "tt_hits": 2693,
+                    "tt_cutoffs": 2046,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 8418,
+                    "cutoffs": 4282,
+                    "tt_hits": 2839,
+                    "tt_cutoffs": 2077,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 7671,
+                    "cutoffs": 3941,
+                    "tt_hits": 2601,
+                    "tt_cutoffs": 1872,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 3998,
+                    "cutoffs": 1994,
+                    "tt_hits": 1220,
+                    "tt_cutoffs": 906,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 4572,
+                    "cutoffs": 2358,
+                    "tt_hits": 1396,
+                    "tt_cutoffs": 994,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 4604,
+                    "cutoffs": 2464,
+                    "tt_hits": 1420,
+                    "tt_cutoffs": 1070,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2343,
+                    "cutoffs": 1285,
+                    "tt_hits": 620,
+                    "tt_cutoffs": 425,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 2077,
+                    "cutoffs": 1098,
+                    "tt_hits": 553,
+                    "tt_cutoffs": 390,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 1903,
+                    "cutoffs": 1010,
+                    "tt_hits": 493,
+                    "tt_cutoffs": 352,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 1092,
+                    "cutoffs": 525,
+                    "tt_hits": 354,
+                    "tt_cutoffs": 277,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 870,
+                    "cutoffs": 398,
+                    "tt_hits": 279,
+                    "tt_cutoffs": 210,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 643,
+                    "cutoffs": 261,
+                    "tt_hits": 211,
+                    "tt_cutoffs": 151,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 471,
+                    "cutoffs": 166,
+                    "tt_hits": 147,
+                    "tt_cutoffs": 97,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 333,
+                    "cutoffs": 105,
+                    "tt_hits": 89,
+                    "tt_cutoffs": 50,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 219,
+                    "cutoffs": 54,
+                    "tt_hits": 40,
+                    "tt_cutoffs": 13,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 129,
+                    "cutoffs": 14,
+                    "tt_hits": 14,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 75,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                }
+            ]
+        }
+    },
+    {
+        "episode_id": 4,
+        "policy_log": {
+            "player": [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "logs": [
+                {
+                    "nodes": 1599,
+                    "cutoffs": 57,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1050,
+                    "cutoffs": 56,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1121,
+                    "cutoffs": 55,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 1001,
+                    "cutoffs": 54,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 589,
+                    "cutoffs": 52,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 870,
+                    "cutoffs": 51,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 761,
+                    "cutoffs": 49,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 809,
+                    "cutoffs": 50,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 668,
+                    "cutoffs": 48,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 618,
+                    "cutoffs": 46,
+                    "tt_hits": 5,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 565,
+                    "cutoffs": 46,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 525,
+                    "cutoffs": 45,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 567,
+                    "cutoffs": 44,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 431,
+                    "cutoffs": 44,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 544,
+                    "cutoffs": 40,
+                    "tt_hits": 6,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 368,
+                    "cutoffs": 42,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 503,
+                    "cutoffs": 42,
+                    "tt_hits": 2,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 420,
+                    "cutoffs": 40,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 384,
+                    "cutoffs": 39,
+                    "tt_hits": 3,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 411,
+                    "cutoffs": 37,
+                    "tt_hits": 4,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 2
+                },
+                {
+                    "nodes": 5340,
+                    "cutoffs": 407,
+                    "tt_hits": 200,
+                    "tt_cutoffs": 46,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 4202,
+                    "cutoffs": 364,
+                    "tt_hits": 131,
+                    "tt_cutoffs": 17,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 3085,
+                    "cutoffs": 240,
+                    "tt_hits": 93,
+                    "tt_cutoffs": 10,
+                    "skipped_move": 0,
+                    "depth": 3
+                },
+                {
+                    "nodes": 18975,
+                    "cutoffs": 2320,
+                    "tt_hits": 1342,
+                    "tt_cutoffs": 352,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 11669,
+                    "cutoffs": 1715,
+                    "tt_hits": 731,
+                    "tt_cutoffs": 198,
+                    "skipped_move": 0,
+                    "depth": 4
+                },
+                {
+                    "nodes": 26826,
+                    "cutoffs": 5758,
+                    "tt_hits": 2437,
+                    "tt_cutoffs": 912,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 10292,
+                    "cutoffs": 2729,
+                    "tt_hits": 880,
+                    "tt_cutoffs": 429,
+                    "skipped_move": 0,
+                    "depth": 5
+                },
+                {
+                    "nodes": 12066,
+                    "cutoffs": 3992,
+                    "tt_hits": 1194,
+                    "tt_cutoffs": 813,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 8364,
+                    "cutoffs": 2490,
+                    "tt_hits": 724,
+                    "tt_cutoffs": 472,
+                    "skipped_move": 0,
+                    "depth": 6
+                },
+                {
+                    "nodes": 15467,
+                    "cutoffs": 6013,
+                    "tt_hits": 2003,
+                    "tt_cutoffs": 1448,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 13259,
+                    "cutoffs": 5443,
+                    "tt_hits": 2021,
+                    "tt_cutoffs": 1522,
+                    "skipped_move": 0,
+                    "depth": 8
+                },
+                {
+                    "nodes": 7686,
+                    "cutoffs": 3584,
+                    "tt_hits": 1087,
+                    "tt_cutoffs": 846,
+                    "skipped_move": 0,
+                    "depth": 10
+                },
+                {
+                    "nodes": 16750,
+                    "cutoffs": 8076,
+                    "tt_hits": 2711,
+                    "tt_cutoffs": 2145,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 7112,
+                    "cutoffs": 3574,
+                    "tt_hits": 1144,
+                    "tt_cutoffs": 899,
+                    "skipped_move": 0,
+                    "depth": 10
+                },
+                {
+                    "nodes": 10113,
+                    "cutoffs": 4900,
+                    "tt_hits": 1703,
+                    "tt_cutoffs": 1296,
+                    "skipped_move": 0,
+                    "depth": 11
+                },
+                {
+                    "nodes": 20033,
+                    "cutoffs": 10512,
+                    "tt_hits": 4496,
+                    "tt_cutoffs": 3562,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 21997,
+                    "cutoffs": 11684,
+                    "tt_hits": 4837,
+                    "tt_cutoffs": 3810,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 15274,
+                    "cutoffs": 7796,
+                    "tt_hits": 3567,
+                    "tt_cutoffs": 2783,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 15094,
+                    "cutoffs": 7679,
+                    "tt_hits": 3266,
+                    "tt_cutoffs": 2526,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 16702,
+                    "cutoffs": 9393,
+                    "tt_hits": 3744,
+                    "tt_cutoffs": 2900,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 10085,
+                    "cutoffs": 5338,
+                    "tt_hits": 2148,
+                    "tt_cutoffs": 1579,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 8650,
+                    "cutoffs": 4500,
+                    "tt_hits": 1522,
+                    "tt_cutoffs": 1048,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 9876,
+                    "cutoffs": 5171,
+                    "tt_hits": 1815,
+                    "tt_cutoffs": 1275,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 10015,
+                    "cutoffs": 5819,
+                    "tt_hits": 2130,
+                    "tt_cutoffs": 1475,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 9476,
+                    "cutoffs": 5608,
+                    "tt_hits": 1903,
+                    "tt_cutoffs": 1286,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 11112,
+                    "cutoffs": 6056,
+                    "tt_hits": 2944,
+                    "tt_cutoffs": 1936,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 10965,
+                    "cutoffs": 5791,
+                    "tt_hits": 2969,
+                    "tt_cutoffs": 1956,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 6773,
+                    "cutoffs": 3210,
+                    "tt_hits": 1988,
+                    "tt_cutoffs": 1271,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 7699,
+                    "cutoffs": 3296,
+                    "tt_hits": 2489,
+                    "tt_cutoffs": 1510,
+                    "skipped_move": 0,
+                    "depth": 13
+                },
+                {
+                    "nodes": 5982,
+                    "cutoffs": 2479,
+                    "tt_hits": 2183,
+                    "tt_cutoffs": 1350,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 4734,
+                    "cutoffs": 1839,
+                    "tt_hits": 1764,
+                    "tt_cutoffs": 1034,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 3812,
+                    "cutoffs": 1447,
+                    "tt_hits": 1373,
+                    "tt_cutoffs": 736,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2854,
+                    "cutoffs": 1009,
+                    "tt_hits": 1013,
+                    "tt_cutoffs": 502,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 2168,
+                    "cutoffs": 741,
+                    "tt_hits": 714,
+                    "tt_cutoffs": 307,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 1511,
+                    "cutoffs": 452,
+                    "tt_hits": 476,
+                    "tt_cutoffs": 167,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 992,
+                    "cutoffs": 236,
+                    "tt_hits": 297,
+                    "tt_cutoffs": 71,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 594,
+                    "cutoffs": 103,
+                    "tt_hits": 144,
+                    "tt_cutoffs": 13,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 335,
+                    "cutoffs": 27,
+                    "tt_hits": 68,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 167,
+                    "cutoffs": 0,
+                    "tt_hits": 18,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                },
+                {
+                    "nodes": 70,
+                    "cutoffs": 0,
+                    "tt_hits": 0,
+                    "tt_cutoffs": 0,
+                    "skipped_move": 0,
+                    "depth": 15
+                }
+            ]
+        }
+    }
+]
