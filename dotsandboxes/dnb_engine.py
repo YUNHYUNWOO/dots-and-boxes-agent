@@ -33,7 +33,7 @@ class DotsAndBoxesEngine:
           - h,v는 유효 비트 수 이내여야 함
           - score 합 == 현재 비트보드에서 완성된 박스 수
         """
-        print(state)
+
         if not isinstance(state, DnBEngineState):
             raise TypeError("state must be a dict")
 

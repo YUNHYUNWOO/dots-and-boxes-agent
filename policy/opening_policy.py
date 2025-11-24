@@ -2,8 +2,9 @@ import random
 
 from config import *
 from util import (count_box_edges, get_boxes_adjacent_to_edge, get_missing_edges)
+from util.time_manager import TimeManager
 
-from .basepolicy import BasePolicy, TimeManager
+from .basepolicy import BasePolicy
 
 
 def dots_and_boxes_policy(board: Board) -> Action:

@@ -3,8 +3,9 @@ import numpy as np
 
 from config import *
 
-from .basepolicy import BasePolicy, TimeManager
-from .scheduler import PiecewiseConstantScheduler
+from .basepolicy import BasePolicy
+from util.scheduler import PiecewiseConstantScheduler
+from util.time_manager import TimeManager
 
 
 class MixedPolicy(BasePolicy):

@@ -6,7 +6,6 @@ from policy import *
 from search import *
 from util import *
 
-from .Log import save_sim_logs
 
 def Test_AB_Model(env, A_policy: BasePolicy, B_policy: BasePolicy, verbose=False):
     """
@@ -52,35 +51,3 @@ def Test_AB_Model(env, A_policy: BasePolicy, B_policy: BasePolicy, verbose=False
     env.close()
 
 
-if __name__ == '__main__':
-    
-    run_name = 'pv_search_vs_none'
-    n_box = 5
-    env = DnBEnv(render_mode='human', n_box=n_box)
-
-    config_p0 = {
-        'evaluate':evaluate_relv2,
-        'move_ordering':move_ordering,
-        'depth': ExponentialSchedulerInt(15,2,35,24),
-        'use_iterative_deepening': True,
-        'deterministic': True,
-        'skip_move': False,
-        'use_time_control': False,
-        'use_pvs_search': True
-    }
-    p0_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p0)
-
-    
-    config_p1 = {
-        'evaluate':evaluate_relv2,
-        'move_ordering':move_ordering_v2,
-        'depth': ExponentialSchedulerInt(15,2,35,24),
-        'use_iterative_deepening': True,
-        'deterministic': True,
-        'skip_move': False,
-        'use_time_control': False,
-    }
-    p1_policy = SearchPolicy(AB_TT_Search_TC_v1(), config_p1)
-
-    env.render_mode = 'human'
-    Test_AB_Model(env, p0_policy, p1_policy)

@@ -1,6 +1,9 @@
-from dotsandboxes import DotsAndBoxes, DnBEnv
-from .basepolicy import BasePolicy, TimeManager
 import pygame
+
+from dotsandboxes import DotsAndBoxes, DnBEnv
+from util.time_manager import TimeManager
+
+from .basepolicy import BasePolicy
 
 class PlayablePolicy(BasePolicy):
 

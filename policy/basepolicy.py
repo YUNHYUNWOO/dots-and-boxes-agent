@@ -3,28 +3,7 @@ import random
 
 from config import *
 from dotsandboxes import DnBEnv
-
-class TimeManager():
-    def __init__(self):
-        self.total_budget = 24.0
-        self.used_time = 0.0
-        self.move_start = None
-
-    def remaining(self):
-        return max(0.0, self.total_budget - self.used_time)
-    
-    def start_move(self):
-        self._move_start = time.perf_counter()
-    
-    def end_move(self):
-        dt = time.perf_counter() - self._move_start
-        self.used_time += dt
-        return dt
-    
-    def reset(self):
-        self.total_budget = 24.0
-        self.used_time = 0.0
-
+from util.time_manager import TimeManager
 
 class BasePolicy():
     def __init__(self):

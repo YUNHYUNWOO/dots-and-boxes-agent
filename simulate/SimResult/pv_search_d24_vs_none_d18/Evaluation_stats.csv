@@ -1,2 +1,0 @@
-,n_episodes,n_p0_wins,n_p1_wins,p0_win_rate,p1_win_rate,p0_time_per_game,p1_time_per_game,p0_time_per_turn,p1_time_per_turn,p0_score_count,p0_score_mean,p0_score_std,p0_score_min,p0_score_25%,p0_score_50%,p0_score_75%,p0_score_max,p1_score_count,p1_score_mean,p1_score_std,p1_score_min,p1_score_25%,p1_score_50%,p1_score_75%,p1_score_max
-0,20,14,6,0.7,0.3,19.199863215004008,13.178057484988676,0.5880509407351916,0.48183025539263896,20.0,14.75,5.720461887865902,4.0,10.25,17.5,19.0,21.0,20.0,10.25,5.720461887865902,4.0,6.0,7.5,14.75,21.0

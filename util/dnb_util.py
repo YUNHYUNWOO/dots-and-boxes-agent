@@ -1,7 +1,3 @@
-import random
-import time
-import pandas
-
 from config import *
 
 def get_boxes_adjacent_to_edge(edge:Edge) -> list[Box]:

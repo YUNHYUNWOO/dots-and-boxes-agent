@@ -1,10 +1,12 @@
 import numpy as np
 
+from config import *
 from dotsandboxes import DotsAndBoxesEngine
-from util import *
+from util.bit_dnb_util import (encode_board, decode_bitboard)
+from util.time_manager import TimeManager
 from search import BaseSearchEngine
 
-from .scheduler import *
+from util.scheduler import *
 from .basepolicy import BasePolicy, TimeManager
 
 # =======================================
@@ -42,8 +44,9 @@ class SearchPolicy(BasePolicy):
             t = 0
             for c in range(N):
                 for r in range(N):
-                    for d in range(N):
-                        t += 1
+                    for d in range(2):
+                        if board[c][r][d] == 1:
+                            t += 1
             return t
         t = get_t(observation['board'])
         config = self.get_config(t)
