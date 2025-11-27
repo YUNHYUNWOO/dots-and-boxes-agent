@@ -45,6 +45,7 @@ environment is same as the challenge has provided
 
 - **Board size**: **5 x 5 Boxes**(6 x 6 dots)
 <img src="assets/Dots_And_Boxes_ex.png" width="400" alt="Dots and Boxes example board" />
+
 - **Time Limit**: **24 seconds** per game
 - **Hardware**: **CPU only** Environment. GPU is not allowed
 
