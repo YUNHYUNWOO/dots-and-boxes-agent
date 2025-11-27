@@ -52,6 +52,7 @@ class AB_SearchEngine(BaseSearchEngine):
         self._tt_cutoffs = 0
         self._skipped_move = 0
         self._searched_d = 0
+        self._time_spent = 0
 
     def search(self, eng, state, time_manager: TimeManager):
         
@@ -63,14 +64,15 @@ class AB_SearchEngine(BaseSearchEngine):
 
         actions = None
 
-        def count_moves(edges) -> int:
-            h_bits, v_bits = edges
+        def count_moves(board:BitBoard) -> int:
+            h_bits, v_bits = board
             return h_bits.bit_count() + v_bits.bit_count() 
     
         t = count_moves(eng.get_state().board)
 
-        budget = self.budget_manager.get_budget(t, time_manager)
-        time_manager.set_deadline(budget if self.use_time_control else float('inf'))
+    
+        budget = self.budget_manager.get_budget(t, time_manager) if self.use_time_control != None else float('inf')
+        time_manager.set_deadline(budget)
         
         try:
             if self.use_iterative_deepening:
@@ -106,6 +108,8 @@ class AB_SearchEngine(BaseSearchEngine):
             actions = bit_get_legal_actions(eng.get_state().board)[0:1]
             vals = [0]
         
+        self._time_spent = time.perf_counter() - time_manager.get_move_start_time()
+
         return actions[0], vals[0]
     
     def alpha_beta(self,    
@@ -282,7 +286,8 @@ class AB_SearchEngine(BaseSearchEngine):
             'tt_hits': self._tt_hits,
             'tt_cutoffs': self._tt_cutoffs,
             'skipped_move': self._skipped_move,
-            'depth': self._searched_d
+            'depth': self._searched_d,
+            'time_spent': self._time_spent
         }
     
     def reset_log(self):
@@ -292,6 +297,8 @@ class AB_SearchEngine(BaseSearchEngine):
         self._tt_cutoffs = 0
         self._skipped_move = 0
         self._searched_d = 0
+        self._time_spent = 0
+
 
     def clear_tt(self):
         self.tt = TranspositionTable()

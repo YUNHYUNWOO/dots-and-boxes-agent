@@ -270,13 +270,12 @@ def draw_board(screen, game: DotsAndBoxes, fonts):
     # Sidebar / Score
     p1_col = LINE_COLOR_P1
     p2_col = LINE_COLOR_P2
-    score_text = fonts['lg'].render(f"P1: {game.score[0]}    P2: {game.score[1]}", True, TEXT_COLOR)
+    score_text = fonts['lg'].render(f"P0: {game.score[0]}    P1: {game.score[1]}", True, TEXT_COLOR)
     screen.blit(score_text, (MARGIN, MARGIN + game.n * SPACING + 36))
     turn_color = p1_col if game.current_player == 0 else p2_col
-    turn_text = fonts['md'].render(f"Turn: P{game.current_player + 1}", True, turn_color)
+    turn_text = fonts['md'].render(f"Turn: P{game.current_player}", True, turn_color)
     screen.blit(turn_text, (MARGIN, MARGIN + game.n * SPACING + 72))
-    hint_text = fonts['sm'].render("Click edges to draw. R = restart, +/- = grid size, Esc = quit", True, (180, 180, 185))
-    screen.blit(hint_text, (MARGIN, MARGIN + game.n * SPACING + 104))
+
     # Game over banner
     if game.is_game_over:
         w = screen.get_width()
@@ -309,7 +308,7 @@ def main():
         height = MARGIN * 2 + SPACING * nboxes + 150
         return width, height
 
-    screen, clock, fonts = get_render_desc(n)
+    screen, clock, fonts = get_render_context(n)
 
     game = DotsAndBoxes(n)
 

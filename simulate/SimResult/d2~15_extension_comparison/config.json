@@ -1,0 +1,70 @@
+{
+    "run_name": "d2~15_extension_comparison",
+    "n_episodes": 100,
+    "p0_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_rel",
+            "move_ordering": "move_ordering",
+            "depth": {
+                "type": "ExponentialSchedulerInt",
+                "t0": 15,
+                "v0": 2,
+                "t1": 35,
+                "v1": 15
+            },
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "skip_move": false,
+            "use_extension": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_v1",
+                "w_scheduler": {
+                    "type": "ExponentialSchedulerInt",
+                    "t0": 15,
+                    "v0": 2,
+                    "t1": 20,
+                    "v1": 4.2
+                }
+            },
+            "use_pvs": true
+        }
+    },
+    "p1_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_rel",
+            "move_ordering": "move_ordering",
+            "depth": {
+                "type": "ExponentialSchedulerInt",
+                "t0": 15,
+                "v0": 2,
+                "t1": 35,
+                "v1": 15
+            },
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "skip_move": false,
+            "use_extension": true,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_v1",
+                "w_scheduler": {
+                    "type": "ExponentialSchedulerInt",
+                    "t0": 15,
+                    "v0": 2,
+                    "t1": 20,
+                    "v1": 4.2
+                }
+            },
+            "use_pvs": true
+        }
+    }
+}

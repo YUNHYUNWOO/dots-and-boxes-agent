@@ -24,7 +24,8 @@ class TimeManager():
     def check_time(self):
         if time.perf_counter() >= self._deadline:
             raise TimeoutError()
-    
+    def get_move_start_time(self):
+        return self._move_start
     def reset(self):
         self.total_budget = 24.0
         self.used_time = 0.0

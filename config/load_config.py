@@ -7,7 +7,7 @@ from policy import RandomPolicy, FixedOrderPolicy, SearchPolicy, OpeningPolicy, 
 from search import AB_SearchEngine
 from util.scheduler import ConstantScheduler, ExponentialSchedulerInt, PiecewiseConstantScheduler
 from util.budget_manager import BudgetManager_v1, BudgetManager_v2, BudgetManager_v3
-from heuristic import move_ordering, move_ordering_v2, evaluate_rel, evaluate_relv2, evaluate_relv3, evaluate_chain_aware, evaluate_comps
+from heuristic import move_ordering, move_ordering_v2, evaluate_rel, evaluate_relv2, evaluate_chain_added, evaluate_chain_aware, evaluate_comps
 
 def load_config(path: str) -> dict[str, Any]:
 
@@ -51,7 +51,7 @@ FUNCTION_MAP = {
     'move_ordering_v2': move_ordering_v2, 
     'evaluate_rel': evaluate_rel, 
     'evaluate_relv2': evaluate_relv2, 
-    'evaluate_relv3': evaluate_relv3, 
+    'evaluate_chain_added': evaluate_chain_added, 
     'evaluate_chain_aware': evaluate_chain_aware, 
     'evaluate_comps': evaluate_comps
 }

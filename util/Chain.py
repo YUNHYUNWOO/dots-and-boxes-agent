@@ -31,20 +31,21 @@ dc = [ 0, 1, 0, -1]
 dr = [-1, 0, 1,  0]
 
 
-def init_box_data(edges: List):
+def init_box_data(board: BitBoard):
 
     # returns these three
     adj = { box_id(c, r): [] for r in range(N_BOX) for c in range(N_BOX) }
-    external_open = { box_id(c, r): 0 for r in range(N_BOX) for c in range(N_BOX) }
     is_candidate = { box_id(c, r): False for r in range(N_BOX) for c in range(N_BOX) }
 
     for r in range(N_BOX):
         for c in range(N_BOX):
             # 이 박스의 열린 변 개수 세기
             open_dirs = []
-            
-            for d, adj_edge in enumerate(get_edges_adjacent_to_box(c, r)):
-                if not bit_is_edge_claimed(edges, adj_edge[0], adj_edge[1], adj_edge[2]):  # 선이 안 그려져 있음 = open
+            box = (c, r)
+
+            for d, adj_edge in enumerate(get_edges_adjacent_to_box(box)):
+                action = (c, r, d)
+                if not bit_is_edge_claimed(board, action):  # 선이 안 그려져 있음 = open
                     open_dirs.append(d)
                     
             #print(f'open_dir: {(r,c)}, {open_dirs}, length: {len(open_dirs)}')
@@ -76,7 +77,6 @@ def init_box_data_for_components(board: Board):
 
     # returns these three
     adj = { box_id(c, r): [] for r in range(N_BOX) for c in range(N_BOX) }
-    external_open = { box_id(c, r): 0 for r in range(N_BOX) for c in range(N_BOX) }
     is_candidate = { box_id(c, r): False for r in range(N_BOX) for c in range(N_BOX) }
 
     for r in range(N_BOX):

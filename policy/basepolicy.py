@@ -2,7 +2,6 @@ import time
 import random 
 
 from config import *
-from dotsandboxes import DnBEnv
 from util.time_manager import TimeManager
 
 class BasePolicy():

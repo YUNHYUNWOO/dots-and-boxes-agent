@@ -44,32 +44,49 @@ def evaluate_relv2(eng: DotsAndBoxesEngine) -> Score:
     bad_moves /= 100
     return -bad_moves
 
-def evaluate_relv3(eng: DotsAndBoxesEngine) -> Score:
+def evaluate_chain_added(eng: DotsAndBoxesEngine) -> int:
     board = eng.get_state().board
     actions = bit_get_legal_actions(board)
 
+
     bad_moves = 0
-    for c, r, d in actions:
-        tmp = 0
+    for action in actions:
+        c, r, d = action
         if d == H:
             if 0 <= r < N_BOX:
                 if bit_count_box_edges(board, (c, r)) == 2:
-                    tmp = 1
+                    bad_moves += 1
+                    continue
             if 0 <= r - 1 < N_BOX:
-                if bit_count_box_edges(board, (c, r - 1)) == 2:
-                    tmp = 1
+                if bit_count_box_edges(board, (c, r-1)) == 2:
+                    bad_moves += 1
         else:
             if 0 <= r < N_BOX:
                 if 0 <= c < N_BOX and bit_count_box_edges(board, (c, r)) == 2:
-                    tmp = 1
-                elif c - 1 < N_BOX and bit_count_box_edges(board, (c, r)) == 2:
-                    tmp = 1
-        bad_moves += tmp
+                    bad_moves += 1
+                    continue
+                if 0 < c and bit_count_box_edges(board, (c-1, r)) == 2:
+                    bad_moves += 1
 
-    adj, is_candidate = init_box_data(board)
-    comps = get_connected_components(adj, is_candidate)
-    comps = classify_component(comps, adj)
-    bad_moves += get_long_chain(comps) * 0.5
+    used_edge = 0
+    h, v = board
+    for i in range(30):
+        if ((h >> i) & 1): used_edge += 1
+        if ((v >> i) & 1): used_edge += 1
+
+    if (used_edge > 25):
+        cnt = 0
+        for br in range(N_BOX):
+            for bc in range(N_BOX):
+                if (h >> (br * (N - 1) + bc) & 1) & (h >> ((br + 1) * (N - 1) + bc) & 1) & (v >> (br * N + bc) & 1) & (v >> (br * N + bc + 1) & 1): 
+                    cnt += 1
+        
+        if (cnt % 2) == 0:
+            adj, is_candidate = init_box_data(board)
+            comps = get_connected_components(adj, is_candidate)
+            comps = classify_component(comps, adj)
+
+            bad_moves += 4 + get_long_chain(comps) * 0.6
 
     bad_moves /= 100
 

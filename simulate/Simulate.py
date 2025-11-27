@@ -3,11 +3,11 @@ import time
 
 import numpy as np
 import tqdm.auto as tqdm
-import fire
+import pygame
 import json
 
 from dotsandboxes import DnBEnv
-from config.load_config import load_config
+from config.load_config import load_config, make_obejct_from_config
 from policy import BasePolicy, TimeManager, OpeningPolicy, FixedOrderPolicy, SearchPolicy
 from util import *
 from heuristic import evaluate_rel, evaluate_comps, move_ordering
@@ -91,8 +91,7 @@ def simulate_episode(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, 
         ep_logger.get_action_log(), 
         ep_logger.get_policy_log()
     )
-
-
+  
 
 
 def simulate_multiple_episodes(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, n_episodes: int, log: bool, save_path: str, verbose: bool=False):
@@ -149,7 +148,41 @@ def run_config(config_path: str):
                                log=True, 
                                save_path=save_path, 
                                verbose=False)
-    
 
-if __name__ == "__main__":
-    fire.Fire(run_config)
+def play_against_policy(config_path: str, user_first: bool):
+    waiting = True
+
+    env = DnBEnv(render_mode='human')
+
+
+    with open(config_path, mode='r') as f:
+        config = json.load(f)
+    policy = make_obejct_from_config(config)
+    time_manager = TimeManager()
+    observation, info = env.reset()
+    dnb = env.DnB
+    episode_over = False
+    while not episode_over:
+        if user_first and observation['cur_player'] == P0:
+            waiting = True
+            while waiting:
+                mouse_pos = pygame.mouse.get_pos()
+                dnb.hover_edge = dnb.find_hover_edge(mouse_pos)
+                env._render_frame()
+                
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        e = dnb.find_hover_edge(event.pos)
+                        if e is not None:
+                            d, r, c = e
+                            action = (c, r, 0 if d == 'H' else 1)
+                            observation, _, terminated, _, info = env.step(action)
+                            episode_over = terminated
+                            waiting = False
+                        
+        else:
+            time_manager.start_move()
+            action = policy.get_action(observation, time_manager)
+            time_manager.end_move() 
+            observation, _, terminated, _, info = env.step(action)
+            episode_over = terminated  
