@@ -1,128 +1,132 @@
+"""Budget managers that allocate per-move time based on schedulers."""
+
 import numpy as np
 from scipy.stats import skewnorm
 
-from config import *
-from .time_manager import TimeManager
-from .scheduler import BaseScheduler
+from config import H_COUNT, N_BOX, V_COUNT
+from util.scheduler import BaseScheduler
+from util.time_manager import TimeManager
 
-class BaseBudgetManager():
-    def __init__(self):
-        pass
+
+class BaseBudgetManager:
+    """Interface for computing a time budget for a move."""
 
     def get_budget(self, t: int, time_manager: TimeManager) -> float:
-        pass
+        """Return a time budget for ply ``t``."""
+
+        raise NotImplementedError
 
 
-class BudgetManager_v1(BaseBudgetManager):
-    def __init__(self, w_scheduler: BaseScheduler, MIN_BUDGET=0.02, MAX_BUDGET=float('inf'), SAFETY=0.05):
+class BudgetManager_default(BaseBudgetManager):
+    """Simple scheduler-scaled budget with a safety margin."""
+
+    def __init__(
+        self,
+        w_scheduler: BaseScheduler,
+        MIN_BUDGET: float = 0.02,
+        MAX_BUDGET: float = float("inf"),
+        SAFETY: float = 0.05,
+    ) -> None:
         self.w_scheduler = w_scheduler
         self.MIN_BUDGET = MIN_BUDGET
         self.MAX_BUDGET = MAX_BUDGET
         self.SAFETY = SAFETY
 
     def get_budget(self, t: int, time_manager: TimeManager) -> float:
-        """
-            budget_for_this_move(t):
-            -> returns budget for turn t
-        """
+        """Allocate budget proportional to remaining moves."""
+
         rem = time_manager.remaining()
-        base = rem / ( 2 * N_BOX * (N_BOX + 1) - t)
+        base = rem / (2 * N_BOX * (N_BOX + 1) - t)
 
-        w = self.w_scheduler(t)
-        budget = base * w
+        weight = self.w_scheduler(t)
+        budget = base * weight
 
-        MAX_BUDGET = max(rem, self.MAX_BUDGET)    # 남은 시간 이상은 쓸 수 없음
-        budget = max(self.MIN_BUDGET, min(budget, MAX_BUDGET))
+        max_budget = min(rem, self.MAX_BUDGET)
+        budget = max(self.MIN_BUDGET, min(budget, max_budget))
         budget = max(0.0, budget - self.SAFETY)
 
         return budget
-    
 
-class BudgetManager_v2(BaseBudgetManager):
-    def __init__(self, 
-                 center: float,
-                 scale: float,
-                 alpha: float,
-                 p: float, 
-                 MIN_BUDGET=0.02, 
-                 MAX_BUDGET=float('inf'), 
-                 SAFETY=0.05):
-        """
-            center=33, scale=7, alpha=0, p=0.5 is good point to start
-        """
+
+class BudgetManager_cdf_base(BaseBudgetManager):
+    """Skew-normal cumulative schedule targeting specific plies."""
+
+    def __init__(
+        self,
+        center: float,
+        scale: float,
+        alpha: float,
+        p: float,
+        MIN_BUDGET: float = 0.02,
+        MAX_BUDGET: float = float("inf"),
+        SAFETY: float = 0.05,
+    ) -> None:
+        self.MIN_BUDGET = MIN_BUDGET
+        self.MAX_BUDGET = MAX_BUDGET
+        self.SAFETY = SAFETY
+
         num_turns = H_COUNT + V_COUNT
 
         t = np.arange(num_turns)
         g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
         w = g / g.sum()
-        u = np.ones((num_turns,)) / num_turns
-        self.w = np.cumsum(p * u + w * (1 - p))
+        uniform = np.ones((num_turns,)) / num_turns
+        self.w = np.cumsum(p * uniform + w * (1 - p))
 
-        self.MIN_BUDGET = MIN_BUDGET
-        self.MAX_BUDGET = MAX_BUDGET
-        self.SAFETY = SAFETY
+    def get_budget(self, t: int, time_manager: TimeManager) -> float:
+        """Allocate budget to track target cumulative fraction."""
 
-    def get_budget(self, t: int, time_manager: TimeManager):
-        """
-            get_budget(self, t: int, time_manager: TimeManager):
-            -> returns budget for turn t
-        """
         target_frac = self.w[t]
 
         rem = time_manager.remaining()
         used_frac = 1 - rem / time_manager.total_budget
 
         delta_frac = target_frac - used_frac
-
-        # 타겟 프랙션에 맞는 '이론상' 예산
         budget = time_manager.total_budget * delta_frac
 
-        MAX_BUDGET = min(rem, self.MAX_BUDGET)    # 남은 시간 이상은 쓸 수 없음
-        budget = max(self.MIN_BUDGET, min(budget, MAX_BUDGET))
+        max_budget = min(rem, self.MAX_BUDGET)
+        budget = max(self.MIN_BUDGET, min(budget, max_budget))
         budget = max(0.0, budget - self.SAFETY)
-        
-        return budget
-    
 
-class BudgetManager_v3(BaseBudgetManager):
-    def __init__(self, 
-                 center: float,
-                 scale: float,
-                 alpha: float,
-                 p: float,
-                 w_2:float, 
-                 MIN_BUDGET=0.02, 
-                 MAX_BUDGET=float('inf'), 
-                 SAFETY=0.05):
-        """
-        center=30, scale=7, alpha=1, p=0.3, w_2=2.0
-        """
-        
-        num_turns = H_COUNT + V_COUNT
-        t = np.arange(num_turns)
-        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
-        
-        w = g / g.sum()
-        u = np.ones((num_turns,)) / num_turns
-        self.w = (p * u + w * (1 - p)) * w_2
-    
+        return budget
+
+
+class BudgetManager_pdf_base(BaseBudgetManager):
+    """Scaled skew-normal schedule for larger midgame emphasis."""
+
+    def __init__(
+        self,
+        center: float,
+        scale: float,
+        alpha: float,
+        p: float,
+        w_2: float,
+        MIN_BUDGET: float = 0.02,
+        MAX_BUDGET: float = float("inf"),
+        SAFETY: float = 0.05,
+    ) -> None:
         self.MIN_BUDGET = MIN_BUDGET
         self.MAX_BUDGET = MAX_BUDGET
         self.SAFETY = SAFETY
 
-    def get_budget(self, t: int, time_manager: TimeManager):
-        """
-            get_budget(self, t: int, time_manager: TimeManager):
-            -> returns budget for turn t
-        """
+        num_turns = H_COUNT + V_COUNT
+        t = np.arange(num_turns)
+        g = skewnorm.pdf(t, alpha, loc=center, scale=scale)
+
+        w = g / g.sum()
+        uniform = np.ones((num_turns,)) / num_turns
+        self.w = (p * uniform + w * (1 - p)) * w_2
+
+    def get_budget(self, t: int, time_manager: TimeManager) -> float:
+        """Allocate budget following the scaled skew-normal profile."""
+
         rem = time_manager.remaining()
-        w = self.w[t]
+        weight = self.w[t]
 
-        # 타겟 프랙션에 맞는 '이론상' 예산
-        budget = time_manager.total_budget * w
+        budget = time_manager.total_budget * weight
 
-        MAX_BUDGET = min(rem, self.MAX_BUDGET)    # 남은 시간 이상은 쓸 수 없음
-        budget = max(self.MIN_BUDGET, min(budget, MAX_BUDGET))
+        max_budget = min(rem, self.MAX_BUDGET)
+        budget = max(self.MIN_BUDGET, min(budget, max_budget))
         budget = max(0.0, budget - self.SAFETY)
-        
+
         return budget

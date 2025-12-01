@@ -1,28 +1,29 @@
 import random
 
-from config import *
-from util import (count_box_edges, get_boxes_adjacent_to_edge, get_missing_edges)
+from config import Action, Board, N, N_BOX
+from util.dnb_util import count_box_edges, get_boxes_adjacent_to_edge, get_missing_edges
 from util.time_manager import TimeManager
 
 from .basepolicy import BasePolicy
 
 
 def dots_and_boxes_policy(board: Board) -> Action:
+    """Select a move for the opening phase using simple heuristics.
+
+    The policy inspects ``board[c][r][d]`` to choose an action ``(x, y, d)``.
+    Strategy:
+    1) If any box already has three edges, draw one of the remaining edges to complete it.
+    2) Otherwise, choose randomly among "safe" moves that do not create a three-edged box.
+    3) If no safe moves exist, pick any remaining edge uniformly at random.
     """
-    board_lines[c][r][d] 입력으로부터 한 수를 선택해서 (x, y, d)를 리턴.
-    
-    정책:
-    1) 3변이 이미 그려진 박스가 있으면 → 그 박스를 완성하는 선 중 하나를 선택.
-    2) 없으면 → 안전수(어떤 박스도 3변이 되지 않는 수) 중에서 랜덤.
-    3) 안전수도 없으면 → 남은 아무 수나 랜덤.
-    """
+
     available_moves = []
 
-    # 1. 모든 아직 안 그려진 선(엣지) 수집
+    # 1. Collect every edge that has not been drawn.
     for c in range(N):
         for r in range(N):
             for d in range(2):
-                # 실제로 존재하는 선만 고려 (범위 밖은 패스)
+                # Consider only edges that exist within board bounds.
                 if d == 0:
                     # horizontal: x in [0, W-1], y in [0, H]
                     if not (0 <= c < N_BOX and 0 <= r <= N_BOX):
@@ -32,13 +33,13 @@ def dots_and_boxes_policy(board: Board) -> Action:
                     if not (0 <= c <= N_BOX and 0 <= r < N_BOX):
                         continue
 
-                if board[c][r][d] == 0:  # 아직 안 그려진 선만
+                if board[c][r][d] == 0:
                     available_moves.append((c, r, d))
 
     if not available_moves:
-        return None  # 둘 곳이 없음 (게임 종료 상태)
+        return None  # No moves available (game finished).
 
-    # 2. 먼저, 3변 박스를 찾아서 완성시킬 수 있는 수들 찾기
+    # 2. Prefer completing boxes that already have three edges.
     complete_box_moves = []
     for br in range(N_BOX):
         for bc in range(N_BOX):
@@ -46,17 +47,14 @@ def dots_and_boxes_policy(board: Board) -> Action:
             sides = count_box_edges(board, box)
             if sides == 3:
                 missing = get_missing_edges(board, box)
-                # missing 중 실제로 available_moves에 있는 것만 사용
                 for a in missing:
                     if a in available_moves:
                         complete_box_moves.append(a)
 
-    print('complete_box_move: ', complete_box_moves)
     if complete_box_moves:
         return random.choice(complete_box_moves)
 
-    # 3. 안전수(safe moves) 찾기:
-    #    이 수를 두었을 때, 인접한 박스들 중 어느 것도 3변이 되지 않으면 safe.
+    # 3. Find safe moves that do not leave any adjacent box with three edges.
     safe_moves = []
 
     for action in available_moves:
@@ -74,9 +72,12 @@ def dots_and_boxes_policy(board: Board) -> Action:
     if safe_moves:
         return random.choice(safe_moves)
 
-    # 4. 안전수도 없으면 그냥 남은 수 중 랜덤
+    # 4. If no safe move exists, pick any remaining move at random.
     return random.choice(available_moves)
 
+
 class OpeningPolicy(BasePolicy):
-    def get_action(self, observation: dict, time_manager:TimeManager) -> Action:
+    def get_action(self, observation: dict, time_manager: TimeManager) -> Action:
+        """Choose an opening move based on adjacency heuristics."""
+
         return dots_and_boxes_policy(observation['board'])

@@ -1,0 +1,50 @@
+{
+    "run_name": "Phase2_vs_Phase3",
+    "n_episodes": 20,
+    "p0_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_bad_moves",
+            "move_ordering": null,
+            "depth": 30,
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_default",
+                "w_scheduler": {
+                    "type": "ConstantScheduler",
+                    "v": 2.0
+                }
+            },
+            "use_pvs": false,
+            "use_aspiration": false
+        }
+    },
+    "p1_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_bad_moves",
+            "move_ordering": "move_ordering",
+            "depth": 30,
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_default",
+                "w_scheduler": {
+                    "type": "ConstantScheduler",
+                    "v": 2.0
+                }
+            },
+            "use_pvs": false,
+            "use_aspiration": false
+        }
+    }
+}

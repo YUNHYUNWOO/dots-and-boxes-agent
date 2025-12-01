@@ -98,6 +98,8 @@ class MultiEpisodeLogger():
         basic_policy_stat_df = _calc_basic_stats_from_policy_logs(policy_logs=self.policy_logs)
         basic_policy_stat_df.to_csv(os.path.join(self.save_path, 'Policy_stats.csv'))
         
+        print(basic_eval_stat_df)
+        print(basic_policy_stat_df)
         _search_node_plot(policy_logs=self.policy_logs, save_path=self.save_path)
 
         print(f"Simulation results saved to {self.save_path}")
@@ -251,8 +253,10 @@ def _search_node_plot(policy_logs, save_path):
         for ep_id, ep in enumerate(policy_logs):
             logs = ep["policy_log"]["logs"]
             player = ep["policy_log"]["player"]
-
+            
             for t, log_entry in enumerate(logs):
+                if log_entry is None:
+                    continue
                 for k, val in log_entry.items():
                     if isinstance(val, (int, float)):
                         rows.append({
@@ -264,9 +268,11 @@ def _search_node_plot(policy_logs, save_path):
                         })
         return pd.DataFrame(rows)
 
-    df = logs_to_long_format(policy_logs)
-    print(df)
 
+    df = logs_to_long_format(policy_logs)
+    if df.empty:
+        return
+    
     keys = df["key"].unique()
     print(keys)
 
@@ -290,6 +296,7 @@ def _search_node_plot(policy_logs, save_path):
         plt.tight_layout()
 
         plt.savefig(os.path.join(save_path, key + "_line_plot.jpg"))
+        plt.close()
 
 
 # def save_sim_logs(Evaluation_logs, Actions_logs, Policy_logs, save_path: str):

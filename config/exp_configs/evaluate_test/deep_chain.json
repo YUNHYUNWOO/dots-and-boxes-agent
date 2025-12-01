@@ -1,0 +1,65 @@
+{
+    "run_name": "deep_chain",
+    "n_episodes": 100,
+    "seed": 42,
+    "p0_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_default",
+            "move_ordering": "move_ordering",
+            "depth": {
+                "type": "ExponentialSchedulerInt",
+                "t0": 15,
+                "v0": 2,
+                "t1": 35,
+                "v1": 20
+            },
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "skip_move": false,
+            "use_extension": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_default",
+                "w_scheduler": {
+                    "type": "ConstantScheduler",
+                    "v": 2.0
+                }
+            },
+            "use_pvs": true
+        }
+    },
+    "p1_policy": {
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_chain",
+            "move_ordering": "move_ordering",
+            "depth": {
+                "type": "ExponentialSchedulerInt",
+                "t0": 15,
+                "v0": 2,
+                "t1": 35,
+                "v1": 20
+            },
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "skip_move": false,
+            "use_extension": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_default",
+                "w_scheduler": {
+                    "type": "ConstantScheduler",
+                    "v": 2.0
+                }
+            },
+            "use_pvs": true
+        }
+    }
+}

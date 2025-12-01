@@ -1,5 +1,5 @@
 import os
-import time
+import random
 
 import numpy as np
 import tqdm.auto as tqdm
@@ -7,14 +7,10 @@ import pygame
 import json
 
 from dotsandboxes import DnBEnv
+from config import P0, P1
 from config.load_config import load_config, make_obejct_from_config
-from policy import BasePolicy, TimeManager, OpeningPolicy, FixedOrderPolicy, SearchPolicy
+from policy import BasePolicy, TimeManager
 from util import *
-from heuristic import evaluate_rel, evaluate_comps, move_ordering
-from search import AB_SearchEngine
-from util.scheduler import ExponentialSchedulerInt, BooleanScheduler
-from util.budget_manager import BudgetManager_v1, BudgetManager_v2, BudgetManager_v3
-
 from .logger import EpisodeLogger, MultiEpisodeLogger
 
 BASE_SAVE_PATH = './Simulate/SimResult'
@@ -24,14 +20,6 @@ BASE_SAVE_PATH = './Simulate/SimResult'
 # 만약 pygame window가 작동하지 않으면 env 생성시 render_mode를 'human'으로 설정할 것
 def simulate_episode(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, verbose=False):
     """
-    po_policy와 p1_policy가 선후공을 맡아 한 에피소드를 시뮬레이션합니다.
-
-    Returns:
-        results = {
-            'record': List of action records for each episode (Submit format),
-            'info': List of info dictionaries for each episode (env의 정의 그대로),
-            'total_reward': List of total rewards for the first player in each episode (현재까지는 아무 쓸모 없음, Debugging용, Reward 알고리즘이 복잡하면 쓸모있을 수도)
-        }
     """
         
     # verbose는 디버깅 출력 여부
@@ -40,7 +28,6 @@ def simulate_episode(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, 
     if verbose:
         print(f"Starting observation: {observation}")
 
-    turn_count = [0, 0]
     ep_logger = EpisodeLogger()
     episode_over = False
     p0_time_manager = TimeManager()
@@ -96,43 +83,48 @@ def simulate_episode(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, 
 
 def simulate_multiple_episodes(env: DnBEnv, p0_policy: BasePolicy, p1_policy: BasePolicy, n_episodes: int, log: bool, save_path: str, verbose: bool=False):
     """
-    po_policy와 p1_policy가 번갈아가며 선후공을 맡아 n_episodes만큼 시뮬레이션을 수행합니다.
-    결과는 딕셔너리 형태로 반환됩니다.
+    Run multiple self-play episodes between two policies in the Dots and Boxes environment.
+
+    For each episode this function:
+    - simulates a full game between `first_player` and `second_player` using `simulate_episode`
+    - logs default, action, and policy logs with `MultiEpisodeLogger`
+    - alternates which policy takes the first move in the next episode
+
+    Args:
+        env: DnBEnv game environment.
+        p0_policy: Policy used as Player 0.
+        p1_policy: Policy used as Player 1.
+        n_episodes: Number of episodes to simulate.
+        log: Flag indicating whether logging should be enabled (currently not used).
+        save_path: Directory where logs and aggregated statistics will be saved.
+        verbose: If True, print per-episode progress messages.
 
     Returns:
-        results = {
-            'record': List of action records for each episode (Submit format),
-            'info': List of info dictionaries for each episode (env의 정의 + first_player),
-            'total_reward': List of total rewards for the first player in each episode (현재까지는 아무 쓸모 없음, Debugging용, Reward 알고리즘이 복잡하면 쓸모있을 수도)
-        }
+        None
     """
-
-    results = {
-        'record': [],
-        'info': [],
-        'total_reward': [],
-        'time_spent': []
-    }
 
     first_player = p0_policy
     second_player = p1_policy
 
-    logger = MultiEpisodeLogger(save_path)
+
+    logger = MultiEpisodeLogger(save_path) if log else None
 
     for episode in tqdm.tqdm(range(n_episodes)):
         if verbose:
             print(f"=== Episode {episode + 1} ===")
         default_log, action_log, policy_log  = simulate_episode(env, first_player, second_player, verbose)
 
-        logger.log(default_log, action_log, policy_log, episode_id=episode, first_player_is_p0=(first_player==p0_policy))
+        if log:
+            logger.log(default_log, action_log, policy_log, episode_id=episode, first_player_is_p0=(first_player is p0_policy))
 
         first_player, second_player = second_player, first_player  # 다음 에피소드에서 선후공 교체
     
-    logger.log_stats()
+    if log:
+        logger.log_stats()
     return
 
 
-def run_config(config_path: str):
+def run_config(config_path: str, render_mode: str):
     run_name, n_episodes, p0_policy, p1_policy, config_json = load_config(config_path)
     save_path = os.path.join(BASE_SAVE_PATH, run_name)
 
@@ -140,7 +132,7 @@ def run_config(config_path: str):
     with open(os.path.join(save_path, 'config.json'), 'w') as f:
         json.dump(config_json, f, indent=4)
 
-    env = DnBEnv(render_mode='rgb_array')
+    env = DnBEnv(render_mode=render_mode)
     simulate_multiple_episodes(env=env, 
                                p0_policy=p0_policy, 
                                p1_policy=p1_policy,

@@ -10,8 +10,8 @@ UPPERBOUND = 2
 class TTEntry:
     __slots__ = ("value", "depth", "flag", "best_action")
     def __init__(self, value: int, depth: int, flag, best_action: Optional[Tuple[int,int,int]]):
-        self.value = value          # root 기준의 미래마진 값
-        self.depth = depth          # 이 값이 유효한 최소 보장 깊이
+        self.value = value          # Evaluated score from the board and min, max flag
+        self.depth = depth          # Minimum search depth for which this entry remains valid.
         self.flag = flag            # EXACT / LOWERBOUND / UPPERBOUND
         self.best_action = best_action
 
@@ -36,8 +36,10 @@ class TranspositionTable:
     def store(self, eng, maximizing, depth, flag, value, best_action):
         k = self.key_from(eng, maximizing)
         prev = self._t.get(k)
-        # 더 깊은(depth 큰) 결과만 덮어씌우자
-
+        
+        # A TT entry is stored only when one of the following conditions is met:
+        # - greater search depth than the existing one
+        # - a better bound the existing one (LOWER/UPPERBOUND → EXACT)
         replace = False
         if (prev is None):
             replace = True
@@ -45,7 +47,7 @@ class TranspositionTable:
             if depth > prev.depth:
                 replace = True
             elif depth == prev.depth:
-                # EXACT가 더 가치 높음
+                # EXACT is more valuable
                 if flag == EXACT and prev.flag != EXACT:
                     replace = True
                 else:
@@ -56,9 +58,9 @@ class TranspositionTable:
         if replace:
             self._t[k] = TTEntry(value, depth, flag, best_action)
 
-        # 최근 사용으로 이동
+        # move entry to the most recently used position
         self._t.move_to_end(k, last=True)
-        # 용량 초과 시 LRU부터 제거
+        # if the capacity is exceeded, remove the least recently used entry
         if len(self._t) > self.capacity:
             self._t.popitem(last=False)
 

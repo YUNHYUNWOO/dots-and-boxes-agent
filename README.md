@@ -61,7 +61,6 @@ environment is same as the challenge has provided
 
 - Due to the CPU-only constraint in the challenge environment, we could not - fully utilize GPU-based neural networks.
 - However, prior work such as **AlphaZero** and **MuZero** suggests that NN-based methods can perform extremely well.
-
 - We would like to:
     - Train a value/policy network for Dots and Boxes
     - Compare a **pure search-based agent vs a NN-augmented search agent** (AlphaZero-style)

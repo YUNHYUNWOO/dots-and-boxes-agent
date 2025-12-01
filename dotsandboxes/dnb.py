@@ -39,7 +39,7 @@ def grid_to_px(r: int, c: int) -> Tuple[int, int]:
 
 def compute_window(nboxes: int) -> Tuple[int, int]:
     width = MARGIN * 2 + SPACING * nboxes
-    height = MARGIN * 2 + SPACING * nboxes + 150
+    height = MARGIN * 2 + SPACING * nboxes + 50
     return width, height
 
 def get_render_context(n_box):
@@ -286,7 +286,7 @@ def draw_board(screen, game: DotsAndBoxes, fonts):
         if winner == -1:
             msg = "Game Over — Tie!"
         else:
-            msg = f"Game Over — Winner: P{winner + 1}!"
+            msg = f"Game Over — Winner: P{winner}!"
         txt = fonts['xl'].render(msg, True, WIN_MSG_COLOR)
         screen.blit(txt, (MARGIN, 24))
 

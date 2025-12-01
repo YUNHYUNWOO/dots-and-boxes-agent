@@ -1,94 +1,104 @@
+"""Search extensions and move ordering heuristics for Dots and Boxes."""
+
+from config import Action, BitBoard
 from dotsandboxes import DotsAndBoxesEngine
-from config import *
-from util import get_boxes_adjacent_to_edge, bit_count_box_edges, bit_makes_third_edge 
 from search.TranspositionTable import TranspositionTable
+from util.bit_dnb_util import bit_count_box_edges, bit_makes_third_edge
+from util.dnb_util import get_boxes_adjacent_to_edge
 
 
-# Search Extension 
+# Search extensions
+def complete_extension(out: dict, action: Action) -> bool:
+    """Extend depth if the move completed a box."""
 
-def complete_extension(out, action: Action):
-    if out['is_box_completed']:
-        return True
+    return bool(out.get("is_box_completed"))
 
-def give_away_extension(out, action: Action):
-    
-    board = out['state']['board']
-    b_list = get_boxes_adjacent_to_edge(action)
-    for box in b_list:
-        if (bit_count_box_edges(board, box) == 3):
+
+def give_away_extension(out: dict, action: Action) -> bool:
+    """Extend depth if the move hands over a nearly complete box."""
+
+    board: BitBoard = out["state"]["board"]
+    for box in get_boxes_adjacent_to_edge(action):
+        if bit_count_box_edges(board, box) == 3:
             return True
     return False
 
 
-# Move Ordering
+# Move ordering
+def default_move_ordering(
+    actions: list[Action],
+    eng: DotsAndBoxesEngine,
+    tt: TranspositionTable,
+    depth: int,
+    root_player: int,
+) -> list[Action]:
+    """Return actions unchanged (baseline ordering)."""
 
-def default_move_ordering(actions: list[Action], eng: DotsAndBoxesEngine, tt: TranspositionTable, depth:int, root_player:int):
     return actions
 
-def _complete_box(board: Board, action: Action) -> bool:
+
+def _completes_box(board: BitBoard, action: Action) -> bool:
+    """Return True if the action would complete any adjacent box."""
+
     for box in get_boxes_adjacent_to_edge(action):
         if bit_count_box_edges(board, box) == 3:
-            # 지금 두면 박스가 완성됨
             return True
-        
-def _make_double_cross(edges, action):
-    c, r, d = action
-    h, v = edges
-    b_list = get_boxes_adjacent_to_edge(c, r, d)
-    if len(b_list) == 2:
-        return (bit_count_box_edges(h, v, b_list[0][0], b_list[0][1]) == 2) and (bit_count_box_edges(h, v, b_list[1][0], b_list[1][1]) == 2)
-    else:
-        return False
-## Move_Ordering
-def move_ordering(actions: list[Action], eng: DotsAndBoxesEngine, tt: TranspositionTable, depth:int, root_player:int):
-    
-    state = eng.get_state()
-    edges = state.board
+    return False
 
-    ranked = []
+
+def move_ordering(
+    actions: list[Action],
+    eng: DotsAndBoxesEngine,
+    tt: TranspositionTable,
+    depth: int,
+    root_player: int,
+) -> list[Action]:
+    """Prioritize forced moves, then safe moves, then the rest."""
+
+    edges = eng.get_state().board
 
     forced = []
     safe = []
     for a in actions:
-        if _complete_box(edges, a):
+        if _completes_box(edges, a):
             forced.append(a)
-        
         if not bit_makes_third_edge(edges, a):
             safe.append(a)
 
-    rest = actions
-    rest = [a for a in rest if a not in forced]
-    rest = [a for a in rest if a not in safe]
+    rest = [a for a in actions if a not in forced and a not in safe]
+    return forced + safe + rest
 
-    ranked = forced + safe + rest
 
-    return ranked
+def move_ordering_v2(
+    actions: list[Action],
+    eng: DotsAndBoxesEngine,
+    depth: int,
+    root_player: int,
+) -> list[Action]:
+    """Alternate ordering including double-cross preference."""
 
-def move_ordering_v2(actions: list[Action], eng: DotsAndBoxesEngine, depth:int, root_player:int):
-    
-    state = eng.get_state()
-    edges = state["edges"]
+    edges = eng.get_state().board
 
-    ranked = []
+    forced: list[Action] = []
+    double_cross: list[Action] = []
+    safe: list[Action] = []
 
-    forced = []
-    double_cross = []
-    safe = []
     for a in actions:
-        if _complete_box(edges, a):
+        if _completes_box(edges, a):
             forced.append(a)
-        
-        if _make_double_cross(edges, a):
+        if _makes_double_cross(edges, a):
             double_cross.append(a)
-
         if not bit_makes_third_edge(edges, a):
             safe.append(a)
 
-    rest = actions
-    rest = [a for a in rest if a not in forced]
-    rest = [a for a in rest if a not in double_cross]
-    rest = [a for a in rest if a not in safe]
+    rest = [a for a in actions if a not in forced and a not in double_cross and a not in safe]
+    return forced + safe + double_cross + rest
 
-    ranked = forced + safe + double_cross + rest
 
-    return ranked
+def _makes_double_cross(board: BitBoard, action: Action) -> bool:
+    """Return True if the action creates two boxes each with two edges."""
+
+    boxes = get_boxes_adjacent_to_edge(action)
+    if len(boxes) != 2:
+        return False
+    return all(bit_count_box_edges(board, box) == 2 for box in boxes)
