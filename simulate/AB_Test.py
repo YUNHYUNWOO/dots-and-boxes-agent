@@ -32,7 +32,7 @@ def Test_AB_Model(env: DnBEnv, A_policy: BasePolicy, B_policy: BasePolicy, verbo
         episode_over = terminated or truncated
     env.close()
 
-if __name__ is "__main__":
+if __name__ == "__main__":
     from util import BudgetManager_pdf_base, ExponentialSchedulerInt
     from policy import SearchPolicy
     from heuristic import evaluate_bad_moves, move_ordering

@@ -1,0 +1,10 @@
+{
+    "run_name": "v0_random_vs_v0_random",
+    "n_episodes": 100,
+    "p0_policy": {
+        "type": "RandomPolicy"
+    },
+    "p1_policy": {
+        "type": "RandomPolicy"
+    }
+}

@@ -182,7 +182,7 @@ def main():
         print(len(test_data[0]), len(test_data[0][0]), len(test_data[0][0][0]))
         edges = encode_board(edges)
 
-        adj, external_open, is_candidate = init_box_data_for_components(edges)
+        adj, is_candidate = init_box_data(edges)
         print(is_candidate)
         components = get_connected_components(adj, is_candidate)
         print(components)

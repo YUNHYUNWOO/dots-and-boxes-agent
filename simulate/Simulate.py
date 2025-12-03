@@ -13,7 +13,7 @@ from policy import BasePolicy, TimeManager
 from util import *
 from .logger import EpisodeLogger, MultiEpisodeLogger
 
-BASE_SAVE_PATH = './Simulate/SimResult'
+BASE_SAVE_PATH = './simulate/sim_result'
 
 
 # 정책에 의한 전체 에피소드를 시뮬레이션 하는 함수

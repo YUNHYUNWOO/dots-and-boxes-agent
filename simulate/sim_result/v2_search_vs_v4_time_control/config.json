@@ -1,6 +1,6 @@
 {
-    "run_name": "24_7_5_0.3_2.0",
-    "n_episodes": 50,
+    "run_name": "v2_search_vs_v4_time_control",
+    "n_episodes": 100,
     "p0_policy": {
         "type": "SearchPolicy",
         "search_engine": {
@@ -8,7 +8,7 @@
         },
         "config_schedule": {
             "evaluate": "evaluate_bad_moves",
-            "move_ordering": "move_ordering",
+            "move_ordering": null,
             "depth": 30,
             "use_iterative_deepening": true,
             "deterministic": false,
@@ -30,23 +30,22 @@
             "type": "AB_SearchEngine"
         },
         "config_schedule": {
-            "evaluate": "evaluate_default",
+            "evaluate": "evaluate_bad_moves",
             "move_ordering": "move_ordering",
             "depth": 30,
             "use_iterative_deepening": true,
             "deterministic": false,
-            "skip_move": false,
-            "use_extension": false,
             "use_time_control": true,
             "budget_manager": {
                 "type": "BudgetManager_pdf_base",
-                "center": 24,
+                "center": 30,
                 "scale": 7,
-                "alpha": 5,
+                "alpha": 3,
                 "p": 0.3,
                 "w_2": 2.0
             },
-            "use_pvs": false
+            "use_pvs": false,
+            "use_aspiration": false
         }
     }
 }

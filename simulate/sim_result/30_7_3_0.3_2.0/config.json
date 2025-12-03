@@ -1,5 +1,5 @@
 {
-    "run_name": "24_7_5_0.3_2.0",
+    "run_name": "30_7_3_0.3_2.0",
     "n_episodes": 50,
     "p0_policy": {
         "type": "SearchPolicy",
@@ -30,7 +30,7 @@
             "type": "AB_SearchEngine"
         },
         "config_schedule": {
-            "evaluate": "evaluate_default",
+            "evaluate": "evaluate_bad_moves",
             "move_ordering": "move_ordering",
             "depth": 30,
             "use_iterative_deepening": true,
@@ -40,9 +40,9 @@
             "use_time_control": true,
             "budget_manager": {
                 "type": "BudgetManager_pdf_base",
-                "center": 24,
+                "center": 30,
                 "scale": 7,
-                "alpha": 5,
+                "alpha": 3,
                 "p": 0.3,
                 "w_2": 2.0
             },
