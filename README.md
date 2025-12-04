@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ```
 **How to run experiments**
 ``` bash
-python run_experiments.py [CONFIG_PATH or CONFIG_DIR]
+python run_experiments.py --human -p [CONFIG_PATH or CONFIG_DIR]
 ```
 
 Example:
@@ -32,14 +32,12 @@ python run_experiments.py -p config/exp_configs/version_comparison
 ``` bash
 python run_experiments.py --human -p config/exp_configs/version_comparison
 ```
-Example:
-```bash
-python play_with_ai.py configs/policy_configs/v0.json 
-```
+
 **How to Play against our AI**
 ``` bash
-python play_with_ai.py [POCLICY_CONFIG_PATH] --agent_first
+python play_with_ai.py -p [POCLICY_CONFIG_PATH] --agent_first
 ```
+
 POLICY_CONFIG is also a **single JSON file**
 With the --agent_first flag, the agent will play as the first player.
 If it runs Successfully, GUI based on pygame will show up.
