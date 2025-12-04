@@ -21,22 +21,20 @@ Example:
 
 - If you pass **a JSON file,** it runs that experiments only:
 ``` bash
-python run_experiments.py -p config/exp_configs/Basic_vs_d2~20_extension.json
+python run_experiments.py -p config/exp_configs/version_comparison/v0_random_vs_v0_random.json
 ```
 
 - If you pass **a directory**, it runs all *.json configs in that directory:
 ``` bash
-python run_experiments.py -p config/exp_configs
+python run_experiments.py -p config/exp_configs/version_comparison
 ```
-
-Rendering GUI
 - To render the GUI, run with the --human flag:
 ``` bash
-python run_experiments.py -p config/exp_configs --human
+python run_experiments.py --human -p config/exp_configs/version_comparison
 ```
 Example:
 ```bash
-python play_with_ai.py configs/policy_configs/d2~25.json 
+python play_with_ai.py configs/policy_configs/v0.json 
 ```
 **How to Play against our AI**
 ``` bash
