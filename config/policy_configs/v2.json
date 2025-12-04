@@ -1,0 +1,24 @@
+{
+        "type": "SearchPolicy",
+        "search_engine": {
+            "type": "AB_SearchEngine"
+        },
+        "config_schedule": {
+            "evaluate": "evaluate_bad_moves",
+            "move_ordering": "move_ordering",
+            "depth": 30,
+            "use_iterative_deepening": true,
+            "deterministic": false,
+            "use_time_control": true,
+            "budget_manager": {
+                "type": "BudgetManager_pdf_base",
+                "center": 30,
+                "scale": 7,
+                "alpha": 3,
+                "p": 0.3,
+                "w_2": 2.0
+            },
+            "use_pvs": false,
+            "use_aspiration": false
+        }
+    }

@@ -12,7 +12,6 @@ and this repo is a **refactored version** of the experimental environment we use
 pip install -r requirements.txt
 # Tested with Python 3.10
 ```
-
 **How to run experiments**
 ``` bash
 python run_experiments.py [CONFIG_PATH or CONFIG_DIR]
@@ -22,22 +21,29 @@ Example:
 
 - If you pass **a JSON file,** it runs that experiments only:
 ``` bash
-python run_experiments.py config/exp_configs/Basic_vs_d2~20_extension.json
+python run_experiments.py -p config/exp_configs/Basic_vs_d2~20_extension.json
 ```
 
 - If you pass **a directory**, it runs all *.json configs in that directory:
 ``` bash
-python run_experiments.py config/exp_configs
+python run_experiments.py -p config/exp_configs
+```
+
+Rendering GUI
+- To render the GUI, run with the --human flag:
+``` bash
+python run_experiments.py -p config/exp_configs --human
 ```
 Example:
 ```bash
-python play_with_ai.py configs/policy_configs/d2~25.json
+python play_with_ai.py configs/policy_configs/d2~25.json 
 ```
 **How to Play against our AI**
 ``` bash
-python play_with_ai.py [POCLICY_CONFIG_PATH]
+python play_with_ai.py [POCLICY_CONFIG_PATH] --agent_first
 ```
 POLICY_CONFIG is also a **single JSON file**
+With the --agent_first flag, the agent will play as the first player.
 If it runs Successfully, GUI based on pygame will show up.
 
 ## Game Environment
@@ -48,6 +54,11 @@ environment is same as the challenge has provided
 
 - **Time Limit**: **24 seconds** per game
 - **Hardware**: **CPU only** Environment. GPU is not allowed
+## Project Structure
+[Go to Project Structure](project_structure.md)
+
+## Experiment Result
+[Go to experiment result analysis](experimental_result_analysis.md)
 
 ## Future Work / Possible Improvements
 
@@ -64,3 +75,5 @@ environment is same as the challenge has provided
 - We would like to:
     - Train a value/policy network for Dots and Boxes
     - Compare a **pure search-based agent vs a NN-augmented search agent** (AlphaZero-style)
+
+
