@@ -132,7 +132,6 @@ class AB_SearchEngine(BaseSearchEngine):
 
         self._time_spent = time.perf_counter() - time_manager.get_move_start_time()
         self._value = vals[0]
-        print(f'{t}, {self._searched_d}: {actions}, {vals}')
         
         return actions[0], vals[0]
     
