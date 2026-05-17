@@ -54,7 +54,7 @@ environment is same as the challenge has provided
 [Go to Project Structure](project_structure.md)
 
 ## Experiment Result
-[Go to experiment result analysis](experimental_result_analysis.md)
+[Go to experiment result analysis](experiment_result_analysis.md)
 
 ## Future Work / Possible Improvements
 
